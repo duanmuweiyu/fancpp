@@ -62,6 +62,7 @@ class VcCompiler : Task
     }
     catch (Err err)
     {
+      log.info("err: $err.msg")
       throw fatal("CompileCpp failed")
     }
   }
@@ -93,6 +94,10 @@ class VcCompiler : Task
       //include
       include := toOsPath(`${ccHomeDir}include/`.toFile)
       cmd.add("/I$include")
+      includes.each
+      {
+        cmd.add("/I${toOsPath(it)}")
+      }
 
       //depends include
       depends.each
@@ -114,7 +119,7 @@ class VcCompiler : Task
         if (f.isDir){
           f.listFiles.each
           {
-            if (it.ext == "cpp" || it.ext == "h")
+            if (it.ext == "cpp" || it.ext == "c")
             {
               cmd.add(toOsPath(it))
             }
@@ -237,32 +242,39 @@ class VcCompiler : Task
   {
     if (res != null)
     {
-      resource := (output + `$name/res/`).create
-      copyInto(res, resource)
+      copyInto(res, output + `$name/bin/`, false, ["overwrite":true])
     }
 
     if (targetType != "exe")
     {
       //copy include files
-      include := (output + `$name/include/`).create
-      copyInto(src, include, "h")
+      includeDir := (output + `$name/include/$name/`).create
+      copyInto(src, includeDir, true,
+        [
+          "overwrite":true,
+          "exclude":|File f->Bool|
+          {
+            if (f.isDir) return false
+            return f.ext != "h"
+          }
+        ])
     }
 
     log.info("outFile: " + toOsPath(output + `$name/bin/$outName`))
   }
 
-  private Void copyInto(File[] src, File dir, Str? filter := null)
+  private Void copyInto(File[] src, File dir, Bool flatten, [Str:Obj]? options := null)
   {
     src.each |File f|
     {
-      if (f.isDir){
-        f.listFiles.each{
-          if (filter == null || it.ext == filter){
-            it.copyInto(dir)
-          }
+      if (f.isDir && flatten)
+      {
+        f.listFiles.each
+        {
+          it.copyInto(dir, options)
         }
       }else{
-        f.copyInto(dir)
+        f.copyInto(dir, options)
       }
     }
   }
@@ -306,6 +318,9 @@ class VcCompiler : Task
 
   ** List of libraries to link in
   File[]? libs
+
+  ** List of include
+  File[]? includes
 
   ** List of source files or directories to compile
   File[] src := File[,]

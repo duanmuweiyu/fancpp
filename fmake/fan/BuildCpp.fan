@@ -39,7 +39,12 @@ abstract class BuildCpp : BuildScript
   **
   ** List of libraries to link to.
   **
-  Uri[] libDirs := Uri[,]
+  Uri[] libDirs := [,]
+
+  **
+  ** List of include the head file
+  **
+  Uri[] includeDirs := [,]
 
   **
   ** depends lib
@@ -120,6 +125,7 @@ abstract class BuildCpp : BuildScript
       cc.depends = depends
       cc.src  = resolveDirs(srcDirs)
       cc.libs = resolveDirs(libDirs)
+      cc.includes = resolveDirs(includeDirs)
       if(resDirs != null) cc.res = resolveDirs(resDirs)
       cc.run
     }
