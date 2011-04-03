@@ -1,0 +1,55 @@
+**************************************************************************
+** title:      slanweb
+** author:     chunquedong
+** created:    2011-4-3
+** copyright:  Copyright (c) 2011, chunquedong
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+
+a fantom style C++ maker
+
+Usage[#Usage]
+=============
+
+just like fantom:
+
+  using fmake
+
+  class Build : BuildCpp
+  {
+    new make()
+    {
+      name = "hello"
+      targetType = "exe"
+
+      srcDirs = [`cpp/`]
+      depends = ["hello2"]
+    }
+  }
+
+Repository [#repository]
+=============
+
+Defalut output to 'fantomHome/lib/cpp/'
+
+  fantomHome
+   |_lib
+      |_java
+      |_donet
+      |_fan
+      |_cpp
+        |_pro1
+        |  |_lib
+        |  |_bin
+        |  |_obj
+        |  |_res
+        |_pro2
+        |  |_lib
+        |  |_bin
+        |  |_obj
+        |  |_res
+        |...
+
