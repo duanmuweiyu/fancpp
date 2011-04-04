@@ -51,14 +51,14 @@ Defalut output to 'fantomHome/lib/cpp/'
       |_fan
       |_cpp
         |_pro1
-        |  |_lib
         |  |_bin
+        |  |_include
         |  |_obj
-        |  |_res
+        |
         |_pro2
-        |  |_lib
         |  |_bin
+        |  |_include
         |  |_obj
-        |  |_res
+        |
         |...
 
