@@ -11,7 +11,16 @@ Overview [#overview]
 
 a fantom style C++ maker
 
-Usage[#Usage]
+Setting[#setting]
+=============
+
+1. fantomHome/etc/build/config.props:
+  vcHome=/C:/Program Files/Microsoft Visual Studio 9.0/VC/
+  winSdk=/C:/Program Files/Microsoft SDKs/Windows/v6.0A/Lib/
+
+2. add Env path: C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE;
+
+Usage[#usage]
 =============
 
 just like fantom:
