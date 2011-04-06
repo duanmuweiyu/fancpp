@@ -31,25 +31,35 @@ abstract class BuildCpp : BuildScript
   Bool debug := false
 
   **
+  ** default following fantom version
+  **
+  Version version := Version(config("buildVersion", "0"))
+
+  **
+  ** msvc or gcc
+  **
+  Str compiler := "msvc"
+
+  **
+  ** depends lib
+  **
+  Str[] depends := [,]
+
+  **
   ** Required list of directories to compile.  All Cpp source
   ** files in each directory will be compiled.
   **
   Uri[] srcDirs := [`cpp/`]
 
   **
-  ** List of libraries to link to.
+  ** List of ext libraries to link to.
   **
   Uri[] libDirs := [,]
 
   **
-  ** List of include the head file
+  ** List of ext include the head file
   **
   Uri[] includeDirs := [,]
-
-  **
-  ** depends lib
-  **
-  Str[] depends := Str[,]
 
   **
   ** res will be copy to output directly
@@ -60,16 +70,6 @@ abstract class BuildCpp : BuildScript
   ** output
   **
   Uri outDir := Env.cur.workDir.plus(`lib/cpp/`).uri
-
-  **
-  ** default following fantom version
-  **
-  Version version := Version(config("buildVersion", "0"))
-
-  **
-  ** msvc or gcc
-  **
-  Str compiler := "msvc"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -91,8 +91,9 @@ abstract class BuildCpp : BuildScript
 
     oldLevel := log.level
     log.level = LogLevel.silent
+
     try
-      log.out.printLine("  cppcHome:    ${VcCompiler(this).ccHomeDir}")
+      log.out.printLine("  cppcHome:    ${VcCompiler(this).ccHome}")
     catch (Err e)
       log.out.printLine("  cppcHome:    $e")
     finally
@@ -118,15 +119,24 @@ abstract class BuildCpp : BuildScript
     {
       // compile source
       cc := VcCompiler(this)
-      cc.output = outDir.toFile
-      cc.targetType = targetType
-      cc.debug = debug
-      cc.name = name
-      cc.depends = depends
-      cc.src  = resolveDirs(srcDirs)
-      cc.libs = resolveDirs(libDirs)
-      cc.includes = resolveDirs(includeDirs)
-      if(resDirs != null) cc.res = resolveDirs(resDirs)
+      {
+        it.outHome    = this.outDir.toFile
+        it.targetType = this.targetType
+        it.debug      = this.debug
+
+        it.name       = this.name
+        it.depends    = this.depends.map |s->Depend| { Depend.fromStr(s) }
+        it.version    = this.version
+
+        it.src        = this.resolveDirs(srcDirs)
+        it.libPaths   = this.resolveDirs(libDirs)
+        it.includes   = this.resolveDirs(includeDirs)
+
+        if(resDirs != null)
+        {
+          it.res = this.resolveDirs(resDirs)
+        }
+      }
       cc.run
     }
     else if(compiler == "gcc")

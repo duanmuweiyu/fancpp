@@ -14,6 +14,51 @@ using build
 class VcCompiler : Task
 {
 
+  ** Output file created by the compiler.
+  File? outHome
+
+  ** lib name
+  Str? name
+
+  ** output file name
+  Str? outFileName
+
+  ** output dir name
+  File? outPod
+
+  ** lib depends
+  Depend[]? depends
+
+  ** lib depends
+  Version? version
+
+  ** Output target type
+  Str? targetType
+
+  ** is debug mode
+  Bool debug := false
+
+  ** List of librarie Paths to link in
+  File[]? libPaths
+
+  ** List of include
+  File[]? includes
+
+  ** List of source files or directories to compile
+  File[]? src
+
+  ** List of resource
+  File[]? res := null
+
+  ** Home directory for VC or GCC
+  ** configured via config prop
+  File ccHome
+
+  **
+  ** why need this? /C:/Program Files/Microsoft SDKs/Windows/v6.0A/Lib/
+  **
+  File winSdk
+
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
@@ -21,21 +66,17 @@ class VcCompiler : Task
   new make(BuildScript script)
     : super(script)
   {
+    ccHome = script.configDir("vcHome") ?:
+      throw fatal("Must config build prop 'vcHome'")
+    winSdk = script.configDir("winSdk") ?:
+      throw fatal("Must config build prop 'winSdk'")
   }
 
-  **
-  ** Initialize the environment
-  **
-  private This init()
+  private Void init()
   {
-      ccHomeDir = script.configDir("vcHome") ?:
-        throw fatal("Must config build prop 'vcHome'")
-      winSdk = script.configDir("winSdk") ?:
-        throw fatal("Must config build prop 'winSdk'")
-
-      outName = debug? "${name}-d.$targetType" : "${name}.$targetType"
-
-      return this
+    outFileName = debug? "${name}-d.$targetType" : "${name}.$targetType"
+    outPod = outHome + ("$name-$version.toStr/").toUri
+    outPod.create
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,17 +88,16 @@ class VcCompiler : Task
   **
   override Void run()
   {
-    init
     log.info("CompileCpp")
 
     try
     {
+      init
       compile
-      if (targetType == "lib"){
-        lib
-      }else{
+      if (targetType == "lib")
+        makeLib
+      else
         link
-      }
       install
     }
     catch (Err err)
@@ -67,87 +107,125 @@ class VcCompiler : Task
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Compile
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** compile code to .obj
+  **
   Void compile()
   {
       // build command
-      ccExe := ccHomeDir + `bin/cl.exe`
-      cmd := [toOsPath(ccExe)]
+      ccExe := ccHome + `bin/cl.exe`
+      cmd := [ccExe.osPath]
 
       // default paramaters
       cmd.add("/c")//no link
       cmd.add("/EHsc")//suppert exception
 
       //compile mode
+      cmd.add(compileMode)
+
+      //include
+      allIncludes.each
+      {
+        cmd.add("/I${it.osPath}")
+      }
+
+      //output
+      objDir := (outPod + `obj/`).create
+      objOut := objDir.osPath + "\\"
+      cmd.add("/Fo$objOut")
+
+      // src files/dirs
+      srcCodes.each { cmd.add(it.osPath) }
+
+      //run
+      Exec(script, cmd).run
+  }
+
+  private File[] srcCodes()
+  {
+      File[] srcs := [,]
+      src.each |File f|
+      {
+        if (f.isDir){
+          f.listFiles.each {
+            ext := it.ext
+            if (ext == "cpp" || ext == "c" || ext == "cc") {
+              srcs.add(it)
+            }
+          }
+        }else{
+          srcs.add(f)
+        }
+      }
+      return srcs
+  }
+
+  private Str compileMode()
+  {
       if (targetType == "exe" || targetType == "lib")
       {
-        cmd.add(debug? "/MTd": "/MT")
+        return (debug? "/MTd": "/MT")
       }
       else if(targetType == "dll")
       {
-        cmd.add(debug? "/MDd": "/MD")
+        return (debug? "/MDd": "/MD")
       }
       else
       {
         throw fatal("unknow targetType")
       }
+  }
 
-      //include
-      include := toOsPath(`${ccHomeDir}include/`.toFile)
-      cmd.add("/I$include")
+  private File[] allIncludes()
+  {
+      File[] incs := [,]
+
+      //compiler include
+      compilerInc := `${ccHome}include/`.toFile
+      incs.add(compilerInc)
+
+      //platform include
+      platformInc := `${winSdk}Include/`.toFile
+      incs.add(platformInc)
+
+      //user include
       includes.each
       {
-        cmd.add("/I${toOsPath(it)}")
+        incs.add(it)
       }
 
       //depends include
       depends.each
       {
-        dep := output + `$it/include/`
+        dep := outHome + `${it.name}-${it.version}/include/`
         if (!dep.exists) throw fatal("don't find the depend $it")
-        depInclude := toOsPath(dep)
-        cmd.add("/I$depInclude")
+        incs.add(dep)
       }
 
-      //output
-      objDir := (output + `$name/obj/`).create
-      objOut := objDir.osPath + "\\"
-      cmd.add("/Fo$objOut")
-
-      // src files/dirs
-      src.each |File f|
-      {
-        if (f.isDir){
-          f.listFiles.each
-          {
-            if (it.ext == "cpp" || it.ext == "c")
-            {
-              cmd.add(toOsPath(it))
-            }
-          }
-        }else{
-          cmd.add(toOsPath(f))
-        }
-      }
-
-      //run
-      log.debug(cmd.join(" "))
-      r := Process(cmd).run.join
-      if (r != 0) throw Err.make
+      return incs
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Link
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** link objs and output .exe or .dll
+  **
   Void link()
   {
       // build command
-      linkExe := ccHomeDir + `bin/link.exe`
-      cmd := [toOsPath(linkExe)]
+      linkExe := ccHome + `bin/link.exe`
+      cmd := [linkExe.osPath]
 
-      //libs
-      sysLib := toOsPath(`${ccHomeDir}lib/`.toFile)
-      cmd.add("/LIBPATH:$sysLib")
-      cmd.add("/LIBPATH:${winSdk.osPath}")
-      libs.each
+      //lib Paths
+      allLibPaths.each
       {
-        cmd.add("/LIBPATH:${toOsPath(it)}")
+        cmd.add("/LIBPATH:${it.osPath}")
       }
 
       //DLL
@@ -157,98 +235,142 @@ class VcCompiler : Task
       }
 
       //output
-      outDir := (output + `$name/bin/`).create
-      binOut := toOsPath(outDir + outName.toUri)
-      cmd.add("/OUT:${binOut}")
+      cmd.add("/OUT:${output.osPath}")
 
-      // obj files/dirs
-      objDir := output + `$name/obj/`
-      objDir.listFiles.each
-      {
-        if (it.ext == "obj")
-        {
-          cmd.add(toOsPath(it))
-        }
-      }
+      // objs files
+      objFiles.each { cmd.add(it.osPath) }
 
-      //depends obj
-      depends.each
-      {
-        dep := output + `$it/obj/`
-        dep.listFiles.each
-        {
-          if (it.ext == "obj")
-          {
-            cmd.add(toOsPath(it))
-          }
-        }
-      }
+      //depends libs
+      dependsLibs.each { cmd.add(it.osPath) }
 
       //run
-      log.debug(cmd.join(" "))
-      r := Process(cmd).run.join
-      if (r != 0) throw Err.make
+      Exec(script, cmd).run
   }
 
-  Void lib()
+  **
+  ** create a .lib file
+  **
+  Void makeLib()
   {
-      libExe := ccHomeDir + `bin/lib.exe`
-      cmd := [toOsPath(libExe)]
+      libExe := ccHome + `bin/lib.exe`
+      cmd := [libExe.osPath]
 
-      //libs
-      sysLib := toOsPath(`${ccHomeDir}lib/`.toFile)
-      cmd.add("/LIBPATH:$sysLib")
-      cmd.add("/LIBPATH:${winSdk.osPath}")
-      libs.each
+      //lib Paths
+      allLibPaths.each
       {
-        cmd.add("/LIBPATH:${toOsPath(it)}")
+        cmd.add("/LIBPATH:${it.osPath}")
       }
 
       //output
-      outDir := (output + `$name/bin/`).create
-      binOut := toOsPath(outDir + outName.toUri)
-      cmd.add("/OUT:${binOut}")
+      cmd.add("/OUT:${output.osPath}")
 
-      // obj files/dirs
-      objDir := output + `$name/obj/`
+
+      // objs files
+      objFiles.each { cmd.add(it.osPath) }
+
+      //depends libs
+      dependsLibs.each { cmd.add(it.osPath) }
+
+      //run
+      Exec(script, cmd).run
+  }
+
+  private File[] objFiles()
+  {
+      File[] objs := [,]
+      objDir := outPod + `obj/`
       objDir.listFiles.each
       {
         if (it.ext == "obj")
         {
-          cmd.add(toOsPath(it))
+          objs.add(it)
         }
       }
+      return objs
+  }
 
-      //depends obj
+  private File[] dependsLibs()
+  {
+      File[] libs := [,]
       depends.each
       {
-        dep := output + `$it/obj/`
+        dep := outHome + `${it.name}-${it.version}/bin/`
+        count := 0
+        dep.listFiles.each
+        {
+          if (it.ext == "lib")
+          {
+            libs.add(it)
+            count++
+          }
+        }
+        if (count == 0)
+          throw fatal("don't find any lib in ${it.name}-${it.version}/bin/")
+      }
+      return libs
+  }
+
+  private File[] dependsObjs()
+  {
+      File[] objs := [,]
+      depends.each
+      {
+        dep := outHome + `${it.name}-${it.version}/obj/`
         dep.listFiles.each
         {
           if (it.ext == "obj")
           {
-            cmd.add(toOsPath(it))
+            objs.add(it)
           }
         }
       }
-
-      //run
-      log.debug(cmd.join(" "))
-      r := Process(cmd).run.join
-      if (r != 0) throw Err.make
+      return objs
   }
 
+  private File output()
+  {
+    outDir := (outPod + `bin/`).create
+    return outDir + outFileName.toUri
+  }
+
+  private File[] allLibPaths()
+  {
+      File[] paths := [,]
+
+      //compiler path
+      compilerPath := `${ccHome}lib/`.toFile
+      paths.add(compilerPath)
+
+      //platform path
+      platformPath := `${winSdk}Lib/`.toFile
+      paths.add(platformPath)
+
+      //user path
+      libPaths.each
+      {
+        paths.add(it)
+      }
+      return paths
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// install
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** copy include head and res
+  **
   Void install()
   {
     if (res != null)
     {
-      copyInto(res, output + `$name/bin/`, false, ["overwrite":true])
+      copyInto(res, outPod + `bin/`, false, ["overwrite":true])
     }
 
     if (targetType != "exe")
     {
       //copy include files
-      includeDir := (output + `$name/include/$name/`).create
+      includeDir := (outPod + `include/$name/`).create
       copyInto(src, includeDir, true,
         [
           "overwrite":true,
@@ -260,7 +382,7 @@ class VcCompiler : Task
         ])
     }
 
-    log.info("outFile: " + toOsPath(output + `$name/bin/$outName`))
+    log.info("outFile: " + (outPod + `bin/$outFileName`).osPath)
   }
 
   private Void copyInto(File[] src, File dir, Bool flatten, [Str:Obj]? options := null)
@@ -278,54 +400,5 @@ class VcCompiler : Task
       }
     }
   }
-
-  static Str toOsPath(File f)
-  {
-    //"\"" + f.osPath + "\""
-    f.osPath
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  ** Home directory for VC or GCC
-  ** configured via config prop
-  File? ccHomeDir
-
-  **
-  ** why need this? /C:/Program Files/Microsoft SDKs/Windows/v6.0A/Lib/
-  **
-  File? winSdk
-
-  ** Output file created by the compiler.
-  File? output
-
-  ** lib name
-  Str? name
-
-  ** output file name
-  Str? outName
-
-  ** lib version
-  Str[] depends := Str[,]
-
-  ** Output target type
-  Str? targetType
-
-  ** is debug mode
-  Bool debug := false
-
-  ** List of libraries to link in
-  File[]? libs
-
-  ** List of include
-  File[]? includes
-
-  ** List of source files or directories to compile
-  File[] src := File[,]
-
-  ** List of resource
-  File[]? res := null
 
 }
