@@ -1,6 +1,6 @@
 **************************************************************************
-** title:      slanweb
-** author:     chunquedong
+** title:      fmake
+** author:     Jed Young
 ** created:    2011-4-3
 ** copyright:  Copyright (c) 2011, chunquedong
 ** license:    Licensed under the Academic Free License version 3.0
@@ -9,7 +9,7 @@
 Overview [#overview]
 ********************
 
-a fantom style C++ maker
+A fantom style C++ maker
 
 Setting[#setting]
 =============
@@ -31,11 +31,12 @@ just like fantom:
   {
     new make()
     {
-      name = "hello"
-      targetType = "exe"
+      name = "helloExe"
+      summary = "test exe"
+      outType = TargetType.exe
 
       srcDirs = [`cpp/`]
-      depends = ["hello2"]
+      depends = ["helloLib 1.0.0"]
     }
   }
 
@@ -54,11 +55,11 @@ Defalut output to 'fantomHome/lib/cpp/'
         |  |_bin
         |  |_include
         |  |_obj
-        |
+        |  |_lib
         |_pro2
         |  |_bin
         |  |_include
         |  |_obj
-        |
+        |  |_lib
         |...
 

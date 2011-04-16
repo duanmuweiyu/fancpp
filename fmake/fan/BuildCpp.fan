@@ -21,9 +21,14 @@ abstract class BuildCpp : BuildScript
   Str? name
 
   **
+  ** description of pod
+  **
+  Str? summary
+
+  **
   ** Required output type. Possible values are 'exe','dll','lib'
   **
-  Str targetType := "exe"
+  TargetType? outType
 
   **
   ** is debug mode
@@ -54,12 +59,12 @@ abstract class BuildCpp : BuildScript
   **
   ** List of ext libraries to link to.
   **
-  Uri[] libDirs := [,]
+  Str[] extLibs := [,]
 
   **
   ** List of ext include the head file
   **
-  Uri[] includeDirs := [,]
+  Uri[] extIncludeDirs := [,]
 
   **
   ** res will be copy to output directly
@@ -79,6 +84,8 @@ abstract class BuildCpp : BuildScript
   private Void validate()
   {
     if (name == null) throw fatal("Must set name")
+    if (outType == null) throw fatal("Must set outType")
+    if (summary == null) throw fatal("Must set summary")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -121,16 +128,17 @@ abstract class BuildCpp : BuildScript
       cc := VcCompiler(this)
       {
         it.outHome    = this.outDir.toFile
-        it.targetType = this.targetType
+        it.outType = this.outType
         it.debug      = this.debug
 
         it.name       = this.name
+        it.summary    = this.summary
         it.depends    = this.depends.map |s->Depend| { Depend.fromStr(s) }
         it.version    = this.version
 
         it.src        = this.resolveDirs(srcDirs)
-        it.libPaths   = this.resolveDirs(libDirs)
-        it.includes   = this.resolveDirs(includeDirs)
+        it.extLibs    = this.extLibs
+        it.extIncludes   = this.resolveDirs(extIncludeDirs)
 
         if(resDirs != null)
         {
@@ -212,4 +220,21 @@ abstract class BuildCpp : BuildScript
     }
   }
 
+}
+
+**************************************************************************
+** target Type
+**************************************************************************
+
+** output type
+enum class TargetType
+{
+  ** executable file
+  exe,
+
+  ** dynamic link library
+  dll,
+
+  ** static link library
+  lib
 }
