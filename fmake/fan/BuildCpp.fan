@@ -172,7 +172,7 @@ abstract class BuildCpp : BuildScript
   {
     log.info("clean [${scriptDir.name}]")
     log.indent
-    Delete(this, outDir.toFile+name.toUri.plusSlash).run
+    Delete(this, outDir.toFile+`$name-$version/`).run
     log.unindent
   }
 
