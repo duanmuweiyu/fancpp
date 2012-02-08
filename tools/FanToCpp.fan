@@ -21,18 +21,33 @@ class FanToCpp : AbstractMain
   @Opt { help = "namespace"; aliases = ["n"] }
   Str? namespace
 
-  @Opt { help = "dir"; aliases = ["n"] }
+  @Opt { help = "dir"; aliases = ["d"] }
   Str? dir
 
-  @Opt { help = "copy right"; aliases = ["n"] }
+  @Opt { help = "copy right"; aliases = ["c"] }
   Str copyRight := "Copyright (c) 2009-2012, chunquedong"
 
   CcWriter out := CcWriter(Env.cur.out)
   CcWriter impOut := CcWriter(Env.cur.out)
+  CcWriter headOut := CcWriter(Env.cur.out)
 
   override Int run()
   {
     pod := Pod.find(podName)
+
+    //head file
+    File headOutFile := File(`gen/${dir ?: podName}/${dir ?: podName}.h`)
+    headOut = CcWriter(headOutFile.out)
+    Str ns := namespace ?: podName
+    Str headGuard := "_"+ ns.upper +"_"+ (dir ?: podName).upper + "_H_"
+    printHeadComment(headOut)
+    headOut.pl("#ifndef $headGuard")
+    headOut.pl("#define $headGuard").nl
+    headOut.pl(Str<|#include "fanSys/Sys.h"|>)
+    headOut.pl("#define ${ns.upper}_EXPORT")
+    headOut.pl("namespace ${ns}")
+    headOut.pl("{").indent
+
     pod.types.each |type|
     {
       if (!type.isSynthetic)
@@ -43,9 +58,15 @@ class FanToCpp : AbstractMain
         impOut = CcWriter(impOutFile.out)
 
         printType(type)
+        headOut.pl("class $type.name;")
       }
     }
     out.out.close
+    impOut.out.close
+
+    headOut.unindent.pl("}") //end namespace
+    headOut.w("#endif").nl
+    headOut.out.close
     return 0
   }
 
@@ -135,7 +156,7 @@ class FanToCpp : AbstractMain
     //print imp
     printHeadComment(impOut)
     impOut.pl("""#include "${dir ?: podName}/${type.name}.h\"""").nl
-    impOut.pl("using namespace ${ns}").nl
+    impOut.pl("using namespace ${ns};").nl
 
 
     //
@@ -146,7 +167,7 @@ class FanToCpp : AbstractMain
     out.pl("#ifndef $headGuard")
     out.pl("#define $headGuard").nl
 
-    out.pl(Str<|#include "system/Sys.h"|>).nl
+    out.pl("""#include "${dir ?: podName}/${dir ?: podName}.h\"""").nl
 
     out.pl("namespace ${ns}")
     out.pl("{").indent
