@@ -156,7 +156,7 @@ class FanToCpp : AbstractMain
     //print imp
     printHeadComment(impOut)
     impOut.pl("""#include "${dir ?: podName}/${type.name}.h\"""").nl
-    impOut.pl("using namespace ${ns};").nl
+    impOut.pl("${ns.upper}_USING_NAMESPACE").nl
 
 
     //
@@ -169,8 +169,8 @@ class FanToCpp : AbstractMain
 
     out.pl("""#include "${dir ?: podName}/${dir ?: podName}.h\"""").nl
 
-    out.pl("namespace ${ns}")
-    out.pl("{").indent
+    out.pl("${ns.upper}_BEGIN_NAMESPACE")
+    out.pl("").indent
 
     printDoc(out, type.doc)
 
@@ -208,7 +208,7 @@ class FanToCpp : AbstractMain
 
     out.unindent.pl("};") //end class
 
-    out.unindent.pl("}") //end namespace
+    out.unindent.pl("${ns}_END_NAMESPACE") //end namespace
     out.w("#endif").nl
 
   }
