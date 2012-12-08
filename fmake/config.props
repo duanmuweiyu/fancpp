@@ -2,20 +2,22 @@ msvc.define=/D{define}
 msvc.libDir=/LIBPATH:{libDir}
 msvc.includeDir=/I{includeDir}
 msvc.libList={libName}
+msvc.objList={objList}
 
 msvc.comp=cl /c /EHsc /nologo /O2 /MD /DWIN32 /D_WINDOWS /DNDEBUG {msvc.define} {msvc.includeDir} /Fo{objFile} {srcList}
-msvc.lib=lib /OUT:{outFile} {objList}
-msvc.exe=link /NOLOGO {msvc.libDir} /OUT:{outFile} {msvc.libList} {objList}
-msvc.dll=link /NOLOGO /DLL {msvc.libDir} /OUT:{outFile} {msvc.libList} {objList}
+msvc.lib=lib /OUT:{outFile} {msvc.objList}
+msvc.exe=link /NOLOGO {msvc.libDir} /OUT:{outFile} {msvc.libList} {msvc.objList}
+msvc.dll=link /NOLOGO /DLL {msvc.libDir} /OUT:{outFile} {msvc.libList} {msvc.objList}
 
 gcc.define=-D{define}
 gcc.libDir=-L{libDir}
 gcc.includeDir=-I{includeDir}
 gcc.libList=-l{libName}
+gcc.objList={objList}
 
 gcc.comp=g++ -O3 -Wall -c {gcc.define} {gcc.includeDir} -o{objFile} {srcList}
-gcc.lib=ar crv {outFile} {objList}
-gcc.exe=g++ {gcc.libDir} -o{outFile} {gcc.libList} {objList}
-gcc.dll=g++ -shared {gcc.libDir} -o{outFile} {gcc.libList} {objList}
+gcc.lib=ar cqs {outFile} {gcc.objList}
+gcc.exe=g++ -o{outFile} {gcc.objList} -static {gcc.libDir} {gcc.libList}
+gcc.dll=g++ -shared -o{outFile} {gcc.objList} -static {gcc.libDir} {gcc.libList}
 
 

@@ -64,7 +64,7 @@ class CppCompiler : Task
 
   ** Home directory for VC or GCC
   ** configured via config prop
-  File? ccHome
+  Str? ccHome
 
   ** meta data
   [Str:Str]? meta
@@ -95,7 +95,15 @@ class CppCompiler : Task
     try
     {
       init
-      compile
+
+      srcCodes.each
+      {
+        echo(it.osPath)
+        commandMaker.srcList = it.osPath
+        commandMaker.objFile = it.osPath +".obj"
+        compile
+      }
+      commandMaker.objList = srcCodes.map { it.osPath +".obj" }
       if (outType == TargetType.lib)
         makeLib
       else
@@ -111,7 +119,18 @@ class CppCompiler : Task
   ** init. since dump test
   protected virtual Void init()
   {
-    outFileName = debug? "${name}-d.$outType" : "${name}.$outType"
+    if (outType == TargetType.lib)
+    {
+      outFileName = "lib${name}.a"//$outType"
+    }
+    else if (outType == TargetType.dll)
+    {
+      outFileName = "lib${name}.so"//$outType"
+    }
+    else
+    {
+      outFileName = debug? "${name}-d.$outType" : "${name}.$outType"
+    }
 
     outPodDir = outHome + ("$name-$version/").toUri
     outPodDir.create
@@ -126,6 +145,17 @@ class CppCompiler : Task
       "pod.depends" : depends.map { it.toStr } ->join(";"),
       "pod.summary" : summary,
     ]
+
+    commandMaker = CommandMaker
+    {
+      it.libName = allLibs
+      it.define = [,]
+      it.includeDir = allIncludes.map { it.osPath }
+      it.libDir = allLibPaths.map { it.osPath }
+      it.outFile = (outDir +outFileName.toUri).osPath
+      it.objList = objFiles.map { it.osPath }
+      it.config = this.typeof.pod.props(`config.props`, 1min).dup
+    }
   }
 
   ** output file path
@@ -138,6 +168,7 @@ class CppCompiler : Task
   protected virtual Void compile()
   {
     cmd := commandMaker.getCommond(compiler + ".comp")
+    //echo(cmd)
     Exec(script, cmd.split).run
   }
 
@@ -145,6 +176,7 @@ class CppCompiler : Task
   protected virtual Void link(Bool isDll)
   {
     cmd := commandMaker.getCommond(compiler + (isDll ? ".dll" : ".exe"))
+    //echo(cmd)
     Exec(script, cmd.split).run
   }
 
@@ -152,6 +184,7 @@ class CppCompiler : Task
   protected virtual Void makeLib()
   {
     cmd := commandMaker.getCommond(compiler + ".lib")
+    //echo(cmd)
     Exec(script, cmd.split).run
   }
 
@@ -228,7 +261,13 @@ class CppCompiler : Task
         {
           if (it.ext == "lib" || it.ext == "a")
           {
-            libNames.add(it.name)
+            if (it.name.startsWith("lib") && it.name.endsWith(".a"))
+            {
+              i := it.name.indexr(".a")
+              libNames.add(it.name[3..<i])
+            }
+            else
+              libNames.add(it.name)
             count++
           }
         }

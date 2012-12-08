@@ -26,13 +26,16 @@ class CommandMaker
   Str[] libDir := [,]
 
   ** List of source files or directories to compile
-  Str[] srcList := [,]
+  Str srcList := ""
 
   ** output file
-  Str outFile
+  Str outFile := ""
+
+  ** object file
+  Str objFile := ""
 
   ** List of obj file
-  Str[] objFile := [,]
+  Str[] objList := [,]
 
   ** config map
   Str:Str config
@@ -40,51 +43,55 @@ class CommandMaker
 
   new make(|This| f) { f(this) }
 
-  private Str getValue(Str key)
-  {
-    config[key] ?: throw Err("not find config: $key")
-  }
 
   Str getCommond(Str cmd)
   {
+    [Str:Str] map := [:]
     config.each |v, k|
     {
-      config[k] = fillParam(v)
+      map[k] = fillParam(v)
+      //echo("$k : ${v}")
+      //echo("$k => ${map[k]}")
     }
 
-    Str commond := getValue(cmd)
-    config.each |v, k|
+    Str command := map[cmd]
+
+    map.each |v, k|
     {
-      commond = commond.replace(k, v)
+      command = command.replace("{$k}", v)
     }
-    return commond
+    return command
   }
 
   private Str fillParam(Str cmd)
   {
-    Str result := ""
+    Str result := cmd
     this.typeof.fields.each |f|
     {
       if (f.parent == this.typeof)
       {
         Str name := "{$f.name}"
-        if (cmd.contains(name))
+        if (result.contains(name))
         {
           if (f.type != Str#)
           {
             Str[] strs := f.get(this)
+
+            temp := ""
             strs.each |item|
             {
-              result += cmd.replace(name, item) + " "
+              temp += result.replace(name, item) + " "
             }
+            result = temp
           }
           else
           {
-            result = cmd.replace(name, f.get(this).toStr)
+            result = result.replace(name, f.get(this).toStr)
           }
         }
       }
     }
+
     return result
   }
 }

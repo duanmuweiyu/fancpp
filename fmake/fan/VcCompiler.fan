@@ -21,8 +21,6 @@ class VcCompiler : CppCompiler
   new make(BuildScript script)
     : super(script)
   {
-    ccHome = script.configDir("vcHome") ?:
-      throw fatal("Must config build prop 'vcHome'")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,7 +33,7 @@ class VcCompiler : CppCompiler
   override Void compile()
   {
       // build command
-      ccExe := ccHome + `bin/cl.exe`
+      ccExe := ccHome.toUri.toFile + `bin/cl.exe`
       cmd := [ccExe.osPath]
 
       // default paramaters
@@ -103,7 +101,7 @@ class VcCompiler : CppCompiler
   override Void link(Bool isDll)
   {
       // build command
-      linkExe := ccHome + `bin/link.exe`
+      linkExe := ccHome.toUri.toFile + `bin/link.exe`
       cmd := [linkExe.osPath]
 
       //version
@@ -142,7 +140,7 @@ class VcCompiler : CppCompiler
   **
   override Void makeLib()
   {
-      libExe := ccHome + `bin/lib.exe`
+      libExe := ccHome.toUri.toFile + `bin/lib.exe`
       cmd := [libExe.osPath]
 
       //no logo

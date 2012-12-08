@@ -20,5 +20,6 @@ class Build : BuildPod
         "sys 1.0", "build 1.0"
     ]
     srcDirs = [`fan/`]
+    resDirs = [`config.props`]
   }
 }

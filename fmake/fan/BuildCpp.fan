@@ -43,7 +43,7 @@ abstract class BuildCpp : BuildScript
   **
   ** msvc or gcc
   **
-  Str compiler := "msvc"
+  Str compiler := "gcc"
 
   **
   ** depends lib
@@ -123,7 +123,7 @@ abstract class BuildCpp : BuildScript
     log.indent
 
     // compile source
-    cc := VcCompiler(this)
+    cc := CppCompiler(this)
     {
       it.outHome    = this.outDir.toFile
       it.outType = this.outType
@@ -133,18 +133,19 @@ abstract class BuildCpp : BuildScript
       it.summary    = this.summary
       it.depends    = this.depends.map |s->Depend| { Depend.fromStr(s) }
       it.version    = this.version
-
       it.src        = this.resolveDirs(srcDirs)
+
       it.libName    = this.extLibs
       it.includeDir = this.resolveDirs(extIncludeDirs)
       it.compiler   = this.compiler
-      it.ccHome = script.configDir(this.compiler+"Home") ?: throw Err("Must config build prop '${this.compiler}Home'")
+      it.ccHome = ""//script.configDir(this.compiler+"Home") ?: throw Err("Must config build prop '${this.compiler}Home'")
 
       if(resDirs != null)
       {
         it.res = this.resolveDirs(resDirs)
       }
     }
+
     cc.run
 
     log.unindent
