@@ -11,10 +11,10 @@ using build
 **
 ** Run the Cpp compiler
 **
-abstract class CppCompiler : Task
+class CppCompiler : Task
 {
 
-  ** Output file created by the compiler.
+  ** Output repository
   File? outHome
 
   ** lib name
@@ -26,8 +26,8 @@ abstract class CppCompiler : Task
   ** output file name
   Str? outFileName
 
-  ** output home dir name
-  File? outPod
+  ** output file pod dir
+  File? outPodDir
 
   ** output file dir
   File? outDir
@@ -45,10 +45,16 @@ abstract class CppCompiler : Task
   Bool debug := false
 
   ** List of ext librarie to link in
-  Str[]? extLibs
+  Str[]? libName
+
+  ** List of macro define
+  Str[]? define
 
   ** List of include
-  File[]? extIncludes
+  File[]? includeDir
+
+  ** List of lib dir
+  File[]? libDir
 
   ** List of source files or directories to compile
   File[]? src
@@ -60,13 +66,14 @@ abstract class CppCompiler : Task
   ** configured via config prop
   File? ccHome
 
-  **
-  ** why need this? /C:/Program Files/Microsoft SDKs/Windows/v6.0A/Lib/
-  **
-  File? winSdk
-
   ** meta data
   [Str:Str]? meta
+
+  ** compiler
+  Str? compiler
+
+  ** command maker
+  private CommandMaker? commandMaker
 
 
   ** ctor
@@ -92,7 +99,7 @@ abstract class CppCompiler : Task
       if (outType == TargetType.lib)
         makeLib
       else
-        link
+        link(outType == TargetType.dll)
       install
     }
     catch (Err err)
@@ -106,11 +113,11 @@ abstract class CppCompiler : Task
   {
     outFileName = debug? "${name}-d.$outType" : "${name}.$outType"
 
-    outPod = outHome + ("$name-$version/").toUri
-    outPod.create
+    outPodDir = outHome + ("$name-$version/").toUri
+    outPodDir.create
 
     Uri dir := (outType == TargetType.lib) ? `lib/` : `bin/`
-    outDir = (outPod + dir).create
+    outDir = (outPodDir + dir).create
 
     meta =
     [
@@ -128,13 +135,25 @@ abstract class CppCompiler : Task
   }
 
   ** compile the source code
-  protected abstract Void compile()
+  protected virtual Void compile()
+  {
+    cmd := commandMaker.getCommond(compiler + ".comp")
+    Exec(script, cmd.split).run
+  }
 
   ** link target to exe or dll
-  protected abstract Void link()
+  protected virtual Void link(Bool isDll)
+  {
+    cmd := commandMaker.getCommond(compiler + (isDll ? ".dll" : ".exe"))
+    Exec(script, cmd.split).run
+  }
 
   ** make a lib file
-  protected abstract Void makeLib()
+  protected virtual Void makeLib()
+  {
+    cmd := commandMaker.getCommond(compiler + ".lib")
+    Exec(script, cmd.split).run
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile
@@ -163,17 +182,7 @@ abstract class CppCompiler : Task
   protected File[] allIncludes()
   {
       File[] incs := [,]
-
-      //compiler include
-      compilerInc := `${ccHome}include/`.toFile
-      incs.add(compilerInc)
-
-      //platform include
-      platformInc := `${winSdk}Include/`.toFile
-      incs.add(platformInc)
-
-      //user include
-      extIncludes.each
+      includeDir.each
       {
         incs.add(it)
       }
@@ -185,7 +194,6 @@ abstract class CppCompiler : Task
         if (!dep.exists) throw fatal("don't find the depend $it")
         incs.add(dep)
       }
-
       return incs
   }
 
@@ -196,7 +204,7 @@ abstract class CppCompiler : Task
   protected File[] objFiles()
   {
       File[] objs := [,]
-      objDir := outPod + `obj/`
+      objDir := outPodDir + `obj/`
       objDir.listFiles.each
       {
         if (it.ext == "obj")
@@ -229,46 +237,16 @@ abstract class CppCompiler : Task
       }
 
       //user libs
-      extLibs.each
+      libName.each
       {
         libNames.add(it)
       }
       return libNames
   }
-/*
-//TODO: cache .obj
-//usning `dependsLibs`
-
-  private File[] dependsObjs()
-  {
-      File[] objs := [,]
-      depends.each
-      {
-        dep := outHome + `${it.name}-${it.version}/obj/`
-        dep.listFiles.each
-        {
-          if (it.ext == "obj")
-          {
-            objs.add(it)
-          }
-        }
-      }
-      return objs
-  }
-*/
 
   protected File[] allLibPaths()
   {
       File[] paths := [,]
-
-      //compiler path
-      compilerPath := `${ccHome}lib/`.toFile
-      paths.add(compilerPath)
-
-      //platform path
-      platformPath := `${winSdk}Lib/`.toFile
-      paths.add(platformPath)
-
       //depend libs path
       depends.each
       {
@@ -295,7 +273,7 @@ abstract class CppCompiler : Task
     if (outType != TargetType.exe)
     {
       //copy include files
-      includeDir := (outPod + `include/$name/`).create
+      includeDir := (outPodDir + `include/$name/`).create
       copyInto(src, includeDir, true,
         [
           "overwrite":true,
@@ -307,7 +285,7 @@ abstract class CppCompiler : Task
         ])
     }
 
-    (outPod + `meta.props`).out.writeProps(meta)
+    (outPodDir + `meta.props`).out.writeProps(meta)
 
     log.info("outFile: " + output.osPath)
   }

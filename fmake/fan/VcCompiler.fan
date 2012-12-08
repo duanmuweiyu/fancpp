@@ -23,8 +23,6 @@ class VcCompiler : CppCompiler
   {
     ccHome = script.configDir("vcHome") ?:
       throw fatal("Must config build prop 'vcHome'")
-    winSdk = script.configDir("winSdk") ?:
-      throw fatal("Must config build prop 'winSdk'")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,11 +47,11 @@ class VcCompiler : CppCompiler
       if (debug) cmd.add("/Ob2")     //inline
 
       //there is ms vc
-      cmd.add("/D WIN32")
-      cmd.add("/D _WINDOWS")
+      cmd.add("/DWIN32")
+      cmd.add("/D_WINDOWS")
 
       //debug define
-      cmd.add(debug ? "/D _DEBUG": "/D NDEBUG")
+      cmd.add(debug ? "/D_DEBUG": "/DNDEBUG")
 
       //compile mode
       cmd.add(compileMode)
@@ -65,7 +63,7 @@ class VcCompiler : CppCompiler
       }
 
       //output
-      objDir := (outPod + `obj/`).create
+      objDir := (outPodDir + `obj/`).create
       objOut := objDir.osPath + "\\"
       cmd.add("/Fo$objOut")
 
@@ -102,7 +100,7 @@ class VcCompiler : CppCompiler
   **
   ** link objs and output .exe or .dll
   **
-  override Void link()
+  override Void link(Bool isDll)
   {
       // build command
       linkExe := ccHome + `bin/link.exe`

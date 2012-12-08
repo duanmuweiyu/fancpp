@@ -65,6 +65,15 @@ class FanToCpp : AbstractMain
     impOut.out.close
 
     headOut.unindent.pl("}") //end namespace
+
+    pod.types.each |type|
+    {
+      if (!type.isSynthetic)
+      {
+        headOut.pl("typedef ${ns}::$type.name ${ns.upper}${type.name};")
+      }
+    }
+
     headOut.w("#endif").nl
     headOut.out.close
     return 0

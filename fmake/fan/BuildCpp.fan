@@ -122,40 +122,30 @@ abstract class BuildCpp : BuildScript
     log.info("compile [${scriptDir.name}]")
     log.indent
 
-    if (compiler == "msvc")
+    // compile source
+    cc := VcCompiler(this)
     {
-      // compile source
-      cc := VcCompiler(this)
+      it.outHome    = this.outDir.toFile
+      it.outType = this.outType
+      it.debug      = this.debug
+
+      it.name       = this.name
+      it.summary    = this.summary
+      it.depends    = this.depends.map |s->Depend| { Depend.fromStr(s) }
+      it.version    = this.version
+
+      it.src        = this.resolveDirs(srcDirs)
+      it.libName    = this.extLibs
+      it.includeDir = this.resolveDirs(extIncludeDirs)
+      it.compiler   = this.compiler
+      it.ccHome = script.configDir(this.compiler+"Home") ?: throw Err("Must config build prop '${this.compiler}Home'")
+
+      if(resDirs != null)
       {
-        it.outHome    = this.outDir.toFile
-        it.outType = this.outType
-        it.debug      = this.debug
-
-        it.name       = this.name
-        it.summary    = this.summary
-        it.depends    = this.depends.map |s->Depend| { Depend.fromStr(s) }
-        it.version    = this.version
-
-        it.src        = this.resolveDirs(srcDirs)
-        it.extLibs    = this.extLibs
-        it.extIncludes   = this.resolveDirs(extIncludeDirs)
-
-        if(resDirs != null)
-        {
-          it.res = this.resolveDirs(resDirs)
-        }
+        it.res = this.resolveDirs(resDirs)
       }
-      cc.run
     }
-    else if(compiler == "gcc")
-    {
-      //TODO
-      log.info("TODO: GCC")
-    }
-    else
-    {
-      log.info("unsupperted compiler")
-    }
+    cc.run
 
     log.unindent
   }
