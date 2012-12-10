@@ -94,15 +94,16 @@ class CppCompiler : Task
     try
     {
       init
-
+      objDir := (outPodDir + `obj/`).create
       srcCodes.each
       {
         echo(it.osPath)
         commandMaker.srcList = it.osPath.replace(" ", "::")
-        commandMaker.objFile = it.osPath.replace(" ", "::")
+        commandMaker.outObjFile = (objDir+(it.basename).toUri).osPath.replace(" ", "::")
+        commandMaker.objList.add(commandMaker.outObjFile)
         compile
       }
-      commandMaker.objList = srcCodes.map { it.osPath }
+
       if (outType == TargetType.lib)
         makeLib
       else
@@ -140,7 +141,8 @@ class CppCompiler : Task
       it.includeDir = allIncludes.map { it.osPath.replace(" ", "::") }
       it.libDir = allLibPaths.map { it.osPath.replace(" ", "::") }
       it.outFile = (outDir +outFileName.toUri).osPath.replace(" ", "::")
-      it.objList = objFiles.map { it.osPath.replace(" ", "::") }
+      it.outLibFile = (outDir +("lib"+outFileName).toUri).osPath.replace(" ", "::")
+      //it.objList = objFiles.map { it.osPath.replace(" ", "::") }
       it.config = this.typeof.pod.props(`config.props`, 1min).dup
     }
   }

@@ -124,9 +124,8 @@ abstract class BuildCpp : BuildScript
       extIncludeDirs.addAll(this.resolveDirs(extIncludeDir.split(';').map{it.toUri}))
     }
 
-    compiler := config("compiler", "msvc")
+    compiler := config("compiler", "gcc")
     ccHomeConfig := config(compiler+".home")
-    echo("*******************$ccHomeConfig, $compiler")
     ccHome := ccHomeConfig == null ? "" : ccHomeConfig.toUri.toFile.osPath + File.sep
 
     // compile source

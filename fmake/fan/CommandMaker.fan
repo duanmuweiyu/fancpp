@@ -32,7 +32,10 @@ class CommandMaker
   Str outFile := ""
 
   ** object file
-  Str objFile := ""
+  Str outObjFile := ""
+
+  ** out lib file path
+  Str outLibFile := ""
 
   ** List of obj file
   Str[] objList := [,]
