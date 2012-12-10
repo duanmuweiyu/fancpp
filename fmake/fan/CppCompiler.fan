@@ -67,14 +67,13 @@ class CppCompiler : Task
   Str? ccHome
 
   ** meta data
-  [Str:Str]? meta
+  private [Str:Str]? meta
 
   ** compiler
   Str? compiler
 
   ** command maker
   private CommandMaker? commandMaker
-
 
   ** ctor
   new make(BuildScript script)
@@ -99,11 +98,11 @@ class CppCompiler : Task
       srcCodes.each
       {
         echo(it.osPath)
-        commandMaker.srcList = it.osPath
-        commandMaker.objFile = it.osPath +".obj"
+        commandMaker.srcList = it.osPath.replace(" ", "::")
+        commandMaker.objFile = it.osPath.replace(" ", "::")
         compile
       }
-      commandMaker.objList = srcCodes.map { it.osPath +".obj" }
+      commandMaker.objList = srcCodes.map { it.osPath }
       if (outType == TargetType.lib)
         makeLib
       else
@@ -119,19 +118,7 @@ class CppCompiler : Task
   ** init. since dump test
   protected virtual Void init()
   {
-    if (outType == TargetType.lib)
-    {
-      outFileName = "lib${name}.a"//$outType"
-    }
-    else if (outType == TargetType.dll)
-    {
-      outFileName = "lib${name}.so"//$outType"
-    }
-    else
-    {
-      outFileName = debug? "${name}-d.$outType" : "${name}.$outType"
-    }
-
+    outFileName = name
     outPodDir = outHome + ("$name-$version/").toUri
     outPodDir.create
 
@@ -150,42 +137,39 @@ class CppCompiler : Task
     {
       it.libName = allLibs
       it.define = [,]
-      it.includeDir = allIncludes.map { it.osPath }
-      it.libDir = allLibPaths.map { it.osPath }
-      it.outFile = (outDir +outFileName.toUri).osPath
-      it.objList = objFiles.map { it.osPath }
+      it.includeDir = allIncludes.map { it.osPath.replace(" ", "::") }
+      it.libDir = allLibPaths.map { it.osPath.replace(" ", "::") }
+      it.outFile = (outDir +outFileName.toUri).osPath.replace(" ", "::")
+      it.objList = objFiles.map { it.osPath.replace(" ", "::") }
       it.config = this.typeof.pod.props(`config.props`, 1min).dup
     }
-  }
-
-  ** output file path
-  protected File output()
-  {
-    outDir + outFileName.toUri
   }
 
   ** compile the source code
   protected virtual Void compile()
   {
-    cmd := commandMaker.getCommond(compiler + ".comp")
+    cmd := ccHome.replace(" ", "::") + commandMaker.getCommond(compiler + ".comp")
     //echo(cmd)
-    Exec(script, cmd.split).run
+    cmds := cmd.split.map { it.replace("::", " ") }
+    Exec(script, cmds).run
   }
 
   ** link target to exe or dll
   protected virtual Void link(Bool isDll)
   {
-    cmd := commandMaker.getCommond(compiler + (isDll ? ".dll" : ".exe"))
+    cmd := ccHome.replace(" ", "::") + commandMaker.getCommond(compiler + (isDll ? ".dll" : ".exe"))
     //echo(cmd)
-    Exec(script, cmd.split).run
+    cmds := cmd.split.map { it.replace("::", " ") }
+    Exec(script, cmds).run
   }
 
   ** make a lib file
   protected virtual Void makeLib()
   {
-    cmd := commandMaker.getCommond(compiler + ".lib")
+    cmd := ccHome.replace(" ", "::") + commandMaker.getCommond(compiler + ".lib")
     //echo(cmd)
-    Exec(script, cmd.split).run
+    cmds := cmd.split.map { it.replace("::", " ") }
+    Exec(script, cmds).run
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -240,7 +224,7 @@ class CppCompiler : Task
       objDir := outPodDir + `obj/`
       objDir.listFiles.each
       {
-        if (it.ext == "obj")
+        if (it.ext == "obj" || it.ext == "o")
         {
           objs.add(it)
         }
@@ -285,14 +269,13 @@ class CppCompiler : Task
 
   protected File[] allLibPaths()
   {
-      File[] paths := [,]
       //depend libs path
       depends.each
       {
         dep := outHome + `${it.name}-${it.version}/lib/`
-        paths.add(dep)
+        libDir.add(dep)
       }
-      return paths
+      return libDir
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -326,7 +309,7 @@ class CppCompiler : Task
 
     (outPodDir + `meta.props`).out.writeProps(meta)
 
-    log.info("outFile: " + output.osPath)
+    log.info("outFile: " + (outDir + outFileName.toUri).osPath)
   }
 
   private Void copyInto(File[] src, File dir, Bool flatten, [Str:Obj]? options := null)

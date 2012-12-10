@@ -41,11 +41,6 @@ abstract class BuildCpp : BuildScript
   Version version := Version(config("buildVersion", "0"))
 
   **
-  ** msvc or gcc
-  **
-  Str compiler := "gcc"
-
-  **
   ** depends lib
   **
   Str[] depends := [,]
@@ -59,12 +54,20 @@ abstract class BuildCpp : BuildScript
   **
   ** List of ext libraries to link to.
   **
-  Str[] extLibs := [,]
+  Str[] libs := [,]
+
+  **
+  ** preproccess macro define
+  **
+  Str[] define := [,]
 
   **
   ** List of ext include the head file
   **
-  Uri[] extIncludeDirs := [,]
+  Uri[] includeDirs := [,]
+
+  ** List of lib dir
+  Uri[] libDirs := [,]
 
   **
   ** res will be copy to output directly
@@ -89,25 +92,6 @@ abstract class BuildCpp : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Dump Env
-//////////////////////////////////////////////////////////////////////////
-
-  override Void dumpEnv()
-  {
-    super.dumpEnv
-
-    oldLevel := log.level
-    log.level = LogLevel.silent
-
-    try
-      log.out.printLine("  cppcHome:    ${VcCompiler(this).ccHome}")
-    catch (Err e)
-      log.out.printLine("  cppcHome:    $e")
-    finally
-      log.level = oldLevel
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
@@ -122,11 +106,34 @@ abstract class BuildCpp : BuildScript
     log.info("compile [${scriptDir.name}]")
     log.indent
 
+    extLibs := libs
+    extLib := this.config("libs")
+    if (extLib != null) {
+      extLibs.addAll(extLib.split)
+    }
+
+    extLibDirs := this.resolveDirs(libDirs)
+    extLibDir := this.config("libDirs")
+    if (extLibDir != null) {
+      extLibDirs.addAll(this.resolveDirs(extLibDir.split(';').map{it.toUri}))
+    }
+
+    extIncludeDirs := this.resolveDirs(includeDirs)
+    extIncludeDir := this.config("includeDirs")
+    if (extIncludeDir != null) {
+      extIncludeDirs.addAll(this.resolveDirs(extIncludeDir.split(';').map{it.toUri}))
+    }
+
+    compiler := config("compiler", "msvc")
+    ccHomeConfig := config(compiler+".home")
+    echo("*******************$ccHomeConfig, $compiler")
+    ccHome := ccHomeConfig == null ? "" : ccHomeConfig.toUri.toFile.osPath + File.sep
+
     // compile source
     cc := CppCompiler(this)
     {
       it.outHome    = this.outDir.toFile
-      it.outType = this.outType
+      it.outType    = this.outType
       it.debug      = this.debug
 
       it.name       = this.name
@@ -135,11 +142,12 @@ abstract class BuildCpp : BuildScript
       it.version    = this.version
       it.src        = this.resolveDirs(srcDirs)
 
-      it.libName    = this.extLibs
-      it.includeDir = this.resolveDirs(extIncludeDirs)
-      it.compiler   = this.compiler
-      it.ccHome = ""//script.configDir(this.compiler+"Home") ?: throw Err("Must config build prop '${this.compiler}Home'")
-
+      it.libName    = extLibs
+      it.libDir     = extLibDirs
+      it.includeDir = extIncludeDirs
+      it.compiler   = compiler
+      it.ccHome = ccHome
+      it.define = this.define
       if(resDirs != null)
       {
         it.res = this.resolveDirs(resDirs)
