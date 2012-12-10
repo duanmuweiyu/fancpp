@@ -124,7 +124,7 @@ class CppCompiler : Task
     outPodDir = outHome + ("$name-$version/").toUri
     outPodDir.create
 
-    Uri dir := (outType == TargetType.lib) ? `lib/` : `bin/`
+    Uri dir := (outType == TargetType.exe) ? `bin/` : `lib/`
     outDir = (outPodDir + dir).create
 
     meta =
@@ -256,11 +256,16 @@ class CppCompiler : Task
         count := 0
         dep.listFiles.each
         {
-          if (it.ext == "lib" || it.ext == "a")
+          if (it.ext == "lib" || it.ext == "a" || it.ext == "so")
           {
             if (it.name.startsWith("lib") && it.name.endsWith(".a"))
             {
               i := it.name.indexr(".a")
+              libNames.add(it.name[3..<i])
+            }
+            else if (it.name.startsWith("lib") && it.name.endsWith(".so"))
+            {
+              i := it.name.indexr(".so")
               libNames.add(it.name[3..<i])
             }
             else

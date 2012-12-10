@@ -15,8 +15,8 @@ gcc.includeDir=-I{includeDir}
 gcc.libList=-l{libName}
 gcc.objList={objList}.o
 
-gcc.comp=g++ -O3 -Wall -c {gcc.define} {gcc.includeDir} -o{outObjFile}.o {srcList}
+gcc.comp=g++ -fPIC -O3 -Wall -c {gcc.define} {gcc.includeDir} -o{outObjFile}.o {srcList}
 gcc.lib=ar cqs {outLibFile}.a {gcc.objList}
-gcc.exe=g++ -o{outFile}.exe {gcc.objList} -static {gcc.libDir} {gcc.libList}
-gcc.dll=g++ -shared -o{outLibFile}.so {gcc.objList} -static {gcc.libDir} {gcc.libList}
+gcc.exe=g++ -o{outFile}.exe {gcc.objList} {gcc.libDir} {gcc.libList}
+gcc.dll=g++ -shared -o{outLibFile}.so {gcc.objList} {gcc.libDir} {gcc.libList}
 
