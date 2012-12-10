@@ -52,6 +52,11 @@ abstract class BuildCpp : BuildScript
   Uri[] srcDirs := [`cpp/`]
 
   **
+  ** exclude src file name
+  **
+  Regex? excludeSrc := null
+
+  **
   ** List of ext libraries to link to.
   **
   Str[] libs := [,]
@@ -140,6 +145,7 @@ abstract class BuildCpp : BuildScript
       it.depends    = this.depends.map |s->Depend| { Depend.fromStr(s) }
       it.version    = this.version
       it.src        = this.resolveDirs(srcDirs)
+      it.excludeSrc = this.excludeSrc
 
       it.libName    = extLibs
       it.libDir     = extLibDirs

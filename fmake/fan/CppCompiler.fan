@@ -58,6 +58,7 @@ class CppCompiler : Task
 
   ** List of source files or directories to compile
   File[]? src
+  Regex? excludeSrc := null
 
   ** List of resource
   File[]? res := null
@@ -188,7 +189,17 @@ class CppCompiler : Task
           f.listFiles.each {
             ext := it.ext
             if (ext == "cpp" || ext == "c" || ext == "cc" || ext == "cxx") {
-              srcs.add(it)
+              if (excludeSrc != null)
+              {
+                if (!excludeSrc.matches(it.name))
+                {
+                  srcs.add(it)
+                }
+              }
+              else
+              {
+                srcs.add(it)
+              }
             }
           }
         }else{
