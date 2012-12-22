@@ -138,7 +138,7 @@ class CppCompiler : Task
     commandMaker = CommandMaker
     {
       it.libName = allLibs
-      it.define = [,]
+      it.define = this.define
       it.includeDir = allIncludes.map { it.osPath.replace(" ", "::") }
       it.libDir = allLibPaths.map { it.osPath.replace(" ", "::") }
       it.outFile = (outDir +outFileName.toUri).osPath.replace(" ", "::")
@@ -215,6 +215,13 @@ class CppCompiler : Task
       includeDir.each
       {
         incs.add(it)
+      }
+
+      src.each |File f|
+      {
+        if (f.isDir){
+          incs.add(f)
+        }
       }
 
       //depends include
