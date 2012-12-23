@@ -22,6 +22,7 @@ typedef enum cf_Error_ {
   cf_Error_null,
   cf_Error_alloc,
   cf_Error_unknow,
+  cf_Error_notfound,
   cf_Error_parse,
   cf_Error_unsupported
 } cf_Error;

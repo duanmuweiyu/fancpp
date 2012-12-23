@@ -11,14 +11,13 @@
 #ifndef _CF_CFAN_H_
 #define _CF_CFAN_H_
 
-#include <stddef.h>
-
 #include "macro.h"
 #include "miss.h"
 #include "Error.h"
 #include "Memory.h"
 #include "Log.h"
 #include "Array.h"
+#include "HashMap.h"
 
 
 #endif

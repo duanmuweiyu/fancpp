@@ -34,6 +34,8 @@ int cf_ArrayTest_test(void)
   }
 
   cf_dumpMem();
+  cf_Array_destroy(&array);
+  cf_dumpMem();
 
   CF_EXIT_FUNC
   return 0;

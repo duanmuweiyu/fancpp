@@ -59,6 +59,7 @@ typedef union cf_Value_ {
   double doubleV;
 } cf_Value;
 
+#define cf_toValue(p) (*((cf_Value*)(&(p))))
 
 /*************************************************************************
  * misc

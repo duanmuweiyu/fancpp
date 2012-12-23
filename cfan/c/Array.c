@@ -15,6 +15,7 @@ cf_Error cf_Array_reserver_(cf_Array *self) {
   size_t newCapacity = self->capacity * 2 + 4;
 
   CF_ENTRY_FUNC
+  cf_assert(self);
 
   tmp = cf_realloc(self->data, newCapacity * self->elemSize);
   if (!tmp) {

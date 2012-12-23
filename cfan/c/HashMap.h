@@ -24,9 +24,10 @@ CF_BEGIN
  *
  */
 typedef struct cf_HashMapElem_ {
+  bool used; //flag for null
   cf_Value key;
   cf_Value value;
-  HashMapElem *next;
+  struct cf_HashMapElem_ *next;
 } cf_HashMapElem;
 
 /**
@@ -44,20 +45,21 @@ typedef struct cf_HashMap_ {
  * constructor
  *
  */
-cf_Error cf_HashMap_make(cf_HashMap *self, size_t size, size_t (*hashFunc)(cf_Value key), int (*compFunc)(cf_Value v1, cf_Value v2));
+cf_Error cf_HashMap_make(cf_HashMap *self, size_t size
+  , size_t (*hashFunc)(cf_Value key)
+  , int (*compFunc)(cf_Value v1, cf_Value v2));
 
 /**
  * lookup
  *
  */
-void cf_HashMap_get(cf_HashMap *self, cf_Value key, cf_Value *value);
+cf_Error cf_HashMap_get(cf_HashMap *self, cf_Value key, cf_Value *oldKey, cf_Value *oldValue);
 
 /**
  * put
  *
  */
-cf_Error cf_HashMap_set(cf_HashMap *self, cf_Value key, cf_Value value);
-
+cf_Error cf_HashMap_set(cf_HashMap *self, cf_Value key, cf_Value value, cf_Value *oldKey, cf_Value *oldValue);
 
 /**
  * destroy content
@@ -65,6 +67,17 @@ cf_Error cf_HashMap_set(cf_HashMap *self, cf_Value key, cf_Value value);
  */
 void cf_HashMap_destroy(cf_HashMap *self);
 
+/*************************************************************************
+ * dictionary is a map that key is char string
+ */
+
+size_t cf_HashMap_strHash(cf_Value key);
+
+int cf_HashMap_strComp(cf_Value v1, cf_Value v2);
+
+inline cf_Error cf_HashMap_makeDict(cf_HashMap *self, size_t size) {
+  return cf_HashMap_make(self, size, cf_HashMap_strHash, cf_HashMap_strComp);
+}
 
 CF_END
 

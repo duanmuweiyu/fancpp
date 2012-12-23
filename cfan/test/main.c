@@ -13,6 +13,7 @@
 
 int cf_LogTest_test(void);
 int cf_ArrayTest_test(void);
+int cf_HashMapTest_test(void);
 
 int main(void)
 {
