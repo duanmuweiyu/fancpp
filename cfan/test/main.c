@@ -14,10 +14,11 @@
 int cf_LogTest_test(void);
 int cf_ArrayTest_test(void);
 int cf_HashMapTest_test(void);
+int cf_StrBufTest_test(void);
 
 int main(void)
 {
-  cf_ArrayTest_test();
+  cf_StrBufTest_test();
   return 0;
 }
 

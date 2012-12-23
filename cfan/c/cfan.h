@@ -18,6 +18,6 @@
 #include "Log.h"
 #include "Array.h"
 #include "HashMap.h"
-
+#include "StrBuf.h"
 
 #endif
