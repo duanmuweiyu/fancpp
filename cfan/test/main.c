@@ -12,10 +12,11 @@
 #include "cfan.h"
 
 int cf_LogTest_test(void);
+int cf_ArrayTest_test(void);
 
 int main(void)
 {
-  cf_LogTest_test();
+  cf_ArrayTest_test();
   return 0;
 }
 

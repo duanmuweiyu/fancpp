@@ -13,7 +13,7 @@
 
 #include "Log.h"
 
-typedef enum _cf_Error {
+typedef enum cf_Error_ {
   cf_Error_ok,
   cf_Error_error,
   cf_Error_arg,
@@ -25,6 +25,13 @@ typedef enum _cf_Error {
   cf_Error_parse,
   cf_Error_unsupported
 } cf_Error;
+
+#define cf_assert(exp) do {\
+    if (!(exp)) {\
+      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp)\
+      exit(2);\
+    }\
+  } while(0);
 
 #define cf_returnErrorIf(exp, val) do {\
     if (!(exp)) {\

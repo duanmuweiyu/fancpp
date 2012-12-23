@@ -19,7 +19,7 @@ CF_BEGIN
  * logging level
  *
  */
-typedef enum _cf_LogLevel {
+typedef enum cf_LogLevel_ {
   cf_LogLevel_debug,
   cf_LogLevel_info,
   cf_LogLevel_warn,
@@ -31,7 +31,7 @@ typedef enum _cf_LogLevel {
  * logging statements
  *
  */
-typedef struct _cf_LogRec {
+typedef struct cf_LogRec_ {
   const char *tag;
   const char *file;
   const char *func;

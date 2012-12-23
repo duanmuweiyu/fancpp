@@ -14,24 +14,11 @@
 #include <stddef.h>
 
 #include "macro.h"
-#include "type.h"
 #include "miss.h"
-#include "math.h"
-#include "error.h"
-#include "memory.h"
+#include "Error.h"
+#include "Memory.h"
 #include "Log.h"
 #include "Array.h"
-
-typedef union _cf_Value {
-  void *pointer;
-  char charV;
-  short shortV;
-  int intV;
-  long longV;
-  long long longlongV;
-  float floatV;
-  double doubleV;
-} cf_Value;
 
 
 #endif

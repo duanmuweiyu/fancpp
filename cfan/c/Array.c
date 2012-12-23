@@ -12,11 +12,11 @@
 
 cf_Error cf_Array_reserver_(cf_Array *self) {
   void *tmp;
-  size_t newCapacity = self->capacity * 2;
+  size_t newCapacity = self->capacity * 2 + 4;
 
   CF_ENTRY_FUNC
 
-  tmp = cf_realloc(self->data, newCapacity);
+  tmp = cf_realloc(self->data, newCapacity * self->elemSize);
   if (!tmp) {
     CF_EXIT_FUNC
     return cf_Error_alloc;

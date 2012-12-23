@@ -13,7 +13,7 @@
 
 int cf_LogTest_test(void)
 {
-  int tmp = 0;
+  //int tmp = 0;
   CF_ENTRY_FUNC
 
   cf_Log_cfDebug("hello %f", 2.1);

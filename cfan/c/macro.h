@@ -31,29 +31,43 @@
  * Export API
  */
 
-#undef  API
+#undef  CF_API
 #ifdef  WIN32
-  #ifdef CFAN_EXPORT
-    #define API __declspec(dllexport)
+  #ifdef CF_EXPORT
+    #define CF_API __declspec(dllexport)
   #else
-    #define API __declspec(dllimport)
+    #define CF_API __declspec(dllimport)
   #endif
 #else
-  #define  API
+  #define  CF_API
 #endif
 
 /*************************************************************************
  * Endian
  */
 
-#ifndef ENDIAN
+#ifndef CF_ENDIAN
   const int __one = 1;
 #else
   extern const int __one;
 #endif
 
-#define BIG_ENDIAN    (*(char *)(&__one)==0)
-#define LITTLE_ENDIAN (*(char *)(&__one)==1)
+#define CF_BIG_ENDIAN    (*(char *)(&__one)==0)
+#define CF_LITTLE_ENDIAN (*(char *)(&__one)==1)
+
+/*************************************************************************
+ * Math
+ */
+
+#define CF_PI       3.14159265358979323846
+
+#define CF_MAX(a, b)  (((a) > (b)) ? (a) : (b))
+
+#define CF_MIN(a, b)  (((a) < (b)) ? (a) : (b))
+
+#define CF_ABS(a)     (((a) < 0) ? -(a) : (a))
+
+#define CF_CLAMP(a, min, max) (MIN(MAX((a), (min)), (max)))
 
 
 /*************************************************************************
