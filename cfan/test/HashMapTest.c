@@ -14,23 +14,23 @@
 
 int cf_HashMapTest_test(void)
 {
-  cf_HashMap map;
-  cf_Value key;
-  cf_Value value;
-  cf_Value key2;
-  cf_Value value2;
+  cf_StrStrHashMap map;
+  char *key;
+  char *value;
+  char *key2;
+  char *value2;
   char *str = "123";
   CF_ENTRY_FUNC
 
-  cf_HashMap_makeDict(&map, 2);
+  cf_StrStrHashMap_make(&map, 2);
 
-  key.pointer = (void*)"123";
-  value.pointer = (void*)"1234";
+  key = "123";
+  value = "1234";
 
-  cf_HashMap_set(&map, cf_toValue(str), value, &key2, &value2);
+  cf_StrStrHashMap_set(&map, str, value, &key2, &value2);
 
-  cf_HashMap_get(&map, key, &key2, &value2 );
-  printf("%s:%s\n", key2.pointer, value2.pointer);
+  cf_StrStrHashMap_get(&map, key, &key2, &value2 );
+  printf("%s:%s\n", key2, value2);
 
   CF_EXIT_FUNC
   return 0;

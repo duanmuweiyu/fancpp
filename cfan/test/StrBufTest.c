@@ -14,8 +14,8 @@
 int cf_StrBufTest_test(void)
 {
   cf_StrBuf strBuf;
-  char *str1 = "123";
-  char *str2 = "abc";
+  const char *str1 = "123";
+  const char *str2 = "abc";
   CF_ENTRY_FUNC
 
   cf_StrBuf_make(&strBuf);

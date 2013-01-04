@@ -18,7 +18,7 @@ int cf_StrBufTest_test(void);
 
 int main(void)
 {
-  cf_StrBufTest_test();
+  cf_HashMapTest_test();
   return 0;
 }
 

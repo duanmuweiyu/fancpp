@@ -19,67 +19,171 @@
 
 CF_BEGIN
 
-/**
- * Element
- *
- */
-typedef struct cf_HashMapElem_ {
-  bool used; //flag for null
-  cf_Value key;
-  cf_Value value;
-  struct cf_HashMapElem_ *next;
-} cf_HashMapElem;
-
-/**
- * Map
- *
- */
-typedef struct cf_HashMap_ {
-  size_t    size;
-  cf_HashMapElem *table;
-  size_t (*hashFunc)(cf_Value key);
-  int (*compFunc)(cf_Value v1, cf_Value v2);
-} cf_HashMap;
-
-/**
- * constructor
- *
- */
-cf_Error cf_HashMap_make(cf_HashMap *self, size_t size
-  , size_t (*hashFunc)(cf_Value key)
-  , int (*compFunc)(cf_Value v1, cf_Value v2));
-
-/**
- * lookup
- *
- */
-cf_Error cf_HashMap_get(cf_HashMap *self, cf_Value key, cf_Value *oldKey, cf_Value *oldValue);
-
-/**
- * put
- *
- */
-cf_Error cf_HashMap_set(cf_HashMap *self, cf_Value key, cf_Value value, cf_Value *oldKey, cf_Value *oldValue);
-
-/**
- * destroy content
- *
- */
-void cf_HashMap_dispose(cf_HashMap *self);
+/*
+* macro:
+* hashFunc
+* compFunc
+*/
 
 /*************************************************************************
- * dictionary is a map that key is char string
- */
+* Template define
+*/
 
-size_t cf_HashMap_strHash(cf_Value key);
+#define cf_HashMapTemplate(K, V) \
+\
+/**\
+ * Element\
+ *
+ */\
+typedef struct cf_##K##V##HashMapElem_ {\
+  bool used; /*flag for null*/\
+  K key;\
+  V value;\
+  struct cf_##K##V##HashMapElem_ *next;\
+} cf_##K##V##HashMapElem;\
+\
+/**\
+ * Map\
+ *\
+ */\
+typedef struct cf_##K##V##HashMap_ {\
+  size_t    size;\
+  cf_##K##V##HashMapElem *table;\
+} cf_##K##V##HashMap;\
+\
+/**\
+ * constructor\
+ *\
+ */\
+cf_Error cf_##K##V##HashMap_make(cf_##K##V##HashMap *self, size_t size);\
+\
+/**\
+ * lookup\
+ *\
+ */\
+cf_Error cf_##K##V##HashMap_get(cf_##K##V##HashMap *self, K key, K *oldKey, V *oldValue);\
+\
+/**\
+ * put\
+ *\
+ */\
+cf_Error cf_##K##V##HashMap_set(cf_##K##V##HashMap *self, K key, V value, K *oldKey, V *oldValue);\
+\
+/**\
+ * destroy content\
+ *\
+ */\
+void cf_##K##V##HashMap_dispose(cf_##K##V##HashMap *self);\
 
-int cf_HashMap_strComp(cf_Value v1, cf_Value v2);
 
-inline cf_Error cf_HashMap_makeDict(cf_HashMap *self, size_t size) {
-  return cf_HashMap_make(self, size, cf_HashMap_strHash, cf_HashMap_strComp);
-}
+
+/*************************************************************************
+* Impl
+*/
+
+#define cf_HashMapTemplate_impl(K, V) \
+\
+cf_Error cf_##K##V##HashMap_make(cf_##K##V##HashMap *self, size_t size) {\
+\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+\
+  self->size = size;\
+  self->table = (cf_##K##V##HashMapElem*)cf_calloc(size, sizeof(cf_##K##V##HashMapElem));\
+  if (NULL == self->table) {\
+    CF_EXIT_FUNC return cf_Error_alloc;\
+  }\
+  CF_EXIT_FUNC\
+  return cf_Error_ok;\
+}\
+\
+cf_Error cf_##K##V##HashMap_get(cf_##K##V##HashMap *self, K key, K *oldKey, V *oldValue) {\
+  cf_##K##V##HashMapElem *elem;\
+\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  cf_assert(oldKey);\
+  cf_assert(oldValue);\
+\
+  for (elem = self->table + (hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
+    if (compFunc(key, elem->key) == 0) {\
+      *oldKey = elem->key;\
+      *oldValue = elem->value;\
+      CF_EXIT_FUNC\
+      return cf_Error_ok;\
+    }\
+  }\
+  CF_EXIT_FUNC\
+  return cf_Error_notfound;\
+}\
+\
+\
+cf_Error cf_##K##V##HashMap_set(cf_##K##V##HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
+  cf_##K##V##HashMapElem *elem;\
+  cf_##K##V##HashMapElem *newElem;\
+  size_t hashValue;\
+\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  cf_assert(oldKey);\
+  cf_assert(oldValue);\
+\
+  hashValue = hashFunc(key) % self->size;\
+  for (elem = self->table + hashValue; elem != NULL && elem->used; elem = elem->next) {\
+    /* if found*/\
+    if (compFunc(key, elem->key) == 0) {\
+      *oldKey = elem->key;\
+      *oldValue = elem->value;\
+      elem->key = key;\
+      elem->value = value;\
+      CF_EXIT_FUNC\
+      return cf_Error_ok;\
+    }\
+  }\
+\
+  /*now elem is last*/\
+\
+  /* if not found*/\
+  if (elem->used) {\
+    newElem = (cf_##K##V##HashMapElem *)cf_malloc(sizeof(cf_##K##V##HashMapElem));\
+    if (!newElem) {\
+      CF_EXIT_FUNC return cf_Error_alloc;\
+    }\
+    elem->next = newElem;\
+  } else {\
+    /*will use this*/\
+    newElem = elem;\
+  }\
+\
+  newElem->used = true;\
+  newElem->next = NULL;\
+  newElem->key = key;\
+  newElem->value = value;\
+\
+  CF_EXIT_FUNC\
+  return cf_Error_ok;\
+}\
+\
+void cf_##K##V##HashMap_dispose(cf_##K##V##HashMap *self) {\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  cf_free(self->table);\
+  CF_EXIT_FUNC\
+}\
+
+
+/*************************************************************************
+* Default define
+*/
+
+#define Str char*
+cf_HashMapTemplate(Str, Str)
+#undef Str
+
+#define Int int
+cf_HashMapTemplate(Int, Int)
+#undef Int
 
 CF_END
 
 #endif
-
