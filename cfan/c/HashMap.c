@@ -102,7 +102,7 @@ cf_Error cf_HashMap_set(cf_HashMap *self, cf_Value key, cf_Value value, cf_Value
   return cf_Error_ok;
 }
 
-void cf_HashMap_destroy(cf_HashMap *self) {
+void cf_HashMap_dispose(cf_HashMap *self) {
   CF_ENTRY_FUNC
   cf_assert(self);
   cf_free(self->table);

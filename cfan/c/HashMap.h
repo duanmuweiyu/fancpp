@@ -65,7 +65,7 @@ cf_Error cf_HashMap_set(cf_HashMap *self, cf_Value key, cf_Value value, cf_Value
  * destroy content
  *
  */
-void cf_HashMap_destroy(cf_HashMap *self);
+void cf_HashMap_dispose(cf_HashMap *self);
 
 /*************************************************************************
  * dictionary is a map that key is char string

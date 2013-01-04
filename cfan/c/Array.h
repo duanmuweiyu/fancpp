@@ -101,7 +101,7 @@ inline cf_Error cf_Array_add(cf_Array *self, void *elem) {
  * destroy content
  *
  */
-inline void cf_Array_destroy(cf_Array *self) {
+inline void cf_Array_dispose(cf_Array *self) {
   CF_ENTRY_FUNC
   cf_free(self->data);
   CF_EXIT_FUNC

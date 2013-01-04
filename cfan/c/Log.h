@@ -12,6 +12,7 @@
 #define _CF_LOG_H_
 
 #include "macro.h"
+#include "miss.h"
 
 CF_BEGIN
 

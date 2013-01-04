@@ -24,7 +24,7 @@ int cf_StrBufTest_test(void)
 
   puts(cf_StrBuf_str(&strBuf));
 
-  cf_StrBuf_destroy(&strBuf);
+  cf_StrBuf_dispose(&strBuf);
 
   CF_EXIT_FUNC
   return 0;

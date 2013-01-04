@@ -44,7 +44,7 @@ inline char *cf_StrBuf_str(cf_StrBuf *self) {
   return self->buffer;
 }
 
-inline void cf_StrBuf_destroy(cf_StrBuf *self) {
+inline void cf_StrBuf_dispose(cf_StrBuf *self) {
   cf_assert(self);
   if (self->buffer == self->array) return;
   cf_free(self);
