@@ -16,6 +16,7 @@
 #include "miss.h"
 
 #include <string.h>
+#include <stdio.h>
 
 CF_BEGIN
 
@@ -50,6 +51,15 @@ typedef struct HashMap##_ {\
   size_t    size;\
   HashMap##Elem *table;\
 } HashMap;\
+/**\
+ * Iterator\
+ *\
+ */\
+ typedef struct HashMap##Iterator_ {\
+   HashMap *parent;\
+   size_t position;\
+   HashMap##Elem *elem;\
+ } HashMap##Iterator;\
 \
 /**\
  * constructor\
@@ -74,7 +84,19 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue);\
  *\
  */\
 void HashMap##_dispose(HashMap *self);\
-
+\
+\
+cf_Error HashMap##Iterator_next(HashMap##Iterator *self);\
+\
+cf_Error HashMap##Iterator_get(HashMap##Iterator *self, K *key, V *value);\
+\
+inline void HashMap##_createIterator(HashMap *self, HashMap##Iterator *iter) {\
+  cf_assert(self);\
+  cf_assert(iter);\
+  iter->parent = self;\
+  iter->elem = NULL;\
+  iter->position = 0;\
+}\
 
 
 /*************************************************************************
@@ -102,12 +124,11 @@ cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue) {\
 \
   CF_ENTRY_FUNC\
   cf_assert(self);\
-  cf_assert(oldKey);\
   cf_assert(oldValue);\
 \
   for (elem = self->table + (hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
     if (compFunc(key, elem->key) == 0) {\
-      *oldKey = elem->key;\
+      if (oldKey) *oldKey = elem->key;\
       *oldValue = elem->value;\
       CF_EXIT_FUNC\
       return cf_Error_ok;\
@@ -125,20 +146,22 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
 \
   CF_ENTRY_FUNC\
   cf_assert(self);\
-  cf_assert(oldKey);\
-  cf_assert(oldValue);\
 \
   hashValue = hashFunc(key) % self->size;\
-  for (elem = self->table + hashValue; elem != NULL && elem->used; elem = elem->next) {\
+  \
+  elem = self->table + hashValue;\
+  while ( elem->used ) {\
     /* if found*/\
     if (compFunc(key, elem->key) == 0) {\
-      *oldKey = elem->key;\
-      *oldValue = elem->value;\
+      if (oldKey) *oldKey = elem->key;\
+      if (oldValue) *oldValue = elem->value;\
       elem->key = key;\
       elem->value = value;\
       CF_EXIT_FUNC\
       return cf_Error_ok;\
     }\
+    if (elem->next == NULL) break;\
+    elem = elem->next;\
   }\
 \
   /*now elem is last*/\
@@ -170,7 +193,48 @@ void HashMap##_dispose(HashMap *self) {\
   cf_free(self->table);\
   CF_EXIT_FUNC\
 }\
-
+\
+\
+cf_Error HashMap##Iterator_next(HashMap##Iterator *self) {\
+  CF_ENTRY_FUNC\
+  if (self->elem != NULL) {\
+    if (self->elem->next != NULL) {\
+      self->elem = self->elem->next;\
+      CF_EXIT_FUNC return cf_Error_ok;\
+    }\
+  } else if (self->position > 0) {\
+    CF_EXIT_FUNC return cf_Error_notfound;\
+  } else if (self->position == 0) {\
+    self->elem = self->parent->table;\
+    if (self->elem->used) { CF_EXIT_FUNC return cf_Error_ok; }\
+  }\
+\
+  /*increase position*/\
+  do {\
+    ++(self->position);\
+    if ((self->position) == (self->parent->size)){\
+      self->elem = NULL;\
+      CF_EXIT_FUNC return cf_Error_notfound;\
+    }\
+    self->elem = self->parent->table + self->position;\
+    if (self->elem->used) { CF_EXIT_FUNC return cf_Error_ok; }\
+  } while (true);\
+  CF_EXIT_FUNC return cf_Error_unknow;\
+}\
+\
+\
+\
+cf_Error HashMap##Iterator_get(HashMap##Iterator *self, K *key, V *value) {\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  cf_assert(key);\
+  cf_assert(value);\
+  cf_assert(self->elem);\
+  cf_assert(self->elem->used);\
+  *key = self->elem->key;\
+  *value = self->elem->value;\
+  CF_EXIT_FUNC return cf_Error_ok;\
+}\
 
 /*************************************************************************
 * Default define
