@@ -15,7 +15,7 @@
 *
 */
 
-size_t cf_HashMap_strHash(char *str) {
+size_t cf_HashMap_strHash(const char *str) {
   CF_ENTRY_FUNC
   size_t hashValue;
   for (hashValue = 0; *str != '\0'; str++) {
@@ -27,23 +27,20 @@ size_t cf_HashMap_strHash(char *str) {
 
 #define hashFunc(key) cf_HashMap_strHash(key)
 #define compFunc(v1, v2) strcmp((v1), (v2))
-#define Str char*
 
-cf_HashMapTemplate_impl(Str, Str)
+cf_HashMapTemplate_impl(cf_HashMapSS, const char*, char*)
 
-#undef Str
 #undef hashFunc
 #undef compFunc
 
 /*************************************************************************
 *
 */
-#define Int int
+
 #define hashFunc(key) key
-#define compFunc(v1, v2) (v1)-(v2)
+#define compFunc(v1, v2) ((v1)-(v2))
 
-cf_HashMapTemplate_impl(Int, Int)
+cf_HashMapTemplate_impl(cf_HashMapII, int, int)
 
-#undef Int
 #undef hashFunc
 #undef compFunc
