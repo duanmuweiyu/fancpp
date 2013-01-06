@@ -24,12 +24,21 @@ typedef enum cf_Error_ {
   cf_Error_unknow,
   cf_Error_notfound,
   cf_Error_parse,
-  cf_Error_unsupported
+  cf_Error_unsupported,
+  cf_Error_eof,
+  cf_Error_overflow
 } cf_Error;
 
 #define cf_assert(exp) do {\
     if (!(exp)) {\
       cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp)\
+      exit(2);\
+    }\
+  } while(0);
+
+#define cf_verify(exp) do {\
+    if (!(exp)) {\
+      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "verify fail: %s", #exp)\
       exit(2);\
     }\
   } while(0);

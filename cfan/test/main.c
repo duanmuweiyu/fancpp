@@ -19,7 +19,7 @@ int cf_StrBufTest_test(void);
 
 int main(void)
 {
-  cf_HashMapTest_testIter();
+  cf_StrBufTest_test();
   return 0;
 }
 

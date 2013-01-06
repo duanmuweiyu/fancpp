@@ -47,6 +47,10 @@ inline cf_Error cf_Array_make(cf_Array *self, size_t size, size_t capacity, cons
   return cf_Error_ok;
 }
 
+/**
+ * return array size
+ *
+ */
 inline size_t cf_Array_size(cf_Array *self) {
   cf_assert(self);
   return self->size;

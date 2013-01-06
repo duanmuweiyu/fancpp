@@ -11,8 +11,22 @@
 #include <stdio.h>
 #include "cfan.h"
 
-int cf_StrBufTest_test(void)
-{
+int cf_StrBufTest_testPrintf(void) {
+  cf_StrBuf strBuf;
+  CF_ENTRY_FUNC
+
+  cf_StrBuf_make(&strBuf);
+  cf_StrBuf_printf(&strBuf, 128, "hello %s, %d", "world", 2);
+
+  printf("%s, %d\n", cf_StrBuf_str(&strBuf), cf_StrBuf_size(&strBuf));
+
+  cf_verify(strcmp(cf_StrBuf_str(&strBuf), "hello world, 2") == 0);
+
+  cf_StrBuf_dispose(&strBuf);
+  return 0;
+}
+
+int cf_StrBufTest_testAdd(void) {
   cf_StrBuf strBuf;
   const char *str1 = "123";
   const char *str2 = "abc";
@@ -24,9 +38,16 @@ int cf_StrBufTest_test(void)
 
   puts(cf_StrBuf_str(&strBuf));
 
+  cf_verify(strcmp(cf_StrBuf_str(&strBuf), "123abc") == 0);
+
   cf_StrBuf_dispose(&strBuf);
 
   CF_EXIT_FUNC
   return 0;
+}
+
+int cf_StrBufTest_test(void) {
+  cf_StrBufTest_testPrintf();
+  cf_StrBufTest_testAdd();
 }
 
