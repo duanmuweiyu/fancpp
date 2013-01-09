@@ -9,9 +9,9 @@
  */
 
 #include <stdio.h>
-#include "cfan.h"
+#include "cfan/cfan.h"
 
-int cf_StrBufTest_testPrintf(void) {
+void cf_StrBufTest_testPrintf(void) {
   cf_StrBuf strBuf;
   CF_ENTRY_FUNC
 
@@ -23,10 +23,9 @@ int cf_StrBufTest_testPrintf(void) {
   cf_verify(strcmp(cf_StrBuf_str(&strBuf), "hello world, 2") == 0);
 
   cf_StrBuf_dispose(&strBuf);
-  return 0;
 }
 
-int cf_StrBufTest_testAdd(void) {
+void cf_StrBufTest_testAdd(void) {
   cf_StrBuf strBuf;
   const char *str1 = "123";
   const char *str2 = "abc";
@@ -43,10 +42,9 @@ int cf_StrBufTest_testAdd(void) {
   cf_StrBuf_dispose(&strBuf);
 
   CF_EXIT_FUNC
-  return 0;
 }
 
-int cf_StrBufTest_test(void) {
+void cf_StrBufTest_test(void) {
   cf_StrBufTest_testPrintf();
   cf_StrBufTest_testAdd();
 }

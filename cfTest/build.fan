@@ -14,11 +14,12 @@ class Build : BuildCpp
 {
   new make()
   {
-    name = "cfan"
-    summary = "cfan is a base C library"
-    outType = TargetType.lib
+    name = "cfTest"
+    summary = "cfan test"
+    outType = TargetType.exe
     version = Version("1.0.0")
-    srcDirs = [`c/`]
+    depends = ["cfan 1.0.0"]
+    srcDirs = [`test/`]
     define = ["_DEBUG"]
   }
 }

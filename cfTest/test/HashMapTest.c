@@ -9,10 +9,10 @@
  */
 
 #include <stdio.h>
-#include "cfan.h"
+#include "cfan/cfan.h"
 
 
-int cf_HashMapTest_test(void)
+void cf_HashMapTest_test(void)
 {
   cf_HashMapSS map;
 
@@ -36,10 +36,9 @@ int cf_HashMapTest_test(void)
   printf("%s:%s\n", key, value);
 
   CF_EXIT_FUNC
-  return 0;
 }
 
-int cf_HashMapTest_testIter(void)
+void cf_HashMapTest_testIter(void)
 {
   cf_HashMapSS map;
   cf_HashMapSSIterator iter;
@@ -65,6 +64,5 @@ int cf_HashMapTest_testIter(void)
   }
 
   CF_EXIT_FUNC
-  return 0;
 }
 

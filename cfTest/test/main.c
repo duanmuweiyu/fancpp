@@ -9,17 +9,18 @@
  */
 
 #include <stdio.h>
-#include "cfan.h"
+#include "cfan/cfan.h"
 
-int cf_LogTest_test(void);
-int cf_ArrayTest_test(void);
-int cf_HashMapTest_test(void);
-int cf_HashMapTest_testIter(void);
-int cf_StrBufTest_test(void);
+void cf_LogTest_test(void);
+void cf_ArrayTest_test(void);
+void cf_HashMapTest_test(void);
+void cf_HashMapTest_testIter(void);
+void cf_StrBufTest_test(void);
+void cf_ConfigTest_test(void);
 
 int main(void)
 {
-  cf_StrBufTest_test();
+  cf_ConfigTest_test();
   return 0;
 }
 

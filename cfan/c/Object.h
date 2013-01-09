@@ -11,7 +11,7 @@
 #ifndef _CF_OBJECT_H_
 #define _CF_OBJECT_H_
 
-#include "miss.h"
+#include "Error.h"
 
 CF_BEGIN
 
@@ -25,15 +25,20 @@ typedef struct cf_Object_ {
 } cf_Object;
 
 /**
+ * get vtable
+ */
+#define CF_VTABLE(type, obj) ((type##VTable*)((cf_Object*)(obj))->vtable)
+
+/**
  * interface call
  */
-#define CF_ICALL(obj, func, ...) ((cf_Object*)(obj))->vtable->func(\
-   ((char*)(ojb))+((cf_Object*)(obj))->vtable->offset, ## __VA_ARGS__);
+#define CF_ICALL(type, obj, func, ...) (CF_VTABLE(type, obj)->func(\
+   (type*)(((char*)(obj))+((cf_Object*)(obj))->vtable->offset), ## __VA_ARGS__))
 
 /**
  * virtual call
  */
-#define CF_CALL(obj, func, ...) ((cf_Object*)(obj))->vtable->func(obj, ## __VA_ARGS__);
+#define CF_CALL(type, obj, func, ...) (CF_VTABLE(type, obj)->func((type*)obj, ## __VA_ARGS__))
 
 CF_END
 

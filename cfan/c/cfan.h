@@ -19,5 +19,7 @@
 #include "Array.h"
 #include "HashMap.h"
 #include "StrBuf.h"
+#include "File.h"
+#include "Config.h"
 
 #endif

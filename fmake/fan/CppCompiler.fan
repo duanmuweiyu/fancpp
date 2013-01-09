@@ -148,31 +148,36 @@ class CppCompiler : Task
     }
   }
 
+  private Void exeCmd(Str cmd)
+  {
+    cmds := cmd.split.map { it.replace("::", " ") }
+    try {
+      Exec(script, cmds).run
+    } catch (Err err) {
+      echo((cmds.map |Str s->Str| { s.contains(" ") ? "\"$s\"" : s }).join(" "))
+      throw err
+    }
+  }
+
   ** compile the source code
   protected virtual Void compile()
   {
     cmd := ccHome.replace(" ", "::") + commandMaker.getCommond(compiler + ".comp")
-    //echo(cmd)
-    cmds := cmd.split.map { it.replace("::", " ") }
-    Exec(script, cmds).run
+    exeCmd(cmd)
   }
 
   ** link target to exe or dll
   protected virtual Void link(Bool isDll)
   {
     cmd := ccHome.replace(" ", "::") + commandMaker.getCommond(compiler + (isDll ? ".dll" : ".exe"))
-    //echo(cmd)
-    cmds := cmd.split.map { it.replace("::", " ") }
-    Exec(script, cmds).run
+    exeCmd(cmd)
   }
 
   ** make a lib file
   protected virtual Void makeLib()
   {
     cmd := ccHome.replace(" ", "::") + commandMaker.getCommond(compiler + ".lib")
-    //echo(cmd)
-    cmds := cmd.split.map { it.replace("::", " ") }
-    Exec(script, cmds).run
+    exeCmd(cmd)
   }
 
 //////////////////////////////////////////////////////////////////////////

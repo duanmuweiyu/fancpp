@@ -9,9 +9,9 @@
  */
 
 #include <stdio.h>
-#include "cfan.h"
+#include "cfan/cfan.h"
 
-int cf_ArrayTest_test(void)
+void cf_ArrayTest_test(void)
 {
   cf_Array array;
   int a = 1;
@@ -38,6 +38,5 @@ int cf_ArrayTest_test(void)
   cf_dumpMem();
 
   CF_EXIT_FUNC
-  return 0;
 }
 

@@ -9,9 +9,9 @@
  */
 
 #include <stdio.h>
-#include "cfan.h"
+#include "cfan/cfan.h"
 
-int cf_LogTest_test(void)
+void cf_LogTest_test(void)
 {
   //int tmp = 0;
   CF_ENTRY_FUNC
@@ -21,6 +21,5 @@ int cf_LogTest_test(void)
   printf("Hello Wrold\n");
 
   CF_EXIT_FUNC
-  return 0;
 }
 
