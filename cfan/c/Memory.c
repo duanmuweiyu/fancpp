@@ -10,6 +10,7 @@
 
 #include "Memory.h"
 #include "Error.h"
+#include <stdio.h>
 
 #include <string.h>
 
@@ -22,6 +23,7 @@ void *cf_doMalloc(const char *file, const char *func, const unsigned int line, s
   if (NULL == memManager.last) {
     memManager.first = chunk;
     memManager.last = chunk;
+    chunk->prev = NULL;
   } else {
     memManager.last->next = chunk;
     chunk->prev = memManager.last;
@@ -36,9 +38,9 @@ void *cf_doMalloc(const char *file, const char *func, const unsigned int line, s
   return chunk + 1;
 }
 
-void *cf_calloc(size_t nobj, size_t size) {
+void *cf_doCalloc(const char *file, const char *func, const unsigned int line, size_t nobj, size_t size) {
   void *temp;
-  temp = cf_malloc(nobj * size);
+  temp = cf_doMalloc(file, func, line, nobj * size);
   if (!temp) return NULL;
   memset(temp, 0, nobj * size);
   return temp;
@@ -50,6 +52,15 @@ void *cf_realloc(void *p, size_t size) {
   chunk = (cf_MemChunk *)realloc(chunk, size + sizeof(cf_MemChunk));
   if (!chunk) return NULL;
   chunk->size = size;
+  if (chunk->prev) {
+    chunk->prev->next = chunk;
+  } else {
+    memManager.first = chunk;
+  }
+
+  if (chunk->next == NULL) {
+    memManager.last = chunk;
+  }
   return chunk + 1;
 }
 

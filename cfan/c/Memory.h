@@ -37,7 +37,7 @@ extern cf_MemManager memManager;
 
 void *cf_doMalloc(const char *file, const char *func, const unsigned int line, size_t size);
 
-void *cf_calloc(size_t nobj, size_t size);
+void *cf_doCalloc(const char *file, const char *func, const unsigned int line, size_t nobj, size_t size);
 
 void *cf_realloc(void *p, size_t size);
 
@@ -45,7 +45,8 @@ void cf_free(void *p);
 
 void cf_dumpMem();
 
-#define cf_malloc(size) cf_doMalloc(__FILE__, __func__, __LINE__, size);
+#define cf_malloc(size) cf_doMalloc(__FILE__, __func__, __LINE__, size)
+#define cf_calloc(nobj, size) cf_doCalloc(__FILE__, __func__, __LINE__, nobj, size)
 
 CF_END
 

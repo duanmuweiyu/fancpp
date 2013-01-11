@@ -14,9 +14,9 @@
 void cf_LogTest_test(void);
 void cf_ArrayTest_test(void);
 void cf_HashMapTest_test(void);
-void cf_HashMapTest_testIter(void);
 void cf_StrBufTest_test(void);
 void cf_ConfigTest_test(void);
+void cf_MemoryTest_test(void);
 
 int main(void)
 {

@@ -37,14 +37,16 @@ cf_Error cf_Config_make(cf_Config *self, const char *path) {
   mode = 0;
   while (EOF != c) {
     if (c == '\r' || c == '\n') {
-      // deal new line
-      mode = 0;
-      value[pos] = 0;
-      k = (char*)cf_malloc(strlen(key)+1);
-      strcpy(k, key);
-      v = (char*)cf_malloc(strlen(value)+1);
-      strcpy(v, value);
-      cf_HashMapSS_set(&self->map, k, v, NULL, NULL);
+      if (mode == 1) {
+        // deal new line
+        mode = 0;
+        value[pos] = 0;
+        k = (char*)cf_malloc(strlen(key)+1);
+        strcpy(k, key);
+        v = (char*)cf_malloc(strlen(value)+1);
+        strcpy(v, value);
+        cf_HashMapSS_set(&self->map, k, v, NULL, NULL);
+      }
       pos = 0;
     } else {
       if (mode == 0) {

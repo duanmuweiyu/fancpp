@@ -53,7 +53,7 @@ void cf_Log_doLog(const char *tag, const char *file, const char *func, const uns
  */
 
 #define cf_Log_log(tag, level, msg, ...)\
-  cf_Log_doLog(tag, __FILE__, __func__, __LINE__,  level, msg, ## __VA_ARGS__);
+  cf_Log_doLog(tag, __FILE__, __func__, __LINE__,  level, msg, ## __VA_ARGS__)
 
 #define cf_Log_tag "cf"
 #define cf_Log_cfError(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_err, msg, ## __VA_ARGS__)

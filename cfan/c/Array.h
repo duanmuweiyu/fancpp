@@ -107,6 +107,7 @@ inline cf_Error cf_Array_add(cf_Array *self, void *elem) {
  */
 inline void cf_Array_dispose(cf_Array *self) {
   CF_ENTRY_FUNC
+  cf_assert(self);
   cf_free(self->data);
   CF_EXIT_FUNC
 }

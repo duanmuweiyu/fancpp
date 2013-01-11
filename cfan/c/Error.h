@@ -31,21 +31,21 @@ typedef enum cf_Error_ {
 
 #define cf_assert(exp) do {\
     if (!(exp)) {\
-      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp)\
+      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
       exit(2);\
     }\
   } while(0);
 
 #define cf_verify(exp) do {\
     if (!(exp)) {\
-      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "verify fail: %s", #exp)\
+      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "verify fail: %s", #exp);\
       exit(2);\
     }\
   } while(0);
 
 #define cf_returnErrorIf(exp, val) do {\
     if (!(exp)) {\
-      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp)\
+      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
       CF_EXIT_FUNC\
       return val;\
     }\
@@ -53,7 +53,7 @@ typedef enum cf_Error_ {
 
 #define cf_gotoErrorIf(exp) do {\
     if (!(exp)) {\
-      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp)\
+      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
       goto error;\
     }\
   } while(0);
