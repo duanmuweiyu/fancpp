@@ -22,13 +22,13 @@ cf_Error cf_File_inputStream(cf_File *self, cf_FileInputStream *in) {
   return cf_Error_ok;
 }
 
-cf_Error cf_File_outputStream(cf_File *self, cf_FileOutputStream *in, bool append) {
+cf_Error cf_File_outputStream(cf_File *self, cf_FileOutputStream *out, bool append) {
   const char *mode;
   CF_ENTRY_FUNC
 
   mode = append ? "ab" : "wb";
-  in->file = fopen(self->path, mode);
-  if (!in->file) {
+  out->file = fopen(self->path, mode);
+  if (!out->file) {
     CF_EXIT_FUNC
     return cf_Error_io;
   }

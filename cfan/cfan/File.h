@@ -30,7 +30,7 @@ inline void cf_File_make(cf_File *self, char *path) {
 
 cf_Error cf_File_inputStream(cf_File *self, cf_FileInputStream *in);
 
-cf_Error cf_File_outputStream(cf_File *self, cf_FileInputStream *in, bool append);
+cf_Error cf_File_outputStream(cf_File *self, cf_FileOutputStream *out, bool append);
 
 CF_END
 

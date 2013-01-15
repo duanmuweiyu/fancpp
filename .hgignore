@@ -1,2 +1,4 @@
 glob:fan2c
 glob:fanllvm
+syntax: glob
+*.user

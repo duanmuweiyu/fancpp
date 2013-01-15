@@ -45,7 +45,7 @@ typedef struct cf_LogRec_ {
  * do log
  *
  */
-void cf_Log_doLog(const char *tag, const char *file, const char *func, const unsigned int line
+CF_API void cf_Log_doLog(const char *tag, const char *file, const char *func, const unsigned int line
   , const cf_LogLevel level, const char *msg, ...);
 
 /*************************************************************************

@@ -135,7 +135,7 @@ inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
 inline void cf_StrBuf_clear(cf_StrBuf *self) {
   cf_assert(self);
   self->size = 0;
-};
+}
 
 /*************************************************************************
  * String method

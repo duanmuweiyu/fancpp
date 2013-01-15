@@ -16,8 +16,8 @@
 */
 
 size_t cf_HashMap_strHash(const char *str) {
-  CF_ENTRY_FUNC
   size_t hashValue;
+  CF_ENTRY_FUNC
   for (hashValue = 0; *str != '\0'; str++) {
     hashValue = *(str) + 31 * hashValue;
   }

@@ -18,7 +18,7 @@ class Build : BuildCpp
     summary = "cfan is a base C library"
     outType = TargetType.lib
     version = Version("1.0.0")
-    srcDirs = [`c/`]
+    srcDirs = [`cfan/`]
     define = ["_DEBUG"]
   }
 }

@@ -20,7 +20,7 @@ void cf_MemoryTest_test(void);
 
 int main(void)
 {
-  cf_ConfigTest_test();
+  cf_HashMapTest_test();
   return 0;
 }
 

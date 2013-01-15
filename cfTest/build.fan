@@ -19,7 +19,7 @@ class Build : BuildCpp
     outType = TargetType.exe
     version = Version("1.0.0")
     depends = ["cfan 1.0.0"]
-    srcDirs = [`test/`]
+    srcDirs = [`cfTest/`]
     define = ["_DEBUG"]
   }
 }

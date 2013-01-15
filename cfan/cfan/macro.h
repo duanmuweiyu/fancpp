@@ -47,9 +47,9 @@
  */
 
 #ifndef CF_ENDIAN
-  const int __one = 1;
-#else
   extern const int __one;
+#else
+  const int __one = 1;
 #endif
 
 #define CF_BIG_ENDIAN    (*(char *)(&__one)==0)
