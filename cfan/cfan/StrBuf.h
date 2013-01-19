@@ -66,7 +66,6 @@ cf_Error cf_StrBuf_add(cf_StrBuf *self, const char *str, long size);
  */
 inline char *cf_StrBuf_str(cf_StrBuf *self) {
   cf_assert(self);
-  *(self->buffer + self->size) = '\0';
   return self->buffer;
 }
 
@@ -135,27 +134,6 @@ inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
 inline void cf_StrBuf_clear(cf_StrBuf *self) {
   cf_assert(self);
   self->size = 0;
-}
-
-/*************************************************************************
- * String method
- */
-
-/**
- * Return if this string contains the specified string.
- */
-inline bool cf_StrBuf_contains(cf_StrBuf *self, char *s) {
-  return strstr(self->buffer, s) != NULL;
-}
-
-/**
- * Return the first occurance of the specified substring searching forward,
- * starting at the specified offset index.
- */
-inline long cf_StrBuf_index(cf_StrBuf *self, char *s) {
-  char *r = strstr(self->buffer, s);
-  if (r == NULL) return -1;
-  return r-self->buffer;
 }
 
 /**

@@ -56,6 +56,7 @@ cf_Error cf_StrBuf_add(cf_StrBuf *self, const char *str, long size) {
 
   memcpy(self->buffer + self->size, str, size);
   self->size += size;
+  *(self->buffer + self->size) = '\0';
 
   CF_EXIT_FUNC
   return cf_Error_ok;
@@ -67,8 +68,11 @@ cf_Error cf_StrBuf_printf(cf_StrBuf *self, int size, char *format, ...) {
   int rc;
   CF_ENTRY_FUNC
   va_start(args, format);
-  err = cf_StrBuf_reserver_(self, size);
-  if (err) { va_end(args); CF_EXIT_FUNC return err; }
+
+  if (self->capacity <= size) {
+    err = cf_StrBuf_reserver_(self, size);
+    if (err) { va_end(args); CF_EXIT_FUNC return err; }
+  }
 
   rc = vsnprintf(self->buffer, size, format, args);
 

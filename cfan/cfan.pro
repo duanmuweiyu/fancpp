@@ -23,7 +23,8 @@ HEADERS += \
     cfan/Error.h \
     cfan/Config.h \
     cfan/cfan.h \
-    cfan/Array.h
+    cfan/Array.h \
+    cfan/Str.h
 
 SOURCES += \
     cfan/StrBuf.c \

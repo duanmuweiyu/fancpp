@@ -12,7 +12,8 @@ SOURCES += \
     cfTest/HashMapTest.c \
     cfTest/ConfigTest.c \
     cfTest/ArrayTest.c \
-    cfTest/FileTest.c
+    cfTest/FileTest.c \
+    cfTest/StrTest.c
 
 
 

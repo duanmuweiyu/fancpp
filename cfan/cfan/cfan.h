@@ -21,5 +21,6 @@
 #include "cfan/StrBuf.h"
 #include "cfan/File.h"
 #include "cfan/Config.h"
+#include "cfan/Str.h"
 
 #endif
