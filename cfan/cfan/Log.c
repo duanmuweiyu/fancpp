@@ -8,7 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#include "Log.h"
+#include "cfan/Log.h"
 
 #include <stdarg.h>
 #include <stdio.h>

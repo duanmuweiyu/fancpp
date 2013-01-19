@@ -11,7 +11,7 @@
 #ifndef _CF_FILESTREAM_H_
 #define _CF_FILESTREAM_H_
 
-#include "Stream.h"
+#include "cfan/Stream.h"
 #include <stdio.h>
 
 CF_BEGIN

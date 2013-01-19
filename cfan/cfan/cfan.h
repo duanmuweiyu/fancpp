@@ -11,15 +11,15 @@
 #ifndef _CF_CFAN_H_
 #define _CF_CFAN_H_
 
-#include "macro.h"
-#include "miss.h"
-#include "Error.h"
-#include "Memory.h"
-#include "Log.h"
-#include "Array.h"
-#include "HashMap.h"
-#include "StrBuf.h"
-#include "File.h"
-#include "Config.h"
+#include "cfan/macro.h"
+#include "cfan/miss.h"
+#include "cfan/Error.h"
+#include "cfan/Memory.h"
+#include "cfan/Log.h"
+#include "cfan/Array.h"
+#include "cfan/HashMap.h"
+#include "cfan/StrBuf.h"
+#include "cfan/File.h"
+#include "cfan/Config.h"
 
 #endif

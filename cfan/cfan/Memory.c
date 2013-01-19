@@ -8,7 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#include "Memory.h"
+#include "cfan/Memory.h"
 #include "Error.h"
 #include <stdio.h>
 

@@ -11,8 +11,8 @@
 #ifndef _CF_LOG_H_
 #define _CF_LOG_H_
 
-#include "macro.h"
-#include "miss.h"
+#include "cfan/macro.h"
+#include "cfan/miss.h"
 
 CF_BEGIN
 

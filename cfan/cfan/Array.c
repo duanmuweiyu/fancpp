@@ -8,7 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#include "Array.h"
+#include "cfan/Array.h"
 
 cf_Error cf_Array_reserver_(cf_Array *self) {
   void *tmp;

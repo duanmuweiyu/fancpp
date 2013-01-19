@@ -11,7 +11,7 @@
 #ifndef _CF_ERROR_H_
 #define _CF_ERROR_H_
 
-#include "Log.h"
+#include "cfan/Log.h"
 
 typedef enum cf_Error_ {
   cf_Error_ok,

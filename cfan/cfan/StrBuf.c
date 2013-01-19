@@ -8,7 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#include "StrBuf.h"
+#include "cfan/StrBuf.h"
 
 #include <stdarg.h>
 #include <stdio.h>

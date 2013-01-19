@@ -12,7 +12,7 @@
 #define _CF_MEMORY_H_
 
 
-#include "macro.h"
+#include "cfan/macro.h"
 
 #include <stdlib.h>
 

@@ -33,7 +33,8 @@ SOURCES += \
     cfan/FileStream.c \
     cfan/File.c \
     cfan/Config.c \
-    cfan/Array.c
+    cfan/Array.c \
+    cfan/File_unix.c
 
 
 

@@ -11,7 +11,8 @@ SOURCES += \
     cfTest/LogTest.c \
     cfTest/HashMapTest.c \
     cfTest/ConfigTest.c \
-    cfTest/ArrayTest.c
+    cfTest/ArrayTest.c \
+    cfTest/FileTest.c
 
 
 

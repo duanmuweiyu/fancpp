@@ -17,10 +17,11 @@ void cf_HashMapTest_test(void);
 void cf_StrBufTest_test(void);
 void cf_ConfigTest_test(void);
 void cf_MemoryTest_test(void);
+void cf_FileTest_test(void);
 
 int main(void)
 {
-  cf_HashMapTest_test();
+  cf_FileTest_test();
   return 0;
 }
 

@@ -11,9 +11,9 @@
 #ifndef _CF_HASHMAP_H_
 #define _CF_HASHMAP_H_
 
-#include "Error.h"
-#include "Memory.h"
-#include "miss.h"
+#include "cfan/Error.h"
+#include "cfan/Memory.h"
+#include "cfan/miss.h"
 
 #include <string.h>
 #include <stdio.h>

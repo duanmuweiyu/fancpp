@@ -11,7 +11,7 @@
 #ifndef _CF_INPUTSTREAM_H_
 #define _CF_INPUTSTREAM_H_
 
-#include "Object.h"
+#include "cfan/Object.h"
 #include <stdio.h>
 
 CF_BEGIN

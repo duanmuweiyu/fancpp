@@ -8,7 +8,7 @@
  *   2012-12-24  Jed Young  Creation
  */
 
-#include "HashMap.h"
+#include "cfan/HashMap.h"
 
 
 /*************************************************************************

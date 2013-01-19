@@ -11,7 +11,7 @@
 #ifndef _CF_CONFIG_H_
 #define _CF_CONFIG_H_
 
-#include "HashMap.h"
+#include "cfan/HashMap.h"
 
 #include <stdio.h>
 #include <string.h>

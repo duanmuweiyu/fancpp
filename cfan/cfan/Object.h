@@ -11,7 +11,7 @@
 #ifndef _CF_OBJECT_H_
 #define _CF_OBJECT_H_
 
-#include "Error.h"
+#include "cfan/Error.h"
 
 CF_BEGIN
 

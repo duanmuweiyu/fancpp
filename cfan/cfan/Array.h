@@ -11,9 +11,9 @@
 #ifndef _CF_ARRAY_H_
 #define _CF_ARRAY_H_
 
-#include "macro.h"
-#include "Error.h"
-#include "Memory.h"
+#include "cfan/macro.h"
+#include "cfan/Error.h"
+#include "cfan/Memory.h"
 
 #include <string.h>
 

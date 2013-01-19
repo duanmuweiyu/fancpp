@@ -8,7 +8,7 @@
  *   2013-1-6  Jed Young  Creation
  */
 
-#include "FileStream.h"
+#include "cfan/FileStream.h"
 
 
 cf_Error cf_FileOutputStream_write(cf_OutputStream *self, char *buf, size_t size) {

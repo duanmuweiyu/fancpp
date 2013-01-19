@@ -8,7 +8,7 @@
  *   2013-1-6  Jed Young  Creation
  */
 
-#include "Config.h"
+#include "cfan/Config.h"
 
 
 cf_Error cf_Config_make(cf_Config *self, const char *path) {
