@@ -29,3 +29,7 @@ cf_Error cf_Array_reserver_(cf_Array *self) {
   CF_EXIT_FUNC
   return cf_Error_ok;
 }
+
+#define cmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
+cf_Array_sortTemplate_impl(cf_ArrayI)
+#undef cmopFunc

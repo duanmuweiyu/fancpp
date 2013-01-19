@@ -59,6 +59,7 @@ class CppCompiler : Task
   ** List of source files or directories to compile
   File[]? src
   Regex? excludeSrc := null
+  File? scriptDir
 
   ** List of resource
   File[]? res := null
@@ -228,6 +229,7 @@ class CppCompiler : Task
           incs.add(f)
         }
       }
+      incs.add(scriptDir)
 
       //depends include
       depends.each

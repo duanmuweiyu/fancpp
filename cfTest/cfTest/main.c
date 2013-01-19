@@ -22,7 +22,7 @@ void cf_StrTest_test(void);
 
 int main(void)
 {
-  cf_StrTest_test();
+  cf_ArrayTest_test();
   return 0;
 }
 

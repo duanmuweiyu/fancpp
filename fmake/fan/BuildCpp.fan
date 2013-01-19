@@ -160,6 +160,7 @@ abstract class BuildCpp : BuildScript
       it.version    = this.version
       it.src        = this.resolveDirs(srcDirs)
       it.excludeSrc = this.excludeSrc
+      it.scriptDir  = this.scriptDir
 
       it.libName    = extLibs
       it.libDir     = extLibDirs

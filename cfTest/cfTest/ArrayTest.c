@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_ArrayTest_test(void)
-{
+void cf_ArrayTest_testAdd(void) {
   cf_Array array;
   int a = 1;
   int b = 2;
@@ -29,12 +28,49 @@ void cf_ArrayTest_test(void)
   size = cf_Array_size(&array);
 
   for (i=0; i<size; ++i) {
-    cf_Array_get(&array, i, (void**)&value);
+    value = (int*)cf_Array_get(&array, i);
     printf("%d\n", *value);
   }
 
   cf_Array_dispose(&array);
 
   CF_EXIT_FUNC
+}
+
+void cf_ArrayTest_testSort(void) {
+  cf_Array array;
+  int a = 2;
+  int b = 3;
+  int c = 1;
+  size_t size;
+  unsigned int i = 0;
+  int *value;
+  long index;
+  CF_ENTRY_FUNC
+
+  cf_Array_make(&array, 0, 2, sizeof(int));
+  cf_Array_add(&array, &a);
+  cf_Array_add(&array, &b);
+  cf_Array_add(&array, &c);
+  size = cf_Array_size(&array);
+
+  cf_ArrayI_qsort(&array);
+
+  for (i=0; i<size; ++i) {
+    value = (int*)cf_Array_get(&array, i);
+    printf("%d\n", *value);
+  }
+
+  index = cf_ArrayI_bsearch(&array, value);
+  cf_verify(index == 2);
+
+  cf_Array_dispose(&array);
+
+  CF_EXIT_FUNC
+}
+
+void cf_ArrayTest_test(void) {
+  cf_ArrayTest_testAdd();
+  cf_ArrayTest_testSort();
 }
 

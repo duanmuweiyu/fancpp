@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 CF_BEGIN
 
@@ -33,7 +34,7 @@ inline bool cf_StrBuf_contains(const char *self, const char *s) {
  * starting at the specified offset index.
  */
 inline long cf_StrBuf_index(const char *self, const char *s) {
-  char *r = strstr(self, s);
+  const char *r = strstr(self, s);
   if (r == NULL) return -1;
   return r-self;
 }
@@ -142,7 +143,7 @@ inline char *cf_Str_dup(const char *self) {
  */
 
 typedef struct cf_StrToken_ {
-  char *delim;
+  const char *delim;
   char *next;
   long delimLen;
 } cf_StrToken;

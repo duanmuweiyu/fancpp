@@ -73,7 +73,20 @@
 /*************************************************************************
  * debug macro
  */
+
 #ifdef _DEBUG
+  #undef NDEBUG
+#else
+  #define NDEBUG
+#endif
+
+#ifdef NDEBUG
+  #undef CF_DEBUG
+#else
+  #define CF_DEBUG
+#endif
+
+#ifdef CF_DEBUG
   #define CF_ENTRY_FUNC cf_Log_log("func", cf_LogLevel_debug, "entry function" );
   #define CF_EXIT_FUNC  cf_Log_log("func", cf_LogLevel_debug, "exit function" );
 #else

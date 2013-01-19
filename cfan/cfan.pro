@@ -6,8 +6,10 @@ CONFIG   += staticlib
 VERSION = 1.0.0
 
 QMAKE_CC += -std=c99
+QMAKE_CC += -O3
 
 DEFINES += CF_EXPORT
+DEFINES += _DEBUG
 
 HEADERS += \
     cfan/Stream.h \

@@ -3,6 +3,9 @@ CONFIG += console
 CONFIG -= qt
 
 QMAKE_CC += -std=c99
+QMAKE_CC += -O3
+
+DEFINES += _DEBUG
 
 SOURCES += \
     cfTest/StrBufTest.c \
@@ -14,7 +17,6 @@ SOURCES += \
     cfTest/ArrayTest.c \
     cfTest/FileTest.c \
     cfTest/StrTest.c
-
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../cfan/release/ -lcfan

@@ -77,7 +77,7 @@ typedef union cf_Value_ {
 #endif
 
 #ifndef offsetof
-#define offsetof(STRUCTURE,FIELD) ((int)((char*)&((STRUCTURE*)0)->FIELD))
+#define offsetof(struct_,field_) ((int)((char*)&((struct_*)0)->field_))
 #endif
 
 #endif

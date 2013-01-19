@@ -59,7 +59,7 @@ CF_API void cf_Log_doLog(const char *tag, const char *file, const char *func, co
 #define cf_Log_cfError(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_err, msg, ## __VA_ARGS__)
 #define cf_Log_cfWarn(msg, ...)  cf_Log_log(cf_Log_tag, cf_LogLevel_warn, msg, ## __VA_ARGS__)
 #define cf_Log_cfInfo(msg, ...)  cf_Log_log(cf_Log_tag, cf_LogLevel_info, msg, ## __VA_ARGS__)
-#ifdef _DEBUG
+#ifdef CF_DEBUG
   #define cf_Log_cfDebug(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_debug, msg, ## __VA_ARGS__)
 #else
   #define cf_Log_cfDebug

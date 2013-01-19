@@ -60,17 +60,12 @@ inline size_t cf_Array_size(cf_Array *self) {
  * get by index
  *
  */
-inline void cf_Array_get(cf_Array *self, const unsigned int index, void **elem) {
+inline void *cf_Array_get(cf_Array *self, const unsigned int index) {
   cf_assert(self);
   cf_assert(index >= 0 && index < self->size);
-  cf_assert(elem);
 
-  CF_ENTRY_FUNC
-
-  *elem = (char*)self->data + (index * self->elemSize);
-
-  CF_EXIT_FUNC
-};
+  return (char*)self->data + (index * self->elemSize);
+}
 
 /**
  * increase capacity
@@ -112,6 +107,80 @@ inline void cf_Array_dispose(cf_Array *self) {
   CF_EXIT_FUNC
 }
 
+/*************************************************************************
+ * sort
+ */
+
+inline void cf_Array_swap(cf_Array *self, int i, int j) {
+  int n = self->elemSize - 1;
+  char *s1 = (char *)cf_Array_get(self, i);
+  char *s2 = (char *)cf_Array_get(self, j);
+  char t;
+  for (; n != -1; --n) {
+    t = s1[n];
+    s1[n] = s2[n];
+    s2[n] = t;
+  }
+}
+
+/*
+* macro:
+* cmpFunc
+*/
+
+#define cf_Array_sortTemplate(Array)\
+\
+void Array##_quickSort(cf_Array *self, int left, int right);\
+\
+inline void Array##_qsort(cf_Array *self) {\
+  Array##_quickSort(self, 0, self->size-1);\
+}\
+\
+inline long Array##_bsearch(cf_Array *self, void *elem) {\
+  int cond;\
+  int low, high, mid;\
+  int n;\
+  CF_ENTRY_FUNC\
+  n = self->size;\
+  low = 0;\
+  high = n - 1;\
+  while (low <= high) {\
+    mid = (low+high) / 2;\
+    if ((cond = cmopFunc(elem, cf_Array_get(self, mid))) < 0) {\
+      high = mid - 1;\
+    } else if (cond > 0) {\
+      low = mid + 1;\
+    } else {\
+      CF_EXIT_FUNC\
+      return mid;\
+    }\
+  }\
+  CF_EXIT_FUNC\
+  return -1;\
+}\
+
+#define cf_Array_sortTemplate_impl(Array)\
+\
+void Array##_quickSort(cf_Array *self, int left, int right) {\
+  int i, last;\
+  CF_ENTRY_FUNC\
+  if (left >= right) {\
+    return;\
+  }\
+  cf_Array_swap(self, left, (left + right) / 2);\
+  last = left;\
+  for (i = left + 1; i <= right; i++)\
+    if (cmopFunc(cf_Array_get(self, i), cf_Array_get(self, left)) < 0)\
+      cf_Array_swap(self, ++last, i);\
+  cf_Array_swap(self, left, last);\
+  Array##_quickSort(self, left, last-1);\
+  Array##_quickSort(self, last+1, right);\
+  CF_EXIT_FUNC\
+}\
+
+#define cmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
+cf_Array_sortTemplate(cf_ArrayI)
+#undef cmopFunc
 
 CF_END
 
