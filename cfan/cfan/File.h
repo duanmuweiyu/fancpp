@@ -63,7 +63,7 @@ typedef struct cf_DirIterator_ {
   void *second;
 } cf_DirIterator;
 
-void cf_DirIterator_make(cf_DirIterator *self, const char *path);
+cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path);
 const char* cf_DirIterator_next(cf_DirIterator *self);
 void cf_DirIterator_dispose(cf_DirIterator *self);
 

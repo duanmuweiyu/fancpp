@@ -22,5 +22,6 @@
 #include "cfan/File.h"
 #include "cfan/Config.h"
 #include "cfan/Str.h"
+#include "cfan/Test.h"
 
 #endif

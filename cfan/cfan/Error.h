@@ -36,13 +36,6 @@ typedef enum cf_Error_ {
     }\
   } while(0);
 
-#define cf_verify(exp) do {\
-    if (!(exp)) {\
-      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "verify fail: %s", #exp);\
-      exit(2);\
-    }\
-  } while(0);
-
 #define cf_returnErrorIf(exp, val) do {\
     if (!(exp)) {\
       cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\

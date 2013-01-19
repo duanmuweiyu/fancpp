@@ -44,8 +44,8 @@ void cf_StrBufTest_testAdd(void) {
   CF_EXIT_FUNC
 }
 
-void cf_StrBufTest_test(void) {
-  cf_StrBufTest_testPrintf();
-  cf_StrBufTest_testAdd();
+void cf_StrBufTest_register(void) {
+  cf_Test_add(cf_StrBufTest_testPrintf);
+  cf_Test_add(cf_StrBufTest_testAdd);
 }
 

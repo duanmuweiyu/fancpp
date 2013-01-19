@@ -23,3 +23,6 @@ void cf_LogTest_test(void)
   CF_EXIT_FUNC
 }
 
+void cf_LogTest_register(void) {
+  cf_Test_add(cf_LogTest_test);
+}

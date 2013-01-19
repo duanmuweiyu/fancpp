@@ -39,8 +39,14 @@ void cf_StrTest_testTrim(void) {
   CF_EXIT_FUNC
 }
 
-void cf_StrTest_test(void) {
-  cf_StrTest_testToken();
-  cf_StrTest_testTrim();
+void cf_StrTest_testStartsWith(void) {
+  cf_verify(cf_Str_startsWith("hello world", ""));
+  cf_verify(cf_Str_startsWith("hello world", "hello"));
+}
+
+void cf_StrTest_register(void) {
+  cf_Test_add(cf_StrTest_testToken);
+  cf_Test_add(cf_StrTest_testTrim);
+  cf_Test_add(cf_StrTest_testStartsWith);
 }
 

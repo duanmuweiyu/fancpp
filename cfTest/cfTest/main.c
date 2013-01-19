@@ -11,18 +11,34 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_LogTest_test(void);
-void cf_ArrayTest_test(void);
-void cf_HashMapTest_test(void);
-void cf_StrBufTest_test(void);
-void cf_ConfigTest_test(void);
-void cf_MemoryTest_test(void);
-void cf_FileTest_test(void);
-void cf_StrTest_test(void);
+void cf_LogTest_register(void);
+void cf_ArrayTest_register(void);
+void cf_HashMapTest_register(void);
+void cf_StrBufTest_register(void);
+void cf_ConfigTest_register(void);
+void cf_MemoryTest_register(void);
+void cf_FileTest_register(void);
+void cf_StrTest_register(void);
 
-int main(void)
+void registerAll(void) {
+  cf_LogTest_register();
+  cf_ArrayTest_register();
+  cf_HashMapTest_register();
+  cf_StrBufTest_register();
+  cf_ConfigTest_register();
+  cf_MemoryTest_register();
+  cf_FileTest_register();
+  cf_StrTest_register();
+}
+
+int main(int argc, char **argv)
 {
-  cf_ArrayTest_test();
+  const char *name;
+  cf_Test_init();
+  registerAll();
+
+  name = argc >= 2 ? argv[1] : "";
+  cf_Test_run(name, 0);
   return 0;
 }
 

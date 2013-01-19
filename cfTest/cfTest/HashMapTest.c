@@ -65,8 +65,8 @@ void cf_HashMapTest_testIter(void)
   CF_EXIT_FUNC
 }
 
-void cf_HashMapTest_test(void)
+void cf_HashMapTest_register(void)
 {
-  cf_HashMapTest_testGet();
-  cf_HashMapTest_testIter();
+  cf_Test_add(cf_HashMapTest_testGet);
+  cf_Test_add(cf_HashMapTest_testIter);
 }

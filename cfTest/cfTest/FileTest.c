@@ -11,14 +11,19 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_FileTest_test(void)
-{
+void cf_FileTest_test(void) {
   const char *path = "/home/jed";
   cf_DirIterator iter;
   const char *name;
+  cf_Error err;
   CF_ENTRY_FUNC
 
-  cf_DirIterator_make(&iter, path);
+  err = cf_DirIterator_make(&iter, path);
+  if (err) {
+    printf("file %s notfount\n", path);
+    CF_EXIT_FUNC
+    return;
+  }
 
   while (name = cf_DirIterator_next(&iter)) {
     printf("%s\n", name);
@@ -29,3 +34,6 @@ void cf_FileTest_test(void)
   CF_EXIT_FUNC
 }
 
+void cf_FileTest_register(void) {
+  cf_Test_add(cf_FileTest_test);
+}

@@ -24,7 +24,8 @@ cf_Error cf_Config_make(cf_Config *self, const char *path) {
 
   //open file
   file = fopen(path, "r");
-  if (!file) {
+  if (file == NULL) {
+    cf_HashMapSS_make(&self->map, 1);
     CF_EXIT_FUNC
     return cf_Error_io;
   }

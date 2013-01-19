@@ -26,7 +26,8 @@ HEADERS += \
     cfan/Config.h \
     cfan/cfan.h \
     cfan/Array.h \
-    cfan/Str.h
+    cfan/Str.h \
+    cfan/Test.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -37,7 +38,8 @@ SOURCES += \
     cfan/File.c \
     cfan/Config.c \
     cfan/Array.c \
-    cfan/File_unix.c
+    cfan/File_unix.c \
+    cfan/Test.c
 
 
 

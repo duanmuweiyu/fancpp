@@ -34,3 +34,6 @@ void cf_ConfigTest_test(void)
   CF_EXIT_FUNC
 }
 
+void cf_ConfigTest_register(void) {
+  cf_Test_add(cf_ConfigTest_test);
+}

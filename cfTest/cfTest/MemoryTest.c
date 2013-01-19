@@ -60,8 +60,8 @@ void cf_MemoryTest_testAll(void)
   CF_EXIT_FUNC
 }
 
-void cf_MemoryTest_test(void) {
-  cf_MemoryTest_testBase();
-  cf_MemoryTest_testAll();
+void cf_MemoryTest_register(void) {
+  cf_Test_add(cf_MemoryTest_testBase);
+  cf_Test_add(cf_MemoryTest_testAll);
 }
 

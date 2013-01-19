@@ -57,19 +57,21 @@ inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
   return -1;
 }
 
-inline bool cf_Str_endsWith(const char *self, const char *s) {
+inline bool cf_Str_startsWith(const char *self, const char *s) {
   int i;
-  for (i = 0; self[i] == s[i]; ++i ) {
-    if (s[i] == '\0') {
-      return true;
-    } else if (self[i] == '\0') {
-      return false;
-    }
+  if (*s == '\0') return true;
+  for (i = 0; self[i] == s[i] && s[i] != '\0'; ++i ) {
+  }
+
+  if (s[i] == '\0') {
+    return true;
+  } else if (self[i] == '\0') {
+    return false;
   }
   return false;
 }
 
-inline bool cf_Str_startsWith(const char *self, const char *s) {
+inline bool cf_Str_endsWith(const char *self, const char *s) {
   int i = strlen(self)-1;
   int j = strlen(s)-1;
   for (; i != -1; --i, --j ) {

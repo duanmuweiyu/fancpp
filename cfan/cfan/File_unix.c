@@ -36,9 +36,10 @@ cf_Error cf_File_createDir(cf_File *self) {
   return cf_Error_ok;
 }
 
-void cf_DirIterator_make(cf_DirIterator *self, const char *path) {
+cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
   DIR *dir = opendir(path);
   self->first = dir;
+  return dir == NULL ? cf_Error_io : cf_Error_ok;
 }
 
 const char* cf_DirIterator_next(cf_DirIterator *self) {

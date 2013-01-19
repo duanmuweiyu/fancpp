@@ -69,8 +69,8 @@ void cf_ArrayTest_testSort(void) {
   CF_EXIT_FUNC
 }
 
-void cf_ArrayTest_test(void) {
-  cf_ArrayTest_testAdd();
-  cf_ArrayTest_testSort();
+void cf_ArrayTest_register(void) {
+  cf_Test_add(cf_ArrayTest_testAdd);
+  cf_Test_add(cf_ArrayTest_testSort);
 }
 
