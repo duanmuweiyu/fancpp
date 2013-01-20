@@ -27,7 +27,9 @@ HEADERS += \
     cfan/cfan.h \
     cfan/Array.h \
     cfan/Str.h \
-    cfan/Test.h
+    cfan/Test.h \
+    tinyCThread/tinycthread.h \
+    cfan/Queue.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -40,7 +42,8 @@ SOURCES += \
     cfan/Array.c \
     cfan/File_unix.c \
     cfan/File_win.c \
-    cfan/Test.c
+    cfan/Test.c \
+    tinyCThread/tinycthread.c
 
 
 

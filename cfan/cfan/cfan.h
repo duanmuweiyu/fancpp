@@ -23,5 +23,6 @@
 #include "cfan/Config.h"
 #include "cfan/Str.h"
 #include "cfan/Test.h"
+#include "cfan/Queue.h"
 
 #endif

@@ -19,6 +19,7 @@ void cf_ConfigTest_register(void);
 void cf_MemoryTest_register(void);
 void cf_FileTest_register(void);
 void cf_StrTest_register(void);
+void cf_QueueTest_register(void);
 
 void registerAll(void) {
   cf_LogTest_register();
@@ -29,10 +30,10 @@ void registerAll(void) {
   cf_MemoryTest_register();
   cf_FileTest_register();
   cf_StrTest_register();
+  cf_QueueTest_register();
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   const char *name;
   cf_Test_init();
   registerAll();

@@ -16,7 +16,8 @@ SOURCES += \
     cfTest/ConfigTest.c \
     cfTest/ArrayTest.c \
     cfTest/FileTest.c \
-    cfTest/StrTest.c
+    cfTest/StrTest.c \
+    cfTest/QueueTest.c
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../cfan/release/ -lcfan
