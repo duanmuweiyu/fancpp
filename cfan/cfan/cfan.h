@@ -24,5 +24,7 @@
 #include "cfan/Str.h"
 #include "cfan/Test.h"
 #include "cfan/Queue.h"
+#include "cfan/BlockQueue.h"
+#include "cfan/Executor.h"
 
 #endif

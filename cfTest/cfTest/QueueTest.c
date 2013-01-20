@@ -5,7 +5,7 @@
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE version 3.0
  *
  * History:
- *   2012-12-23  Jed Young  Creation
+ *   2013-1-20  Jed Young  Creation
  */
 
 #include <stdio.h>

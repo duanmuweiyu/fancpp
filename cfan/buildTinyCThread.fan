@@ -14,11 +14,11 @@ class Build : BuildCpp
 {
   new make()
   {
-    name = "cfan"
-    summary = "cfan is a base C library"
+    name = "tinyCThread"
+    summary = "thread library"
     outType = TargetType.lib
     version = Version("1.0.0")
-    srcDirs = [`cfan/`]
+    srcDirs = [`tinyCThread/`]
     define = ["_DEBUG"]
   }
 }

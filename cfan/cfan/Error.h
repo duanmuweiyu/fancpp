@@ -26,7 +26,8 @@ typedef enum cf_Error_ {
   cf_Error_parse,
   cf_Error_unsupported,
   cf_Error_eof,
-  cf_Error_overflow
+  cf_Error_overflow,
+  cf_Error_thread
 } cf_Error;
 
 #define cf_assert(exp) do {\
