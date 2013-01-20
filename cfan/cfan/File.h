@@ -46,6 +46,8 @@ inline bool cf_File_isDir(cf_File *self) {
 
 cf_Error cf_File_createDir(cf_File *self);
 
+cf_Error CF_File_delete(cf_File *self);
+
 inline time_t cf_File_mtime(cf_File *self) {
   return self->mtime;
 }

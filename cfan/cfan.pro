@@ -39,6 +39,7 @@ SOURCES += \
     cfan/Config.c \
     cfan/Array.c \
     cfan/File_unix.c \
+    cfan/File_win.c \
     cfan/Test.c
 
 

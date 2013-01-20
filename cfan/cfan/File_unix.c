@@ -10,6 +10,8 @@
 
 #include "cfan/File.h"
 
+#ifndef WIN32
+
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -36,6 +38,13 @@ cf_Error cf_File_createDir(cf_File *self) {
   return cf_Error_ok;
 }
 
+cf_Error CF_File_delete(cf_File *self) {
+  if (remove(self->path) == 0) {
+    return cf_Error_ok;
+  }
+  return cf_Error_io;
+}
+
 cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
   DIR *dir = opendir(path);
   self->first = dir;
@@ -56,3 +65,5 @@ void cf_DirIterator_dispose(cf_DirIterator *self) {
   DIR *dir = (DIR*)self->first;
   closedir(dir);
 }
+
+#endif
