@@ -13,11 +13,15 @@
 
 #include "cfan/Queue.h"
 #include "tinyCThread/tinycthread.h"
+#include <stdio.h>
 
 typedef struct cf_BlockQueue_ {
   cf_Queue queue;
   mtx_t mutex;
-  cnd_t cond;
+  cnd_t addCond;
+  cnd_t deleteCond;
+  bool cancelAdd;
+  bool cancelDelete;
 } cf_BlockQueue;
 
 inline cf_Error cf_BlockQueue_make(cf_BlockQueue *self, size_t capacity, unsigned int elemSize) {
@@ -29,11 +33,17 @@ inline cf_Error cf_BlockQueue_make(cf_BlockQueue *self, size_t capacity, unsigne
     if (terr != thrd_success) {
       return cf_Error_thread;
     }
-    terr = cnd_init(&self->cond);
+    terr = cnd_init(&self->addCond);
+    if (terr != thrd_success) {
+      return cf_Error_thread;
+    }
+    terr = cnd_init(&self->deleteCond);
     if (terr != thrd_success) {
       return cf_Error_thread;
     }
   }
+  self->cancelAdd = false;
+  self->cancelDelete = false;
   return err;
 }
 
@@ -56,31 +66,71 @@ inline bool cf_BlockQueue_isEmpty(cf_BlockQueue *self) {
 inline cf_Error cf_BlockQueue_add(cf_BlockQueue *self, void *elem) {
   register cf_Error result;
   mtx_lock(&self->mutex);
-  do {
+  while (!self->cancelAdd) {
     result = cf_Queue_add(&self->queue, elem);
     if (result != cf_Error_ok) {
-      cnd_wait(&self->cond, &self->mutex);
+      cnd_wait(&self->addCond, &self->mutex);
     } else {
-      cnd_broadcast(&self->cond);
+      cnd_signal(&self->deleteCond);
       mtx_unlock(&self->mutex);
       return cf_Error_ok;
     }
-  } while (0);
+  }
+  cnd_broadcast(&self->addCond);
+  mtx_unlock(&self->mutex);
+  return cf_Error_error;
+}
+
+inline void cf_BlockQueue_cancel(cf_BlockQueue *self) {
+  mtx_lock(&self->mutex);
+  self->cancelAdd = true;
+  self->cancelDelete = true;
+  printf("queue canceled\n");
+  fflush(stdout);
+  cnd_broadcast(&self->addCond);
+  cnd_broadcast(&self->deleteCond);
+  mtx_unlock(&self->mutex);
 }
 
 inline void *cf_BlockQueue_delete(cf_BlockQueue *self) {
   register void *result;
-  mtx_lock(&self->mutex);
-  do {
+  int rc;
+  rc = mtx_lock(&self->mutex);
+  if (rc != thrd_success) {
+    printf("mtx_lock error\n");
+  }
+  while (!self->cancelDelete) {
     result = cf_Queue_delete(&self->queue);
     if (result == NULL) {
-      cnd_wait(&self->cond, &self->mutex);
+      rc = cnd_wait(&self->deleteCond, &self->mutex);
+      if (rc != thrd_success) {
+        printf("cnd_wait error\n");
+      }
     } else {
-      cnd_broadcast(&self->cond);
-      mtx_unlock(&self->mutex);
+      rc = cnd_signal(&self->addCond);
+      if (rc != thrd_success) {
+        printf("cnd_signal error\n");
+      }
+      rc = mtx_unlock(&self->mutex);
+      if (rc != thrd_success) {
+        printf("mtx_unlock error\n");
+      }
       return result;
     }
-  } while (0);
+  }
+
+  //broadcast other cancel delete
+  rc = cnd_broadcast(&self->deleteCond);
+  if (rc != thrd_success) {
+    printf("cnd_broadcast error\n");
+  }
+
+  //unlock
+  rc = mtx_unlock(&self->mutex);
+  if (rc != thrd_success) {
+    printf("mtx_unlock error\n");
+  }
+  return NULL;
 }
 
 inline void *cf_BlockQueue_peek(cf_BlockQueue *self) {
@@ -92,9 +142,12 @@ inline void *cf_BlockQueue_peek(cf_BlockQueue *self) {
 }
 
 inline void cf_BlockQueue_dispose(cf_BlockQueue *self) {
-  cf_Queue_dispose(&self->queue);
+  //cf_BlockQueue_cancel(self);
   mtx_destroy(&self->mutex);
-  cnd_destroy(&self->cond);
+  cnd_destroy(&self->addCond);
+  cnd_destroy(&self->deleteCond);
+  cf_Queue_dispose(&self->queue);
+  printf("queue disposed\n");
 }
 
 #endif

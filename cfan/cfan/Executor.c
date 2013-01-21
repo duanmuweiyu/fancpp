@@ -16,10 +16,21 @@ int *cf_Executor_thread_(void *arg) {
   cf_ExecutorTask *task;
   self = (cf_Executor *)arg;
 
-  while (!self->canceled) {
+  //printf("thread %ul run\n", thrd_current());
+  printf("thread %d run\n", GetCurrentThreadId());
+  fflush(stdout);
+  while (true) {
     task = (cf_ExecutorTask *)cf_BlockQueue_delete(&self->taskQueue);
-    (*task->func)(task->args);
+    if (task != NULL) {
+      (*task->func)(task->args);
+    } else {
+      break;
+    }
   }
+
+  printf("thread %d exit\n", GetCurrentThreadId());
+  fflush(stdout);
+  //thrd_exit(0);
   return 0;
 }
 

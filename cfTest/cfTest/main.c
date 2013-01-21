@@ -20,6 +20,7 @@ void cf_MemoryTest_register(void);
 void cf_FileTest_register(void);
 void cf_StrTest_register(void);
 void cf_QueueTest_register(void);
+void cf_BlockQueueTest_register(void);
 void cf_ExecutorTest_register(void);
 
 void registerAll(void) {
@@ -32,6 +33,7 @@ void registerAll(void) {
   cf_FileTest_register();
   cf_StrTest_register();
   cf_QueueTest_register();
+  cf_BlockQueueTest_register();
   cf_ExecutorTest_register();
 }
 

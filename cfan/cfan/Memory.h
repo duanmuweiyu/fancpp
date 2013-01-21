@@ -18,6 +18,8 @@
 
 CF_BEGIN
 
+#define cf_Memory_checkCode 0xABCD
+
 typedef struct cf_MemChunk_ {
   const char *file;
   const char *func;
@@ -26,6 +28,7 @@ typedef struct cf_MemChunk_ {
   struct cf_MemChunk_ *prev; //previous chunk
   size_t size;
   size_t refCount;
+  int checkCode;
 } cf_MemChunk;
 
 typedef struct cf_MemManager_ {

@@ -19,6 +19,7 @@ SOURCES += \
     cfTest/FileTest.c \
     cfTest/StrTest.c \
     cfTest/QueueTest.c \
+    cfTest/BlockQueueTest.c \
     cfTest/ExecutorTest.c
 
 LIBS += -pthread
@@ -28,7 +29,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../cfan/debug/ -lcf
 else:symbian: LIBS += -lcfan
 else:unix: LIBS += -L$$OUT_PWD/../cfan/ -lcfan
 
-LIBS += -lrt
+unix: LIBS += -lrt
 
 INCLUDEPATH += $$PWD/../cfan
 DEPENDPATH += $$PWD/../cfan

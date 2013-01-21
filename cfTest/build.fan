@@ -21,6 +21,6 @@ class Build : BuildCpp
     depends = ["cfan 1.0.0", "tinyCThread 1.0.0"]
     srcDirs = [`cfTest/`]
     define = ["_DEBUG"]
-    libs = ["rt"]
+    //libs = ["rt"]
   }
 }

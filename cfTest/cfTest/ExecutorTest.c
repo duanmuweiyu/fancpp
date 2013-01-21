@@ -12,7 +12,8 @@
 #include "cfan/cfan.h"
 
 static void *print(void *args) {
-  printf("%d\n", (char *)args);
+  printf("**%d**\n", *((int *)args));
+  fflush(stdout);
   return 0;
 }
 
@@ -20,17 +21,23 @@ void cf_ExecutorTest_test(void) {
   cf_Executor executor;
   int i;
   int *val;
+  cf_Error err;
   CF_ENTRY_FUNC
 
-  cf_Executor_make(&executor, 100, 70);
+  err = cf_Executor_make(&executor, 3, 2);
+  cf_verify(err == cf_Error_ok);
 
-  val = (int*)cf_malloc(sizeof(int) * 1000);
-  for (i=0; i<1000; ++i) {
-    *(val+i) = i;
+  val = (int*)cf_malloc(sizeof(int) * 4);
+  for (i=0; i<4; ++i) {
+    val[i] = i;
+    //printf("---%d\n", *(val+i));
     cf_Executor_addTask(&executor, print, val+i);
   }
-  cf_free(val);
+
+  printf("=====================\n");
+  fflush(stdout);
   cf_Executor_dispose(&executor);
+  //cf_free(val);
 
   CF_EXIT_FUNC
 }

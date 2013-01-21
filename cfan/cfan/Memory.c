@@ -32,6 +32,7 @@ void *cf_doMalloc(const char *file, const char *func, const unsigned int line, s
   chunk->file = file;
   chunk->func = func;
   chunk->line = line;
+  chunk->checkCode = cf_Memory_checkCode;
   chunk->refCount = 0;
   chunk->next = NULL;
   chunk->size = size;
@@ -69,6 +70,10 @@ void cf_free(void *p) {
   cf_assert(p);
 
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
+  if (chunk->checkCode != cf_Memory_checkCode) {
+    cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad free");
+    exit(2);
+  }
 
   if (chunk->next) {
     if (chunk->prev) {
@@ -86,6 +91,7 @@ void cf_free(void *p) {
     memManager.last = NULL;
   }
 
+  chunk->checkCode = 0;
   free(chunk);
 }
 
