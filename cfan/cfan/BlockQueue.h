@@ -85,7 +85,7 @@ inline void cf_BlockQueue_cancel(cf_BlockQueue *self) {
   mtx_lock(&self->mutex);
   self->cancelAdd = true;
   self->cancelDelete = true;
-  printf("queue canceled\n");
+  //printf("queue canceled\n");
   fflush(stdout);
   cnd_broadcast(&self->addCond);
   cnd_broadcast(&self->deleteCond);
@@ -147,7 +147,7 @@ inline void cf_BlockQueue_dispose(cf_BlockQueue *self) {
   cnd_destroy(&self->addCond);
   cnd_destroy(&self->deleteCond);
   cf_Queue_dispose(&self->queue);
-  printf("queue disposed\n");
+  //printf("queue disposed\n");
 }
 
 #endif

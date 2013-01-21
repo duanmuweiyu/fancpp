@@ -27,7 +27,7 @@ typedef struct cf_Queue_ {
 inline cf_Error cf_Queue_make(cf_Queue *self, size_t capacity, unsigned int elemSize) {
   self->capacity = capacity+1;//add one at here
   self->elemSize = elemSize;
-  self->buf = (char*)cf_malloc(capacity * elemSize);
+  self->buf = (char*)cf_malloc((capacity+1) * elemSize);
   self->front = 0;
   self->rear = 0;
   if (self->buf == NULL) {

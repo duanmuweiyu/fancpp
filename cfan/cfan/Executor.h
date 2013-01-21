@@ -65,18 +65,18 @@ inline void cf_Executor_dispose(cf_Executor *self) {
   //self->canceled = true;
 
 
-  {
-    struct timespec ts;
-    clock_gettime(TIME_UTC, &ts);
-    ts.tv_sec += 2;
+//  {
+//    struct timespec ts;
+//    clock_gettime(TIME_UTC, &ts);
+//    ts.tv_sec += 2;
 
-    /* Sleep... */
-    printf("thread sleepping\n");
-    fflush(stdout);
-    thrd_sleep(&ts, NULL);
-    printf("thread sleeped\n");
-    fflush(stdout);
-  }
+//    /* Sleep... */
+//    printf("thread sleepping\n");
+//    fflush(stdout);
+//    thrd_sleep(&ts, NULL);
+//    printf("thread sleeped\n");
+//    fflush(stdout);
+//  }
 
   cf_BlockQueue_cancel(&self->taskQueue);
 
@@ -88,9 +88,9 @@ inline void cf_Executor_dispose(cf_Executor *self) {
       fflush(stdout);
     }
   }
-  printf("will cf_BlockQueue_dispose\n");
+  //printf("will cf_BlockQueue_dispose\n");
   fflush(stdout);
-  //cf_BlockQueue_dispose(&self->taskQueue);
+  cf_BlockQueue_dispose(&self->taskQueue);
 }
 
 #endif

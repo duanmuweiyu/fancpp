@@ -24,11 +24,11 @@ void cf_ExecutorTest_test(void) {
   cf_Error err;
   CF_ENTRY_FUNC
 
-  err = cf_Executor_make(&executor, 3, 2);
+  err = cf_Executor_make(&executor, 4, 300);
   cf_verify(err == cf_Error_ok);
 
-  val = (int*)cf_malloc(sizeof(int) * 4);
-  for (i=0; i<4; ++i) {
+  val = (int*)cf_malloc(sizeof(int) * 10);
+  for (i=0; i<10; ++i) {
     val[i] = i;
     //printf("---%d\n", *(val+i));
     cf_Executor_addTask(&executor, print, val+i);
@@ -37,7 +37,7 @@ void cf_ExecutorTest_test(void) {
   printf("=====================\n");
   fflush(stdout);
   cf_Executor_dispose(&executor);
-  //cf_free(val);
+  cf_free(val);
 
   CF_EXIT_FUNC
 }

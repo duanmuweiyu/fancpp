@@ -17,7 +17,7 @@ int *cf_Executor_thread_(void *arg) {
   self = (cf_Executor *)arg;
 
   //printf("thread %ul run\n", thrd_current());
-  printf("thread %d run\n", GetCurrentThreadId());
+  //printf("thread %d run\n", thrd_current());
   fflush(stdout);
   while (true) {
     task = (cf_ExecutorTask *)cf_BlockQueue_delete(&self->taskQueue);
@@ -28,7 +28,7 @@ int *cf_Executor_thread_(void *arg) {
     }
   }
 
-  printf("thread %d exit\n", GetCurrentThreadId());
+  //printf("thread %d exit\n", thrd_current());
   fflush(stdout);
   //thrd_exit(0);
   return 0;

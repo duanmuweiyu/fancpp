@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+
 int data[1024];
 
 static void *add(void *args) {
@@ -50,6 +51,7 @@ static void *print(void *args) {
 void cf_BlockQueueTest_test(void) {
   cf_BlockQueue queue;
   thrd_t t1, t2;
+  int i;
   CF_ENTRY_FUNC
 
   cf_BlockQueue_make(&queue, 2, sizeof(int));
@@ -57,19 +59,23 @@ void cf_BlockQueueTest_test(void) {
   thrd_create(&t1, (thrd_start_t)add, &queue);
   thrd_create(&t2, (thrd_start_t)print, &queue);
 
-  {
-    struct timespec ts;
-    clock_gettime(TIME_UTC, &ts);
-    ts.tv_sec++;
+//  {
+//    struct timespec ts;
+//    clock_gettime(TIME_UTC, &ts);
+//    ts.tv_sec++;
 
-    /* Sleep... */
-    printf("thread sleepping\n");
-    fflush(stdout);
-    fflush(stdout);
-    thrd_sleep(&ts, NULL);
-    printf("thread sleeped\n");
-    fflush(stdout);
-    fflush(stdout);
+//    /* Sleep... */
+//    printf("thread sleepping\n");
+//    fflush(stdout);
+//    fflush(stdout);
+//    thrd_sleep(&ts, NULL);
+//    printf("thread sleeped\n");
+//    fflush(stdout);
+//    fflush(stdout);
+//  }
+
+  for (i=0; i< 100000; ++i) {
+    thrd_yield();
   }
 
   cf_BlockQueue_cancel(&queue);

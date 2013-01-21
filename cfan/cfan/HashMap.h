@@ -65,20 +65,20 @@ typedef struct HashMap##_ {\
  * constructor\
  *\
  */\
-cf_Error HashMap##_make(HashMap *self, size_t size);\
-\
-/**\
- * lookup\
- *\
- */\
-cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue);\
-\
-/**\
- * put\
- *\
- */\
-cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue);\
-\
+  cf_Error HashMap##_make(HashMap *self, size_t size);\
+  \
+  /**\
+   * lookup\
+   *\
+   */\
+  cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue);\
+  \
+  /**\
+   * put\
+   *\
+   */\
+  cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue);\
+  \
 /**\
  * destroy content\
  *\
