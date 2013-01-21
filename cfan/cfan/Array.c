@@ -17,7 +17,9 @@ cf_Error cf_Array_reserver_(cf_Array *self) {
   CF_ENTRY_FUNC
   cf_assert(self);
 
+  cf_check(self->data);
   tmp = cf_realloc(self->data, newCapacity * self->elemSize);
+  cf_check(self->data);
   if (!tmp) {
     CF_EXIT_FUNC
     return cf_Error_alloc;

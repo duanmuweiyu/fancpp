@@ -14,6 +14,8 @@
 #include "cfan/macro.h"
 #include "cfan/miss.h"
 
+#include <stdarg.h>
+
 CF_BEGIN
 
 /**
@@ -28,18 +30,31 @@ typedef enum cf_LogLevel_ {
   cf_LogLevel_silent
 } cf_LogLevel;
 
+///**
+// * logging statements
+// *
+// */
+//typedef struct cf_LogRec_ {
+//  const char *tag;
+//  const char *file;
+//  const char *func;
+//  const unsigned int line;
+//  const cf_LogLevel level;
+//  const char *msg;
+//} cf_LogRec;
+
+typedef void (*cf_Log_listener)(const char *tag, const char *file, const char *func, const unsigned int line
+                          , const cf_LogLevel level, const char *msg, va_list args);
+
 /**
- * logging statements
- *
+ * Add listener. if success return id, if fail return -1.
  */
-typedef struct cf_LogRec_ {
-  const char *tag;
-  const char *file;
-  const char *func;
-  const unsigned int line;
-  const cf_LogLevel level;
-  const char *msg;
-} cf_LogRec;
+int cf_Log_addListener(cf_Log_listener listener);
+
+/**
+ * remove listener by id. if success return true, else return false.
+ */
+bool cf_Log_removeListener(int id);
 
 /**
  * do log

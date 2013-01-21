@@ -88,6 +88,7 @@ inline cf_Error cf_Array_add(cf_Array *self, void *elem) {
     err = cf_Array_reserver_(self);
     if (err) { CF_EXIT_FUNC return err; }
   }
+  cf_check(self->data);
 
   memcpy((char*)self->data + (self->size * self->elemSize), elem, self->elemSize);
   self->size++;

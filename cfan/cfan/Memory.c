@@ -16,9 +16,14 @@
 
 cf_MemManager memManager = { NULL, NULL };
 
+#define cf_Memory_getTailCheckCode(chunk) (*((int*)(((char*)(chunk + 1))+chunk->size)))
+#define cf_Memory_setTailCheckCode(chunk, code) cf_Memory_getTailCheckCode(chunk) = code
+
 void *cf_doMalloc(const char *file, const char *func, const unsigned int line, size_t size) {
   cf_MemChunk *chunk;
-  chunk = (cf_MemChunk *)malloc(size + sizeof(cf_MemChunk));
+
+  // chunk + userData + tail checkCode
+  chunk = (cf_MemChunk *)malloc(size + sizeof(cf_MemChunk) + sizeof(int));
   if (!chunk) return NULL;
   if (NULL == memManager.last) {
     memManager.first = chunk;
@@ -36,6 +41,9 @@ void *cf_doMalloc(const char *file, const char *func, const unsigned int line, s
   chunk->refCount = 0;
   chunk->next = NULL;
   chunk->size = size;
+  //set last 4 byte as check code
+  cf_Memory_setTailCheckCode(chunk, cf_Memory_checkCode);
+  //cf_Memory_doCheck(chunk);
   return chunk + 1;
 }
 
@@ -47,18 +55,50 @@ void *cf_doCalloc(const char *file, const char *func, const unsigned int line, s
   return temp;
 }
 
+inline void cf_Memory_doCheck(cf_MemChunk *chunk) {
+  if (chunk->checkCode != cf_Memory_checkCode) {
+    cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, front overflow.");
+    exit(2);
+  }
+
+  if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_checkCode  ) {
+    printf("checkcode %d\n", cf_Memory_getTailCheckCode(chunk));
+    cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, back overflow.");
+    exit(2);
+  }
+}
+
+void cf_Memory_check(const char *file, const char *func, const unsigned int line, void *p) {
+  cf_MemChunk *chunk;
+  if (p == NULL) return;
+  chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
+  if (chunk->checkCode != cf_Memory_checkCode) {
+    cf_Log_doLog(cf_Log_tag, file, func, line, cf_LogLevel_err, "bad heap, front overflow.");
+    exit(2);
+  }
+
+  if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_checkCode  ) {
+    printf("checkcode %d\n", cf_Memory_getTailCheckCode(chunk));
+    cf_Log_doLog(cf_Log_tag, file, func, line, cf_LogLevel_err, "bad heap, back overflow.");
+    exit(2);
+  }
+}
+
 void *cf_realloc(void *p, size_t size) {
   cf_MemChunk *chunk;
+  cf_assert(p);
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
-  chunk = (cf_MemChunk *)realloc(chunk, size + sizeof(cf_MemChunk));
+  cf_Memory_doCheck(chunk);
+  chunk = (cf_MemChunk *)realloc(chunk, size + sizeof(cf_MemChunk) + sizeof(int));
   if (!chunk) return NULL;
   chunk->size = size;
+  cf_Memory_setTailCheckCode(chunk, cf_Memory_checkCode);
+  cf_Memory_doCheck(chunk);
   if (chunk->prev) {
     chunk->prev->next = chunk;
   } else {
     memManager.first = chunk;
   }
-
   if (chunk->next == NULL) {
     memManager.last = chunk;
   }
@@ -70,10 +110,7 @@ void cf_free(void *p) {
   cf_assert(p);
 
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
-  if (chunk->checkCode != cf_Memory_checkCode) {
-    cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad free");
-    exit(2);
-  }
+  cf_Memory_doCheck(chunk);
 
   if (chunk->next) {
     if (chunk->prev) {
@@ -95,9 +132,19 @@ void cf_free(void *p) {
   free(chunk);
 }
 
+void cf_checkMem() {
+  cf_MemChunk *chunk;
+
+  for (chunk = memManager.first; chunk != NULL; chunk = chunk->next) {
+    cf_Memory_doCheck(chunk);
+  }
+}
+
 void cf_dumpMem() {
   cf_MemChunk *chunk;
+
   for (chunk = memManager.first; chunk != NULL; chunk = chunk->next) {
+    cf_Memory_doCheck(chunk);
     cf_Log_cfDebug("func:%s, line:%d, size:%d, refCount:%d"
       , chunk->func, chunk->line, chunk->size, chunk->refCount);
   }

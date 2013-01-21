@@ -48,8 +48,13 @@ void cf_free(void *p);
 
 void cf_dumpMem();
 
+void cf_checkMem();
+
+void cf_Memory_check(const char *file, const char *func, const unsigned int line, void *p);
+
 #define cf_malloc(size) cf_doMalloc(__FILE__, __func__, __LINE__, size)
 #define cf_calloc(nobj, size) cf_doCalloc(__FILE__, __func__, __LINE__, nobj, size)
+#define cf_check(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
 
 CF_END
 
