@@ -18,8 +18,18 @@
 
 CF_BEGIN
 
+/*************************************************************************
+ * Memory manage
+ */
+
+/**
+ * memory overflow check code
+ */
 #define cf_Memory_checkCode 0xABCD
 
+/**
+ * A block of memory that alloced.
+ */
 typedef struct cf_MemChunk_ {
   const char *file;
   const char *func;
@@ -31,31 +41,83 @@ typedef struct cf_MemChunk_ {
   int checkCode;
 } cf_MemChunk;
 
+/**
+ * Momory manager contains a MemChunk linked list.
+ */
 typedef struct cf_MemManager_ {
   cf_MemChunk *first;
   cf_MemChunk *last;
 } cf_MemManager;
 
-extern cf_MemManager memManager;
 
-void *cf_doMalloc(const char *file, const char *func, const unsigned int line, size_t size);
+/**
+ * global memory manager object.
+ */
+extern cf_MemManager cf_Memory_memManager;
 
-void *cf_doCalloc(const char *file, const char *func, const unsigned int line, size_t nobj, size_t size);
+/**
+ * actually do memory alloc.
+ */
+void *cf_Memory_malloc(const char *file, const char *func, const unsigned int line, size_t size);
 
-void *cf_realloc(void *p, size_t size);
+/**
+ * actually do clear memory alloc.
+ */
+void *cf_Memory_calloc(const char *file, const char *func, const unsigned int line, size_t nobj, size_t size);
 
-void cf_free(void *p);
+/**
+ * re alloc memory.
+ */
+void *cf_Memory_realloc(void *p, size_t size);
 
-void cf_dumpMem();
+/**
+ * free memory.
+ */
+void cf_Memory_free(const char *file, const char *func, const unsigned int line, void *p);
 
-void cf_checkMem();
+/**
+ * dump memory leak.
+ */
+void cf_Memory_dumpMem();
 
+/**
+ * check memory overflow.
+ */
+void cf_Memory_checkMem();
+
+/**
+ * actually do memory check.
+ */
 void cf_Memory_check(const char *file, const char *func, const unsigned int line, void *p);
 
-#define cf_malloc(size) cf_doMalloc(__FILE__, __func__, __LINE__, size)
-#define cf_calloc(nobj, size) cf_doCalloc(__FILE__, __func__, __LINE__, nobj, size)
-#define cf_check(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
+/*************************************************************************
+ * Memory manage macro define
+ */
+
+#ifdef CF_DEBUG
+
+  #define cf_malloc(size) cf_Memory_malloc(__FILE__, __func__, __LINE__, size)
+  #define cf_calloc(nobj, size) cf_Memory_calloc(__FILE__, __func__, __LINE__, nobj, size)
+  #define cf_realloc cf_Memory_realloc
+  #define cf_free(p) cf_Memory_free(__FILE__, __func__, __LINE__, p)
+
+  #define cf_check(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
+  #define cf_dumpMem cf_Memory_dumpMem
+  #define cf_checkMem cf_Memory_checkMem
+
+#else
+
+  #define cf_malloc malloc
+  #define cf_calloc calloc
+  #define cf_realloc realloc
+  #define cf_free free
+
+  #define cf_check
+  #define cf_dumpMem
+  #define cf_checkMem
+
+#endif
 
 CF_END
 
-#endif
+#endif //_CF_MEMORY_H_

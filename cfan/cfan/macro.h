@@ -59,15 +59,15 @@
  * Math
  */
 
-#define CF_PI       3.14159265358979323846
+#define cf_Math_pi       3.14159265358979323846
 
-#define CF_MAX(a, b)  (((a) > (b)) ? (a) : (b))
+#define cf_Math_max(a, b)  (((a) > (b)) ? (a) : (b))
 
-#define CF_MIN(a, b)  (((a) < (b)) ? (a) : (b))
+#define cf_Math_min(a, b)  (((a) < (b)) ? (a) : (b))
 
-#define CF_ABS(a)     (((a) < 0) ? -(a) : (a))
+#define cf_Math_abs(a)     (((a) < 0) ? -(a) : (a))
 
-#define CF_CLAMP(a, min, max) (MIN(MAX((a), (min)), (max)))
+#define cf_Math_clamp(a, min, max) (cf_Math_min(cf_Math_max((a), (min)), (max)))
 
 
 /*************************************************************************
@@ -86,6 +86,9 @@
   #define CF_DEBUG
 #endif
 
+/*************************************************************************
+ * function trace
+ */
 #ifdef CF_DEBUG
   #define CF_ENTRY_FUNC cf_Log_log("func", cf_LogLevel_debug, "entry function" );
   #define CF_EXIT_FUNC  cf_Log_log("func", cf_LogLevel_debug, "exit function" );

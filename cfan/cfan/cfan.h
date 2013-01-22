@@ -11,6 +11,10 @@
 #ifndef _CF_CFAN_H_
 #define _CF_CFAN_H_
 
+/**
+ * assemble all head file.
+ *
+ */
 #include "cfan/macro.h"
 #include "cfan/miss.h"
 #include "cfan/Error.h"

@@ -12,9 +12,12 @@
 
 
 /*************************************************************************
-*
+* string to string
 */
 
+/**
+ * hash function
+ */
 size_t cf_HashMap_strHash(const char *str) {
   size_t hashValue;
   CF_ENTRY_FUNC
@@ -34,7 +37,7 @@ cf_HashMapTemplate_impl(cf_HashMapSS, const char*, char*)
 #undef compFunc
 
 /*************************************************************************
-*
+* int to int
 */
 
 #define hashFunc(key) key

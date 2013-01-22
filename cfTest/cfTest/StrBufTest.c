@@ -18,7 +18,7 @@ void cf_StrBufTest_testPrintf(void) {
   cf_StrBuf_make(&strBuf);
   cf_StrBuf_printf(&strBuf, 128, "hello %s, %d", "world", 2);
 
-  printf("%s, %d\n", cf_StrBuf_str(&strBuf), cf_StrBuf_size(&strBuf));
+  printf("%s, %d\n", cf_StrBuf_str(&strBuf), (int)cf_StrBuf_size(&strBuf));
 
   cf_verify(strcmp(cf_StrBuf_str(&strBuf), "hello world, 2") == 0);
 

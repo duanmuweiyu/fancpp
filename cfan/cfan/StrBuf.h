@@ -97,7 +97,7 @@ inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
  */
 inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
   cf_assert(self);
-  cf_assert(index >= 0 && index < self->size);
+  cf_assert(index < self->size);
   memmove(self->buffer+index, self->buffer+index+1, 1);
 }
 
@@ -106,7 +106,7 @@ inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
  */
 inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
   cf_assert(self);
-  cf_assert(index >= 0 && index < self->size);
+  cf_assert(index < self->size);
   self->buffer[index] = c;
 }
 
@@ -115,7 +115,7 @@ inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
  */
 inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
   cf_assert(self);
-  cf_assert(index >= 0 && index < self->size);
+  cf_assert(index < self->size);
   *c = self->buffer[index];
 }
 
@@ -124,7 +124,7 @@ inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
  */
 inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
   cf_assert(self);
-  cf_assert(offset >= 0 && offset+size <= self->size);
+  cf_assert(offset+size <= self->size);
   memcpy(self->buffer + offset, out, size);
 }
 
@@ -139,7 +139,7 @@ inline void cf_StrBuf_clear(cf_StrBuf *self) {
 /**
  * print format
  */
-cf_Error cf_StrBuf_printf(cf_StrBuf *self, int size, char *format, ...);
+cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t size, char *format, ...);
 
 CF_END
 

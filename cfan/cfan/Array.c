@@ -25,7 +25,7 @@ cf_Error cf_Array_reserver_(cf_Array *self) {
     return cf_Error_alloc;
   }
 
-  self->data = tmp;
+  self->data = (char*)tmp;
   self->capacity = newCapacity;
 
   CF_EXIT_FUNC

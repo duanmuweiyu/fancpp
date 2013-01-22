@@ -34,6 +34,8 @@ typedef struct cf_OutputStreamVTable_ {
 
   cf_Error (*write)(cf_OutputStream *self, char *buf, size_t size);
 
+  cf_Error (*isError)(cf_OutputStream *self);
+
 } cf_OutputStreamVTable;
 
 inline cf_Error writeInt8(cf_OutputStream *self, int8_t out) {
@@ -81,6 +83,8 @@ typedef struct cf_InputStreamVTable_ {
   cf_VTable super;
 
   cf_Error (*read)(cf_InputStream *self, char *buf, size_t size);
+
+  cf_Error (*isError)(cf_InputStream *self);
 
 } cf_InputStreamVTable;
 

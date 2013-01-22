@@ -22,7 +22,7 @@ cf_Error cf_File_loadInfo(cf_File *self) {
   struct stat stbuf;
   if (stat(self->path, &stbuf) == -1) {
     self->exists = false;
-    return cf_Error_io;
+    return cf_Error_file;
   }
   self->size = stbuf.st_size;
   self->isDir = S_ISDIR(stbuf.st_mode);
@@ -33,7 +33,7 @@ cf_Error cf_File_loadInfo(cf_File *self) {
 
 cf_Error cf_File_createDir(cf_File *self) {
   if (mkdir(self->path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
-    return cf_Error_io;
+    return cf_Error_file;
   }
   return cf_Error_ok;
 }
@@ -42,13 +42,13 @@ cf_Error CF_File_delete(cf_File *self) {
   if (remove(self->path) == 0) {
     return cf_Error_ok;
   }
-  return cf_Error_io;
+  return cf_Error_file;
 }
 
 cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
   DIR *dir = opendir(path);
   self->first = dir;
-  return dir == NULL ? cf_Error_io : cf_Error_ok;
+  return dir == NULL ? cf_Error_file : cf_Error_ok;
 }
 
 const char* cf_DirIterator_next(cf_DirIterator *self) {

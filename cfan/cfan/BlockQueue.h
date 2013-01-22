@@ -15,6 +15,14 @@
 #include "tinyCThread/tinycthread.h"
 #include <stdio.h>
 
+CF_BEGIN
+
+/**
+ * Block queue is a FIFO sequence.
+ * Blocked when add to full queue or delete from empty queue.
+ * It's like Golang channel.
+ *
+ */
 typedef struct cf_BlockQueue_ {
   cf_Queue queue;
   mtx_t mutex;
@@ -24,6 +32,10 @@ typedef struct cf_BlockQueue_ {
   bool cancelDelete;
 } cf_BlockQueue;
 
+/**
+ * constructor
+ *
+ */
 inline cf_Error cf_BlockQueue_make(cf_BlockQueue *self, size_t capacity, unsigned int elemSize) {
   cf_Error err;
   int terr;
@@ -47,6 +59,9 @@ inline cf_Error cf_BlockQueue_make(cf_BlockQueue *self, size_t capacity, unsigne
   return err;
 }
 
+/**
+ * current num of elements
+ */
 inline size_t cf_BlockQueue_size(cf_BlockQueue *self) {
   register size_t size;
   mtx_lock(&self->mutex);
@@ -55,6 +70,9 @@ inline size_t cf_BlockQueue_size(cf_BlockQueue *self) {
   return size;
 }
 
+/**
+ * queue is empty
+ */
 inline bool cf_BlockQueue_isEmpty(cf_BlockQueue *self) {
   register bool result;
   mtx_lock(&self->mutex);
@@ -63,13 +81,22 @@ inline bool cf_BlockQueue_isEmpty(cf_BlockQueue *self) {
   return result;
 }
 
-inline cf_Error cf_BlockQueue_add(cf_BlockQueue *self, void *elem) {
+/**
+ * push element to back.
+ * If block arg is true and queue is full will be blocked.
+ */
+inline cf_Error cf_BlockQueue_add(cf_BlockQueue *self, void *elem, bool block) {
   register cf_Error result;
   mtx_lock(&self->mutex);
   while (!self->cancelAdd) {
     result = cf_Queue_add(&self->queue, elem);
     if (result != cf_Error_ok) {
-      cnd_wait(&self->addCond, &self->mutex);
+      if (block) {
+        cnd_wait(&self->addCond, &self->mutex);
+      } else {
+        mtx_unlock(&self->mutex);
+        return cf_Error_overflow;
+      }
     } else {
       cnd_signal(&self->deleteCond);
       mtx_unlock(&self->mutex);
@@ -81,6 +108,9 @@ inline cf_Error cf_BlockQueue_add(cf_BlockQueue *self, void *elem) {
   return cf_Error_error;
 }
 
+/**
+ * Release all blocked thread.
+ */
 inline void cf_BlockQueue_cancel(cf_BlockQueue *self) {
   mtx_lock(&self->mutex);
   self->cancelAdd = true;
@@ -92,6 +122,10 @@ inline void cf_BlockQueue_cancel(cf_BlockQueue *self) {
   mtx_unlock(&self->mutex);
 }
 
+/**
+ * pop out a front element.
+ * If queue is empty will be blocked.
+ */
 inline void *cf_BlockQueue_delete(cf_BlockQueue *self) {
   register void *result;
   int rc;
@@ -133,6 +167,9 @@ inline void *cf_BlockQueue_delete(cf_BlockQueue *self) {
   return NULL;
 }
 
+/**
+ * get first element but pop out.
+ */
 inline void *cf_BlockQueue_peek(cf_BlockQueue *self) {
   register void *result;
   mtx_lock(&self->mutex);
@@ -141,6 +178,10 @@ inline void *cf_BlockQueue_peek(cf_BlockQueue *self) {
   return result;
 }
 
+/**
+ * Destroy queue.
+ * Must guarantee call cf_BlockQueue_cancel before.
+ */
 inline void cf_BlockQueue_dispose(cf_BlockQueue *self) {
   //cf_BlockQueue_cancel(self);
   mtx_destroy(&self->mutex);
@@ -149,5 +190,7 @@ inline void cf_BlockQueue_dispose(cf_BlockQueue *self) {
   cf_Queue_dispose(&self->queue);
   //printf("queue disposed\n");
 }
+
+CF_END
 
 #endif

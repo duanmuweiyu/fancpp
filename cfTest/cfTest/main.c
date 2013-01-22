@@ -23,6 +23,10 @@ void cf_QueueTest_register(void);
 void cf_BlockQueueTest_register(void);
 void cf_ExecutorTest_register(void);
 
+/**
+ * register all test case.
+ *
+ */
 void registerAll(void) {
   cf_LogTest_register();
   cf_ArrayTest_register();
@@ -37,6 +41,10 @@ void registerAll(void) {
   cf_ExecutorTest_register();
 }
 
+/**
+ * execute the test.
+ *
+ */
 int main(int argc, char **argv) {
   const char *name;
   cf_Test_init();

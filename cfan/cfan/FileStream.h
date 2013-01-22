@@ -31,6 +31,8 @@ typedef struct cf_FileOutputStream_ {
 
 cf_Error cf_FileOutputStream_write(cf_OutputStream *self, char *buf, size_t size);
 
+cf_Error cf_FileOutputStream_isError(cf_OutputStream *self);
+
 inline void cf_FileOutputStream_make(cf_FileOutputStream *self, FILE *file) {
   self->file = file;
   CF_VTABLE(cf_OutputStream, self)->write = cf_FileOutputStream_write;
@@ -49,6 +51,8 @@ typedef struct cf_FileInputStream_ {
 } cf_FileInputStream;
 
 cf_Error cf_FileInputStream_read(cf_InputStream *self, char *buf, size_t size);
+
+cf_Error cf_FileInputStream_isError(cf_InputStream *self);
 
 inline void cf_FileInputStream_make(cf_FileInputStream *self, FILE *file) {
   self->file = file;

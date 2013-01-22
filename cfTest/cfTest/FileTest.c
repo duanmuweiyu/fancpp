@@ -25,7 +25,7 @@ void cf_FileTest_test(void) {
     return;
   }
 
-  while (name = cf_DirIterator_next(&iter)) {
+  while ((name = cf_DirIterator_next(&iter)) != NULL) {
     printf("%s\n", name);
   }
 

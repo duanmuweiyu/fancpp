@@ -21,15 +21,17 @@
 CF_BEGIN
 
 /*
-* macro:
-* hashFunc
-* compFunc
+* Hash map is a container that contains key-value pairs with unique keys.
+* And supports fast search by key.
+* This is a hash Map template macro.
+* depends macro:
+*   hashFunc
+*   compFunc
 */
 
 /*************************************************************************
-* Template define
+* Template head file define
 */
-
 #define cf_HashMapTemplate(HashMap, K, V) \
 \
 /**\
@@ -50,6 +52,7 @@ typedef struct HashMap##Elem_ {\
 typedef struct HashMap##_ {\
   size_t    size;\
   HashMap##Elem *table;\
+  HashMap##Elem *idle;/*deleted elements*/\
 } HashMap;\
 /**\
  * Iterator\
@@ -65,20 +68,25 @@ typedef struct HashMap##_ {\
  * constructor\
  *\
  */\
-  cf_Error HashMap##_make(HashMap *self, size_t size);\
-  \
-  /**\
-   * lookup\
-   *\
-   */\
-  cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue);\
-  \
-  /**\
-   * put\
-   *\
-   */\
-  cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue);\
-  \
+cf_Error HashMap##_make(HashMap *self, size_t size);\
+\
+/**\
+ * lookup\
+ *\
+ */\
+cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue);\
+\
+/**\
+ * put\
+ *\
+ */\
+cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue);\
+/**\
+ * remove\
+ *\
+ */\
+cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue);\
+\
 /**\
  * destroy content\
  *\
@@ -100,9 +108,8 @@ inline void HashMap##_createIterator(HashMap *self, HashMap##Iterator *iter) {\
 
 
 /*************************************************************************
-* Impl
+* Implemention macro
 */
-
 #define cf_HashMapTemplate_impl(HashMap, K, V) \
 \
 cf_Error HashMap##_make(HashMap *self, size_t size) {\
@@ -111,6 +118,7 @@ cf_Error HashMap##_make(HashMap *self, size_t size) {\
   cf_assert(self);\
 \
   self->size = size;\
+  self->idle = NULL;\
   self->table = (HashMap##Elem*)cf_calloc(size, sizeof(HashMap##Elem));\
   if (NULL == self->table) {\
     CF_EXIT_FUNC return cf_Error_alloc;\
@@ -168,9 +176,14 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
 \
   /* if not found*/\
   if (elem->used) {\
-    newElem = (HashMap##Elem *)cf_malloc(sizeof(HashMap##Elem));\
-    if (!newElem) {\
-      CF_EXIT_FUNC return cf_Error_alloc;\
+    if (self->idle != NULL) {\
+      newElem = self->idle;\
+      self->idle = newElem->next;\
+    } else {\
+      newElem = (HashMap##Elem *)cf_malloc(sizeof(HashMap##Elem));\
+      if (!newElem) {\
+        CF_EXIT_FUNC return cf_Error_alloc;\
+      }\
     }\
     elem->next = newElem;\
   } else {\
@@ -185,6 +198,32 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
 \
   CF_EXIT_FUNC\
   return cf_Error_ok;\
+}\
+\
+cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue) {\
+  HashMap##Elem *elem;\
+  HashMap##Elem *temp = NULL;\
+\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+\
+  for (elem = self->table + (hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
+    if (compFunc(key, elem->key) == 0) {\
+      if (oldKey) *oldKey = elem->key;\
+      if (oldValue) *oldValue = elem->value;\
+      if (temp != NULL) {\
+        temp->next = NULL;\
+        elem->next = self->idle;\
+        self->idle = elem;\
+      }\
+      elem->used = false;\
+      CF_EXIT_FUNC\
+      return cf_Error_ok;\
+    }\
+    temp = elem;\
+  }\
+  CF_EXIT_FUNC\
+  return cf_Error_notfound;\
 }\
 \
 void HashMap##_dispose(HashMap *self) {\
@@ -240,10 +279,16 @@ cf_Error HashMap##Iterator_get(HashMap##Iterator *self, K *key, V *value) {\
 * Default define
 */
 
-
+/**
+ * string to string map
+ */
 cf_HashMapTemplate(cf_HashMapSS, const char*, char*)
 
+/**
+ * int to int map
+ */
 cf_HashMapTemplate(cf_HashMapII, int, int)
+
 
 CF_END
 

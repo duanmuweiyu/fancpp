@@ -62,7 +62,7 @@ cf_Error cf_StrBuf_add(cf_StrBuf *self, const char *str, long size) {
   return cf_Error_ok;
 }
 
-cf_Error cf_StrBuf_printf(cf_StrBuf *self, int size, char *format, ...) {
+cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t size, char *format, ...) {
   va_list args;
   cf_Error err;
   int rc;

@@ -44,7 +44,7 @@ void cf_ArrayTest_testSort(void) {
   int c = 1;
   size_t size;
   unsigned int i = 0;
-  int *value;
+  int *value = NULL;
   long index;
   CF_ENTRY_FUNC
 

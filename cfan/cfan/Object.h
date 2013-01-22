@@ -15,11 +15,18 @@
 
 CF_BEGIN
 
+/**
+ * Virtual table is a function pointer list for Object.
+ * We using this implements polymorphism.
+ */
 typedef struct cf_VTable_ {
   int offset;
 
 } cf_VTable;
 
+/**
+ * Object is a super class of all objects.
+ */
 typedef struct cf_Object_ {
   cf_VTable *vtable;
 } cf_Object;
@@ -30,7 +37,8 @@ typedef struct cf_Object_ {
 #define CF_VTABLE(type, obj) ((type##VTable*)((cf_Object*)(obj))->vtable)
 
 /**
- * interface call
+ * interface call.
+ * the Interface have a offset at the object model.
  */
 #define CF_ICALL(type, obj, func, ...) (CF_VTABLE(type, obj)->func(\
    (type*)(((char*)(obj))+((cf_Object*)(obj))->vtable->offset), ## __VA_ARGS__))

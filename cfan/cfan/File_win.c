@@ -63,21 +63,21 @@ cf_Error cf_File_loadInfo(cf_File *self) {
 
 error:
   self->exists = false;
-  return cf_Error_io;
+  return cf_Error_file;
 }
 
 cf_Error cf_File_createDir(cf_File *self) {
   if (CreateDirectory(self->path, NULL) != NULL) {
     return cf_Error_ok;
   }
-  return cf_Error_io;
+  return cf_Error_file;
 }
 
 cf_Error CF_File_delete(cf_File *self) {
   if (DeleteFile(self->path)) {
     return cf_Error_ok;
   }
-  return cf_Error_io;
+  return cf_Error_file;
 }
 
 cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
@@ -90,7 +90,7 @@ cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
     cf_free(findFileData);
     self->second = NULL;
     printf ("FindFirstFile failed (%d)\n", GetLastError());
-    return cf_Error_io;
+    return cf_Error_file;
   }
   self->first = (void*)hFind;
   self->second = (void*)findFileData;

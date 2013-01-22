@@ -22,7 +22,7 @@ static void *add(void *args) {
   for (i=0; i<10; ++i) {
     data[i] = i*10;
     printf("%d...\n", data[i]);
-    err = cf_BlockQueue_add(queue, data + i);
+    err = cf_BlockQueue_add(queue, data + i, true);
     if (err != cf_Error_ok) {
       break;
     }

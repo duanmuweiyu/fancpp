@@ -14,24 +14,39 @@
 #include "cfan/BlockQueue.h"
 #include <stdio.h>
 
+CF_BEGIN
+
+/**
+ * Executor is a thread pool.
+ * using producer/consumer model.
+ *
+ */
 typedef struct cf_Executor_ {
   cf_BlockQueue taskQueue;
   thrd_t *threadList;
   size_t threadSize;
-  //bool canceled;
 } cf_Executor;
 
+/**
+ * Task is a unexecuted job.
+ */
 typedef struct cf_ExecutorTask_ {
   void *(*func)(void*);
   void *args;
 } cf_ExecutorTask;
 
+/**
+ * execute function.
+ */
 int *cf_Executor_thread_(void *arg);
 
+/**
+ * construcotr
+ */
 inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t threadSize) {
   cf_Error err;
   int terr;
-  int i;
+  size_t i;
   CF_ENTRY_FUNC
 
   err = cf_BlockQueue_make(&self->taskQueue, taskSize, sizeof(cf_ExecutorTask));
@@ -54,29 +69,21 @@ inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t thre
   return err;
 }
 
+/**
+ * add a task
+ */
 inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void*), void *args) {
   cf_ExecutorTask task = { func, args };
-  return cf_BlockQueue_add(&self->taskQueue, &task);
+  return cf_BlockQueue_add(&self->taskQueue, &task, true);
 }
 
+/**
+ * Destroy executor.
+ * wait until all threads return.
+ */
 inline void cf_Executor_dispose(cf_Executor *self) {
-  int i;
+  size_t i;
   int rc;
-  //self->canceled = true;
-
-
-//  {
-//    struct timespec ts;
-//    clock_gettime(TIME_UTC, &ts);
-//    ts.tv_sec += 2;
-
-//    /* Sleep... */
-//    printf("thread sleepping\n");
-//    fflush(stdout);
-//    thrd_sleep(&ts, NULL);
-//    printf("thread sleeped\n");
-//    fflush(stdout);
-//  }
 
   cf_BlockQueue_cancel(&self->taskQueue);
 
@@ -88,9 +95,10 @@ inline void cf_Executor_dispose(cf_Executor *self) {
       fflush(stdout);
     }
   }
-  //printf("will cf_BlockQueue_dispose\n");
-  fflush(stdout);
+
   cf_BlockQueue_dispose(&self->taskQueue);
 }
+
+CF_END
 
 #endif

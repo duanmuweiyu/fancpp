@@ -20,7 +20,7 @@ void cf_StrTest_testToken(void) {
 
   cf_StrToken_make(&tokener, buf, delim);
 
-  while (next = cf_StrToken_next(&tokener)) {
+  while ((next = cf_StrToken_next(&tokener)) != NULL) {
     printf("%s\n", next);
   }
 

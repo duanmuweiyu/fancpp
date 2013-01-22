@@ -16,6 +16,11 @@
 
 #include <string.h>
 
+CF_BEGIN
+
+/**
+ * Queue is a FIFO sequence
+ */
 typedef struct cf_Queue_ {
   char *buf;
   unsigned int elemSize;
@@ -24,6 +29,9 @@ typedef struct cf_Queue_ {
   size_t rear;
 } cf_Queue;
 
+/**
+ * constructor
+ */
 inline cf_Error cf_Queue_make(cf_Queue *self, size_t capacity, unsigned int elemSize) {
   self->capacity = capacity+1;//add one at here
   self->elemSize = elemSize;
@@ -36,16 +44,23 @@ inline cf_Error cf_Queue_make(cf_Queue *self, size_t capacity, unsigned int elem
   return cf_Error_ok;
 }
 
+/**
+ * current num of elements
+ */
 inline size_t cf_Queue_size(cf_Queue *self) {
   if (self->rear > self->front) {
     return self->rear - self->front;
-  } else if (self->rear == self->front) {
-    return 0;
   } else if (self->rear < self->front) {
     return self->rear + (self->capacity - self->front);
+  } else {
+    //self->rear == self->front
+    return 0;
   }
 }
 
+/**
+ * queue is empty
+ */
 inline bool cf_Queue_isEmpty(cf_Queue *self) {
   if (self->front == self->rear) {
     return true;
@@ -53,6 +68,9 @@ inline bool cf_Queue_isEmpty(cf_Queue *self) {
   return false;
 }
 
+/**
+ * push element to back.
+ */
 inline cf_Error cf_Queue_add(cf_Queue *self, void *elem) {
   size_t npos;
   npos = (self->rear + 1) % self->capacity;
@@ -64,6 +82,9 @@ inline cf_Error cf_Queue_add(cf_Queue *self, void *elem) {
   return cf_Error_ok;
 }
 
+/**
+ * pop element from front.
+ */
 inline void *cf_Queue_delete(cf_Queue *self) {
   void *elem;
   if (self->front == self->rear) {
@@ -74,6 +95,9 @@ inline void *cf_Queue_delete(cf_Queue *self) {
   return elem;
 }
 
+/**
+ * get first element but pop out.
+ */
 inline void *cf_Queue_peek(cf_Queue *self) {
   if (self->front == self->rear) {
     return NULL;
@@ -81,8 +105,13 @@ inline void *cf_Queue_peek(cf_Queue *self) {
   return self->buf + (self->front * self->elemSize);
 }
 
+/**
+ * destroy
+ */
 inline void cf_Queue_dispose(cf_Queue *self) {
   cf_free(self->buf);
 }
+
+CF_END
 
 #endif

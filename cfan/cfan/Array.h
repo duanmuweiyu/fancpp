@@ -11,7 +11,6 @@
 #ifndef _CF_ARRAY_H_
 #define _CF_ARRAY_H_
 
-#include "cfan/macro.h"
 #include "cfan/Error.h"
 #include "cfan/Memory.h"
 
@@ -20,14 +19,16 @@
 CF_BEGIN
 
 /**
- * Array
+ * Array represents an liner sequence indexed by an int.
+ * is a dynamic c array lick C++ vector.
+ * supports fast random access to the elements.
  *
  */
 typedef struct cf_Array_ {
   size_t    size;        //current number of items
   size_t    capacity;    //The number of items can hold without allocating more memory.
   unsigned int elemSize;
-  void *data;
+  char *data;
 } cf_Array;
 
 /**
@@ -39,7 +40,7 @@ inline cf_Error cf_Array_make(cf_Array *self, size_t size, size_t capacity, cons
   self->size = size;
   self->capacity = capacity;
   self->elemSize = elemSize;
-  self->data = cf_malloc(capacity * elemSize);
+  self->data = (char*)cf_malloc(capacity * elemSize);
   if (NULL == self->data) {
     CF_EXIT_FUNC return cf_Error_alloc;
   }
@@ -57,12 +58,12 @@ inline size_t cf_Array_size(cf_Array *self) {
 }
 
 /**
- * get by index
+ * get element pointer by index
  *
  */
-inline void *cf_Array_get(cf_Array *self, const unsigned int index) {
+inline void *cf_Array_get(cf_Array *self, size_t index) {
   cf_assert(self);
-  cf_assert(index >= 0 && index < self->size);
+  cf_assert(index < self->size);
 
   return (char*)self->data + (index * self->elemSize);
 }
@@ -98,6 +99,17 @@ inline cf_Error cf_Array_add(cf_Array *self, void *elem) {
 }
 
 /**
+ * Remove element at index.
+ * Before removed must free the element resource by yourself.
+ *
+ */
+inline void cf_Array_remove(cf_Array *self, const unsigned int index) {
+  memmove(self->data + (index * self->elemSize)
+          , self->data + ((index+1) * self->elemSize), self->elemSize);
+  self->size--;
+}
+
+/**
  * destroy content
  *
  */
@@ -112,6 +124,10 @@ inline void cf_Array_dispose(cf_Array *self) {
  * sort
  */
 
+/**
+ * change two element position
+ *
+ */
 inline void cf_Array_swap(cf_Array *self, int i, int j) {
   int n = self->elemSize - 1;
   char *s1 = (char *)cf_Array_get(self, i);
@@ -124,11 +140,11 @@ inline void cf_Array_swap(cf_Array *self, int i, int j) {
   }
 }
 
-/*
-* macro:
-* cmpFunc
-*/
-
+/**
+ * Array qsort and bsearch template macro.
+ * need macro:
+ *   cmpFunc
+ */
 #define cf_Array_sortTemplate(Array)\
 \
 void Array##_quickSort(cf_Array *self, int left, int right);\
@@ -160,6 +176,11 @@ inline long Array##_bsearch(cf_Array *self, void *elem) {\
   return -1;\
 }\
 
+/**
+ * Array sort template implemention macro.
+ * need macro:
+ *   cmpFunc
+ */
 #define cf_Array_sortTemplate_impl(Array)\
 \
 void Array##_quickSort(cf_Array *self, int left, int right) {\
@@ -179,6 +200,9 @@ void Array##_quickSort(cf_Array *self, int left, int right) {\
   CF_EXIT_FUNC\
 }\
 
+/**
+ * define int array
+ */
 #define cmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
 cf_Array_sortTemplate(cf_ArrayI)
 #undef cmopFunc

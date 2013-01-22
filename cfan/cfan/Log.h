@@ -30,19 +30,9 @@ typedef enum cf_LogLevel_ {
   cf_LogLevel_silent
 } cf_LogLevel;
 
-///**
-// * logging statements
-// *
-// */
-//typedef struct cf_LogRec_ {
-//  const char *tag;
-//  const char *file;
-//  const char *func;
-//  const unsigned int line;
-//  const cf_LogLevel level;
-//  const char *msg;
-//} cf_LogRec;
-
+/**
+ * Log listener function type.
+ */
 typedef void (*cf_Log_listener)(const char *tag, const char *file, const char *func, const unsigned int line
                           , const cf_LogLevel level, const char *msg, va_list args);
 
@@ -70,10 +60,15 @@ void cf_Log_doLog(const char *tag, const char *file, const char *func, const uns
 #define cf_Log_log(tag, level, msg, ...)\
   cf_Log_doLog(tag, __FILE__, __func__, __LINE__,  level, msg, ## __VA_ARGS__)
 
+/**
+ * convenience log macro.
+ *
+ */
 #define cf_Log_tag "cf"
 #define cf_Log_cfError(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_err, msg, ## __VA_ARGS__)
 #define cf_Log_cfWarn(msg, ...)  cf_Log_log(cf_Log_tag, cf_LogLevel_warn, msg, ## __VA_ARGS__)
 #define cf_Log_cfInfo(msg, ...)  cf_Log_log(cf_Log_tag, cf_LogLevel_info, msg, ## __VA_ARGS__)
+
 #ifdef CF_DEBUG
   #define cf_Log_cfDebug(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_debug, msg, ## __VA_ARGS__)
 #else

@@ -18,14 +18,35 @@
 
 CF_BEGIN
 
+/**
+ * Tool for read config file.
+ * the file format like Java's Properties file.
+ * for example:
+ *   key = value
+ *
+ */
 typedef struct cf_Config_ {
   cf_HashMapSS map;
 } cf_Config;
 
+/**
+ * load from file
+ *
+ */
 cf_Error cf_Config_make(cf_Config *self, const char *path);
 
-inline void cf_Config_get(cf_Config *self, const char *key, char *value, const char *defVal) {
-  //cf_HashMapSS_get(&map, key, NULL, &value );
+/**
+ * get value by key
+ *
+ */
+inline const char *cf_Config_get(cf_Config *self, const char *key, const char *defVal) {
+  cf_Error err;
+  char *value;
+  err = cf_HashMapSS_get(&self->map, key, NULL, &value );
+  if (err != cf_Error_ok) {
+    return defVal;
+  }
+  return value;
 }
 
 CF_END

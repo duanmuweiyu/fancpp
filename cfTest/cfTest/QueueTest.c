@@ -23,11 +23,11 @@ void cf_QueueTest_test(void) {
 
   cf_Queue_make(&queue, 2, sizeof(int));
   cf_Queue_add(&queue, &a);
-  printf("%d, %d\n", queue.front, queue.rear);
+  printf("%d, %d\n", (int)queue.front, (int)queue.rear);
   cf_Queue_add(&queue, &b);
-  printf("%d, %d\n", queue.front, queue.rear);
+  printf("%d, %d\n", (int)queue.front, (int)queue.rear);
   err = cf_Queue_add(&queue, &c);
-  printf("%d, %d\n", queue.front, queue.rear);
+  printf("%d, %d\n", (int)queue.front, (int)queue.rear);
 
   cf_verify(err != cf_Error_ok);
 

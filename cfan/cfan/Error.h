@@ -13,6 +13,11 @@
 
 #include "cfan/Log.h"
 
+/**
+ * Error code list.
+ * The 0 represents no error.
+ *
+ */
 typedef enum cf_Error_ {
   cf_Error_ok,
   cf_Error_error,
@@ -27,16 +32,28 @@ typedef enum cf_Error_ {
   cf_Error_unsupported,
   cf_Error_eof,
   cf_Error_overflow,
-  cf_Error_thread
+  cf_Error_thread,
+  cf_Error_file
 } cf_Error;
 
-#define cf_assert(exp) do {\
-    if (!(exp)) {\
-      cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
-      exit(2);\
-    }\
-  } while(0);
+/**
+ * Bomb at condition fail.
+ * Only effective at CF_DEBUG macro define.
+ */
+#ifdef CF_DEBUG
+  #define cf_assert(exp) do {\
+      if (!(exp)) {\
+        cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
+        exit(2);\
+      }\
+    } while(0);
+#else
+  #define cf_assert
+#endif
 
+/**
+ * exit function if condition is true.
+ */
 #define cf_returnErrorIf(exp, val) do {\
     if (!(exp)) {\
       cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
@@ -45,6 +62,9 @@ typedef enum cf_Error_ {
     }\
   } while(0);
 
+/**
+ * goto error label if condition is true.
+ */
 #define cf_gotoErrorIf(exp) do {\
     if (!(exp)) {\
       cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
