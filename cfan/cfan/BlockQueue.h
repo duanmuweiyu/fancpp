@@ -103,7 +103,6 @@ inline cf_Error cf_BlockQueue_add(cf_BlockQueue *self, void *elem, bool block) {
       return cf_Error_ok;
     }
   }
-  cnd_broadcast(&self->addCond);
   mtx_unlock(&self->mutex);
   return cf_Error_error;
 }
@@ -151,12 +150,6 @@ inline void *cf_BlockQueue_delete(cf_BlockQueue *self) {
       }
       return result;
     }
-  }
-
-  //broadcast other cancel delete
-  rc = cnd_broadcast(&self->deleteCond);
-  if (rc != thrd_success) {
-    printf("cnd_broadcast error\n");
   }
 
   //unlock
