@@ -20,7 +20,7 @@ int *cf_Executor_thread_(void *arg) {
   //printf("thread %d run\n", thrd_current());
   fflush(stdout);
   while (true) {
-    task = (cf_ExecutorTask *)cf_BlockQueue_delete(&self->taskQueue);
+    task = (cf_ExecutorTask *)cf_BlockingQueue_delete(&self->taskQueue);
     if (task != NULL) {
       (*task->func)(task->args);
     } else {

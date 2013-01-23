@@ -30,8 +30,8 @@ HEADERS += \
     cfan/Test.h \
     tinyCThread/tinycthread.h \
     cfan/Queue.h \
-    cfan/BlockQueue.h \
-    cfan/Executor.h
+    cfan/Executor.h \
+    cfan/BlockingQueue.h
 
 SOURCES += \
     cfan/StrBuf.c \
