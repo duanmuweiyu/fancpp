@@ -10,9 +10,16 @@
 
 #include "cfan/Memory.h"
 #include "Error.h"
+
+#include <tinyCThread/tinycthread.h>
 #include <stdio.h>
 
 #include <string.h>
+
+
+#ifndef CF_NO_THREAD_SAFE
+  mtx_t cf_Memory_mutex;
+#endif
 
 cf_MemManager cf_Memory_memManager = { NULL, NULL };
 
@@ -25,6 +32,10 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
   // chunk + userData + tail checkCode
   chunk = (cf_MemChunk *)malloc(size + sizeof(cf_MemChunk) + sizeof(int));
   if (!chunk) return NULL;
+
+#ifndef CF_NO_THREAD_SAFE
+  mtx_lock(&cf_Memory_mutex);
+#endif
   if (NULL == cf_Memory_memManager.last) {
     cf_Memory_memManager.first = chunk;
     cf_Memory_memManager.last = chunk;
@@ -34,6 +45,10 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
     chunk->prev = cf_Memory_memManager.last;
     cf_Memory_memManager.last = chunk;
   }
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
+
   chunk->file = file;
   chunk->func = func;
   chunk->line = line;
@@ -97,10 +112,22 @@ void *cf_Memory_realloc(void *p, size_t size) {
   if (chunk->prev) {
     chunk->prev->next = chunk;
   } else {
+#ifndef CF_NO_THREAD_SAFE
+    mtx_lock(&cf_Memory_mutex);
+#endif
     cf_Memory_memManager.first = chunk;
+#ifndef CF_NO_THREAD_SAFE
+    mtx_unlock(&cf_Memory_mutex);
+#endif
   }
   if (chunk->next == NULL) {
+#ifndef CF_NO_THREAD_SAFE
+    mtx_lock(&cf_Memory_mutex);
+#endif
     cf_Memory_memManager.last = chunk;
+#ifndef CF_NO_THREAD_SAFE
+    mtx_unlock(&cf_Memory_mutex);
+#endif
   }
   return chunk + 1;
 }
@@ -117,33 +144,64 @@ void cf_Memory_free(const char *file, const char *func, const unsigned int line,
       chunk->prev->next = chunk->next;
       chunk->next->prev = chunk->prev;
     } else {
+#ifndef CF_NO_THREAD_SAFE
+      mtx_lock(&cf_Memory_mutex);
+#endif
       cf_Memory_memManager.first = chunk->next;
+#ifndef CF_NO_THREAD_SAFE
+      mtx_unlock(&cf_Memory_mutex);
+#endif
       chunk->next->prev = NULL;
     }
   } else if (chunk->prev) {
     chunk->prev->next = NULL;
+#ifndef CF_NO_THREAD_SAFE
+    mtx_lock(&cf_Memory_mutex);
+#endif
     cf_Memory_memManager.last = chunk->prev;
+#ifndef CF_NO_THREAD_SAFE
+    mtx_unlock(&cf_Memory_mutex);
+#endif
   } else {
+#ifndef CF_NO_THREAD_SAFE
+    mtx_lock(&cf_Memory_mutex);
+#endif
     cf_Memory_memManager.first = NULL;
     cf_Memory_memManager.last = NULL;
+#ifndef CF_NO_THREAD_SAFE
+    mtx_unlock(&cf_Memory_mutex);
+#endif
   }
 
   chunk->checkCode = 0;
+  cf_Memory_setTailCheckCode(chunk, 0);
   free(chunk);
 }
 
 void cf_Memory_checkMem() {
   cf_MemChunk *chunk;
-
-  for (chunk = cf_Memory_memManager.first; chunk != NULL; chunk = chunk->next) {
+#ifndef CF_NO_THREAD_SAFE
+  mtx_lock(&cf_Memory_mutex);
+#endif
+  chunk = cf_Memory_memManager.first;
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
+  for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
   }
 }
 
 void cf_Memory_dumpMem() {
   cf_MemChunk *chunk;
-
-  for (chunk = cf_Memory_memManager.first; chunk != NULL; chunk = chunk->next) {
+#ifndef CF_NO_THREAD_SAFE
+  mtx_lock(&cf_Memory_mutex);
+#endif
+  chunk = cf_Memory_memManager.first;
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
+  for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
     cf_Log_cfDebug("func:%s, line:%d, size:%d, refCount:%d"
       , chunk->func, chunk->line, chunk->size, chunk->refCount);
