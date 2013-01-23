@@ -115,8 +115,6 @@ inline void cf_BlockingQueue_cancel(cf_BlockingQueue *self) {
   mtx_lock(&self->mutex);
   self->cancelAdd = true;
   self->cancelDelete = true;
-  //printf("queue canceled\n");
-  fflush(stdout);
   cnd_broadcast(&self->addCond);
   cnd_broadcast(&self->deleteCond);
   mtx_unlock(&self->mutex);

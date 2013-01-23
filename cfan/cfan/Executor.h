@@ -92,7 +92,6 @@ inline void cf_Executor_dispose(cf_Executor *self) {
     rc = thrd_join(self->threadList[i], NULL);
     if (rc != thrd_success) {
       printf("thread join error\n");
-      fflush(stdout);
     }
   }
 
