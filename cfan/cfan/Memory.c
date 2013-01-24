@@ -104,6 +104,10 @@ void *cf_Memory_realloc(void *p, size_t size) {
   cf_assert(p);
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
   cf_Memory_doCheck_(chunk);
+
+#ifndef CF_NO_THREAD_SAFE
+  mtx_lock(&cf_Memory_mutex);
+#endif
   chunk = (cf_MemChunk *)realloc(chunk, size + sizeof(cf_MemChunk) + sizeof(int));
   if (!chunk) return NULL;
   chunk->size = size;
@@ -112,23 +116,14 @@ void *cf_Memory_realloc(void *p, size_t size) {
   if (chunk->prev) {
     chunk->prev->next = chunk;
   } else {
-#ifndef CF_NO_THREAD_SAFE
-    mtx_lock(&cf_Memory_mutex);
-#endif
     cf_Memory_memManager.first = chunk;
-#ifndef CF_NO_THREAD_SAFE
-    mtx_unlock(&cf_Memory_mutex);
-#endif
   }
   if (chunk->next == NULL) {
-#ifndef CF_NO_THREAD_SAFE
-    mtx_lock(&cf_Memory_mutex);
-#endif
     cf_Memory_memManager.last = chunk;
-#ifndef CF_NO_THREAD_SAFE
-    mtx_unlock(&cf_Memory_mutex);
-#endif
   }
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
   return chunk + 1;
 }
 
@@ -139,43 +134,31 @@ void cf_Memory_free(const char *file, const char *func, const unsigned int line,
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
   cf_Memory_check(file, func, line, p);
 
+#ifndef CF_NO_THREAD_SAFE
+  mtx_lock(&cf_Memory_mutex);
+#endif
   if (chunk->next) {
     if (chunk->prev) {
       chunk->prev->next = chunk->next;
       chunk->next->prev = chunk->prev;
     } else {
-#ifndef CF_NO_THREAD_SAFE
-      mtx_lock(&cf_Memory_mutex);
-#endif
       cf_Memory_memManager.first = chunk->next;
-#ifndef CF_NO_THREAD_SAFE
-      mtx_unlock(&cf_Memory_mutex);
-#endif
       chunk->next->prev = NULL;
     }
   } else if (chunk->prev) {
     chunk->prev->next = NULL;
-#ifndef CF_NO_THREAD_SAFE
-    mtx_lock(&cf_Memory_mutex);
-#endif
     cf_Memory_memManager.last = chunk->prev;
-#ifndef CF_NO_THREAD_SAFE
-    mtx_unlock(&cf_Memory_mutex);
-#endif
   } else {
-#ifndef CF_NO_THREAD_SAFE
-    mtx_lock(&cf_Memory_mutex);
-#endif
     cf_Memory_memManager.first = NULL;
     cf_Memory_memManager.last = NULL;
-#ifndef CF_NO_THREAD_SAFE
-    mtx_unlock(&cf_Memory_mutex);
-#endif
   }
 
   chunk->checkCode = 0;
   cf_Memory_setTailCheckCode(chunk, 0);
   free(chunk);
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
 }
 
 void cf_Memory_checkMem() {
@@ -184,12 +167,12 @@ void cf_Memory_checkMem() {
   mtx_lock(&cf_Memory_mutex);
 #endif
   chunk = cf_Memory_memManager.first;
-#ifndef CF_NO_THREAD_SAFE
-  mtx_unlock(&cf_Memory_mutex);
-#endif
   for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
   }
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
 }
 
 void cf_Memory_dumpMem() {
@@ -198,12 +181,12 @@ void cf_Memory_dumpMem() {
   mtx_lock(&cf_Memory_mutex);
 #endif
   chunk = cf_Memory_memManager.first;
-#ifndef CF_NO_THREAD_SAFE
-  mtx_unlock(&cf_Memory_mutex);
-#endif
   for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
     cf_Log_cfDebug("func:%s, line:%d, size:%d, refCount:%d"
       , chunk->func, chunk->line, chunk->size, chunk->refCount);
   }
+#ifndef CF_NO_THREAD_SAFE
+  mtx_unlock(&cf_Memory_mutex);
+#endif
 }
