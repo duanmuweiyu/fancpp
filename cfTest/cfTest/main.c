@@ -45,7 +45,7 @@ void registerAll(void) {
  * execute the test.
  *
  */
-int main2(int argc, char **argv) {
+int main(int argc, char **argv) {
   const char *name;
   cf_Test_init();
   registerAll();

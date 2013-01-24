@@ -24,152 +24,168 @@ CF_BEGIN
  * supports fast random access to the elements.
  *
  */
-typedef struct cf_Array_ {
-  const unsigned int elemSize;
-  size_t    size;        //current number of items
-  size_t    capacity;    //The number of items can hold without allocating more memory.
-  char *data;
-} cf_Array;
-
-/**
- * constructor
- *
- */
-inline cf_Error cf_Array_make(cf_Array *self, size_t size, size_t capacity, const unsigned int elemSize) {
-  CF_ENTRY_FUNC
-  *((unsigned int*)(&self->elemSize)) = elemSize;
-  self->size = size;
-  self->capacity = capacity;
-  self->data = (char*)cf_malloc(capacity * elemSize);
-  if (NULL == self->data) {
-    CF_EXIT_FUNC return cf_Error_alloc;
-  }
-  CF_EXIT_FUNC
-  return cf_Error_ok;
-}
-
-/**
- * return array size
- *
- */
-#define cf_Array_size(self) ((self)->size)
-
-#define cf_Array_get_(self, index )\
-  ((char*)(self)->data + ((index) * (self)->elemSize))
-/**
- * get element pointer by index
- *
- */
-inline void *cf_Array_get(cf_Array *self, size_t index) {
-  cf_assert(self);
-  cf_assert(index < self->size);
-
-  return cf_Array_get_(self, index);
-}
-
-/**
- * increase capacity
- */
-cf_Error cf_Array_reserver_(cf_Array *self);
-
-/**
- * add to back
- *
- */
-inline cf_Error cf_Array_add(cf_Array *self, void *elem) {
-  cf_Error err;
-
-  CF_ENTRY_FUNC
-
-  cf_assert(self);
-  cf_assert(elem);
-
-  if (self->size == self->capacity) {
-    err = cf_Array_reserver_(self);
-    if (err) { CF_EXIT_FUNC return err; }
-  }
-  cf_check(self->data);
-
-  memcpy((char*)self->data + (self->size * self->elemSize), elem, self->elemSize);
-  self->size++;
-
-  CF_EXIT_FUNC
-  return cf_Error_ok;
-}
-
-/**
- * Remove element at index.
- * Before removed must free the element resource by yourself.
- *
- */
-inline void cf_Array_remove(cf_Array *self, const unsigned int index) {
-  memmove(self->data + (index * self->elemSize)
-          , self->data + ((index+1) * self->elemSize), self->elemSize);
-  self->size--;
-}
-
-/**
- * destroy content
- *
- */
-inline void cf_Array_dispose(cf_Array *self) {
-  CF_ENTRY_FUNC
-  cf_assert(self);
-  cf_free(self->data);
-  CF_EXIT_FUNC
-}
-
-/*************************************************************************
- * sort
- */
-
-/**
- * change two element position
- * @param buffer is one element size temp space.
- *
- */
-inline void cf_Array_swap(cf_Array *self, int i, int j, void *swapBuffer) {
-  memcpy(swapBuffer, cf_Array_get_(self, i), self->elemSize);
-  memcpy(cf_Array_get_(self, i), cf_Array_get_(self, j), self->elemSize);
-  memcpy(cf_Array_get_(self, j), swapBuffer, self->elemSize);
-}
-
-/**
- * Array qsort and bsearch template macro.
- * need macro:
- *   cmpFunc
- */
-#define cf_Array_sortTemplate(Array)\
+#define cf_ArrayTemplate(Array, T) \
+typedef struct Array##_ {\
+  size_t    size;        /*current number of items*/\
+  size_t    capacity;    /*The number of items can hold without allocating more memory.*/\
+  T *data;\
+} Array;\
 \
-void Array##_quickSort(cf_Array *self, int left, int right, void *swapBuffer);\
 /**\
- * @param buffer is one element size temp space.\
+ * constructor\
+ *\
  */\
-inline void Array##_insertSort(cf_Array *self, int left, int right, void *buffer){\
-  int j;\
-  for (;left < right; left++) {\
-    memcpy(buffer, cf_Array_get_(self, left+1), self->elemSize);\
-    j = left;\
-    while (j>-1 && (cmopFunc(buffer, cf_Array_get_(self, j)) < 0)) {\
-      memcpy(cf_Array_get_(self, j+1), cf_Array_get_(self, j), self->elemSize);\
-      --j;\
-    }\
-    memcpy(cf_Array_get_(self, j+1), buffer, self->elemSize);\
+inline cf_Error Array##_make(Array *self, size_t size, size_t capacity) {\
+  CF_ENTRY_FUNC\
+  self->size = size;\
+  self->capacity = capacity;\
+  self->data = (T*)cf_malloc(capacity * sizeof(T));\
+  if (NULL == self->data) {\
+    CF_EXIT_FUNC return cf_Error_alloc;\
   }\
-}\
-\
-inline cf_Error Array##_sort(cf_Array *self) {\
-  void *swapBuffer;\
-  swapBuffer = cf_malloc(self->elemSize);\
-  if (swapBuffer == NULL) {\
-    return cf_Error_alloc;\
-  }\
-  Array##_quickSort(self, 0, self->size-1, swapBuffer);\
-  cf_free(swapBuffer);\
+  CF_EXIT_FUNC\
   return cf_Error_ok;\
 }\
 \
-inline long Array##_bsearch(cf_Array *self, void *elem) {\
+/**\
+ * return array size\
+ *\
+ */\
+inline size_t Array##_size(Array *self) {\
+  return self->size;\
+}\
+/**\
+ * get element pointer by index\
+ *\
+ */\
+inline T *Array##_get(Array *self, size_t index) {\
+  cf_assert(self);\
+  cf_assert(index < self->size);\
+\
+  return self->data + index;\
+}\
+\
+/**\
+ * get element copy by index\
+ *\
+ */\
+inline T Array##_getCopy(Array *self, size_t index) {\
+  cf_assert(self);\
+  cf_assert(index < self->size);\
+\
+  return self->data[index];\
+}\
+\
+/**\
+ * increase capacity\
+ */\
+cf_Error Array##_reserver_(Array *self);\
+\
+/**\
+ * add to back\
+ *\
+ */\
+inline cf_Error Array##_add(Array *self, T *elem) {\
+  cf_Error err;\
+\
+  CF_ENTRY_FUNC\
+\
+  cf_assert(self);\
+  cf_assert(elem);\
+\
+  if (self->size == self->capacity) {\
+    err = Array##_reserver_(self);\
+    if (err) { CF_EXIT_FUNC return err; }\
+  }\
+\
+  self->data[self->size] = *elem;\
+  self->size++;\
+\
+  CF_EXIT_FUNC\
+  return cf_Error_ok;\
+}\
+inline cf_Error Array##_addCopy(Array *self, T elem) {\
+  cf_Error err;\
+  CF_ENTRY_FUNC\
+  if (self->size == self->capacity) {\
+    err = Array##_reserver_(self);\
+    if (err) { CF_EXIT_FUNC return err; }\
+  }\
+\
+  self->data[self->size] = elem;\
+  self->size++;\
+\
+  CF_EXIT_FUNC\
+  return cf_Error_ok;\
+}\
+\
+/**\
+ * Remove element at index.\
+ * Before removed must free the element resource by yourself.\
+ *\
+ */\
+inline void Array##_remove(Array *self, const unsigned int index) {\
+  memmove(self->data + (index)\
+          , self->data + ((index+1)), sizeof(T));\
+  self->size--;\
+}\
+\
+/**\
+ * destroy content\
+ *\
+ */\
+inline void Array##_dispose(Array *self) {\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  cf_free(self->data);\
+  CF_EXIT_FUNC\
+}\
+\
+/*************************************************************************\
+ * sort\
+ */\
+\
+/**\
+ * change two element position\
+ * @param buffer is one element size temp space.\
+ *\
+ */\
+inline void Array##_swap(Array *self, int i, int j, T *swapBuffer) {\
+  *swapBuffer = self->data[i];\
+  self->data[i] = self->data[j];\
+  self->data[j] = *swapBuffer;\
+}\
+\
+/**\
+ * Array qsort and bsearch template macro.\
+ * need macro:\
+ *   cmpFunc\
+ */\
+\
+void Array##_quickSort(Array *self, int left, int right, T *swapBuffer);\
+/**\
+ * @param swapBuffer is one element size temp space.\
+ */\
+inline void Array##_insertSort(Array *self, int left, int right, T *swapBuffer){\
+  int j;\
+  for (;left < right; left++) {\
+    *swapBuffer = self->data[left+1];\
+    j = left;\
+    while (j>-1 && (cmopFunc(swapBuffer, self->data + j) < 0)) {\
+      self->data[j+1] = self->data[j];\
+      --j;\
+    }\
+    self->data[j+1] = *swapBuffer;\
+  }\
+}\
+\
+inline void Array##_sort(Array *self) {\
+  T swapBuffer;\
+  if (self->size < 2) return;\
+  Array##_quickSort(self, 0, self->size-1, &swapBuffer);\
+}\
+\
+inline long Array##_bsearch(Array *self, T *elem) {\
   int cond;\
   int low, high, mid;\
   int n;\
@@ -179,7 +195,7 @@ inline long Array##_bsearch(cf_Array *self, void *elem) {\
   high = n - 1;\
   while (low <= high) {\
     mid = (low+high) / 2;\
-    if ((cond = cmopFunc(elem, cf_Array_get(self, mid))) < 0) {\
+    if ((cond = cmopFunc(elem, self->data + mid)) < 0) {\
       high = mid - 1;\
     } else if (cond > 0) {\
       low = mid + 1;\
@@ -192,40 +208,71 @@ inline long Array##_bsearch(cf_Array *self, void *elem) {\
   return -1;\
 }\
 
-/**
+/*************************************************************************
  * Array sort template implemention macro.
  * need macro:
  *   cmpFunc
  */
-#define cf_Array_sortTemplate_impl(Array)\
+#define cf_ArrayTemplate_impl(Array, T) \
 \
-void Array##_quickSort(cf_Array *self, int left, int right, void *swapBuffer) {\
+cf_Error Array##_reserver_(Array *self) {\
+  void *tmp;\
+  size_t newCapacity;\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  if (self->capacity > 1000000) {\
+    newCapacity = ((self->capacity * 3) / 2 + 1);\
+  } else {\
+    newCapacity = (self->capacity * 2 + 1);\
+  }\
+\
+  tmp = cf_realloc(self->data, newCapacity * sizeof(T));\
+  if (!tmp) {\
+    CF_EXIT_FUNC\
+    return cf_Error_alloc;\
+  }\
+\
+  self->data = (T*)tmp;\
+  self->capacity = newCapacity;\
+\
+  CF_EXIT_FUNC\
+  return cf_Error_ok;\
+}\
+\
+void Array##_quickSort(Array *self, int left, int right, T *swapBuffer) {\
   int i, last;\
   CF_ENTRY_FUNC\
-  if (left >= right) {\
-    return;\
-  }\
+  cf_assert(left < right);\
+  \
   /*if too small using insert sort*/\
-  if (self->size < 20) {\
+  if (right - left < 30) {\
     Array##_insertSort(self, left, right, swapBuffer);\
+    CF_EXIT_FUNC\
     return;\
   }\
-  cf_Array_swap(self, left, (left + right) / 2, swapBuffer);\
+  Array##_swap(self, left, (left + right) / 2, swapBuffer);\
   last = left;\
   for (i = left + 1; i <= right; i++)\
-    if (cmopFunc(cf_Array_get(self, i), cf_Array_get(self, left)) < 0)\
-      cf_Array_swap(self, ++last, i, swapBuffer);\
-  cf_Array_swap(self, left, last, swapBuffer);\
-  Array##_quickSort(self, left, last-1, swapBuffer);\
-  Array##_quickSort(self, last+1, right, swapBuffer);\
+    if (cmopFunc(self->data + i, self->data + left) < 0)\
+      Array##_swap(self, ++last, i, swapBuffer);\
+  Array##_swap(self, left, last, swapBuffer);\
+  \
+  if (left < last -1) {\
+    Array##_quickSort(self, left, last-1, swapBuffer);\
+  }\
+  if (last+1 < right) {\
+    Array##_quickSort(self, last+1, right, swapBuffer);\
+  }\
   CF_EXIT_FUNC\
 }\
 
 /**
  * define int array
  */
-#define cmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
-cf_Array_sortTemplate(cf_ArrayI)
+#define cf_Array_defaultCmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
+#define cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
+cf_ArrayTemplate(cf_ArrayI, int)
+cf_ArrayTemplate(cf_ArrayP, void*)
 #undef cmopFunc
 
 CF_END

@@ -19,6 +19,8 @@
 cf_Error cf_StrBuf_reserver_(cf_StrBuf *self, const long addSize) {
   void *tmp;
   size_t newCapacity;
+  CF_ENTRY_FUNC
+  cf_assert(self);
 
   //increase 1.5 if large than 1M.
   if (self->capacity > 1000000) {
@@ -26,9 +28,6 @@ cf_Error cf_StrBuf_reserver_(cf_StrBuf *self, const long addSize) {
   } else {
     newCapacity = self->capacity * 2 + addSize;
   }
-
-  CF_ENTRY_FUNC
-  cf_assert(self);
 
   if (self->buffer == self->array) {
     tmp = cf_malloc(newCapacity);

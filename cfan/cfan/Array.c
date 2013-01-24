@@ -10,28 +10,9 @@
 
 #include "cfan/Array.h"
 
-cf_Error cf_Array_reserver_(cf_Array *self) {
-  void *tmp;
-  size_t newCapacity = self->capacity * 2 + 4;
 
-  CF_ENTRY_FUNC
-  cf_assert(self);
 
-  cf_check(self->data);
-  tmp = cf_realloc(self->data, newCapacity * self->elemSize);
-  cf_check(self->data);
-  if (!tmp) {
-    CF_EXIT_FUNC
-    return cf_Error_alloc;
-  }
-
-  self->data = (char*)tmp;
-  self->capacity = newCapacity;
-
-  CF_EXIT_FUNC
-  return cf_Error_ok;
-}
-
-#define cmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
-cf_Array_sortTemplate_impl(cf_ArrayI)
+#define cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
+cf_ArrayTemplate_impl(cf_ArrayI, int)
+cf_ArrayTemplate_impl(cf_ArrayP, void*)
 #undef cmopFunc

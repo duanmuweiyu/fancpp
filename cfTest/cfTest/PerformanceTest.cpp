@@ -48,6 +48,7 @@ namespace stdext
 //////////////////////////////////////////////////////////////////////////
 
 #define array_size 10000
+int testData[array_size];
 
 Int64 cfanArrayMakeTime = 0;
 Int64 cfanArraySortTime = 0;
@@ -61,17 +62,17 @@ Int64 stlMapQueryTime = 0;
 
 void testCfanArray()
 {
-  cf_Array array = { sizeof(int) };
+  cf_ArrayI array;
   int i;
   int n;
 
-  cf_Array_make(&array, 0, array_size, sizeof(int));
+  cf_ArrayI_make(&array, 0, array_size);
 
   Int64 t1 = nowTicks();
   for (i=0; i<array_size; ++i)
   {
-    n = rand();
-    cf_Array_add(&array, &n);
+    n = testData[i];
+    cf_ArrayI_addCopy(&array, n);
   }
   Int64 t2 = nowTicks();
   cfanArrayMakeTime += (t2-t1);
@@ -81,7 +82,7 @@ void testCfanArray()
   Int64 t4 = nowTicks();
   cfanArraySortTime += (t4-t3);
 
-  cf_Array_dispose(&array);
+  cf_ArrayI_dispose(&array);
 }
 
 void testStlVector()
@@ -93,7 +94,7 @@ void testStlVector()
   Int64 t1 = nowTicks();
   for (i=0; i<array_size; ++i)
   {
-    n = rand();
+    n = testData[i];
     list.push_back(n);
   }
   Int64 t2 = nowTicks();
@@ -116,7 +117,7 @@ void testCfanMap()
   Int64 t1 = nowTicks();
   for (i=0; i<array_size; ++i)
   {
-    n = rand();
+    n = testData[i];
     cf_HashMapII_set(&map, n, n, NULL, NULL);
   }
   Int64 t2 = nowTicks();
@@ -143,7 +144,7 @@ void testStlMap()
   Int64 t1 = nowTicks();
   for (i=0; i<array_size; ++i)
   {
-    n = rand();
+    n = testData[i];
     map[n] = n;
   }
   Int64 t2 = nowTicks();
@@ -160,17 +161,22 @@ void testStlMap()
 
 void testPerformance()
 {
+  int i;
+  for (i=0; i<array_size; ++i)
+  {
+    testData[i] = rand();
+  }
   testStlVector();
   testCfanArray();
   testStlMap();
   testCfanMap();
 }
 
-int main()
+int main2()
 {
   int i;
 
-  for (i=0; i<1000; ++i)
+  for (i=0; i<100; ++i)
   {
     testPerformance();
   }

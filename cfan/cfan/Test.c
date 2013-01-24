@@ -11,11 +11,15 @@
 #include "cfan/Test.h"
 #include "cfan/Str.h"
 
-cf_Array testList = { sizeof(cf_Test) };
+#define cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
+cf_ArrayTemplate_impl(cf_ArrayTest, cf_Test)
+#undef cmopFunc
+
+cf_ArrayTest testList;
 long cf_Test_errorCount = 0;
 
 void cf_Test_init(void) {
-  cf_Array_make(&testList, 0, 100, sizeof(cf_Test));
+  cf_ArrayTest_make(&testList, 0, 100);
 }
 
 void cf_Test_run(const char *nameFilter, const int attrFilter) {
@@ -28,9 +32,9 @@ void cf_Test_run(const char *nameFilter, const int attrFilter) {
 
   cf_Log_log("test", cf_LogLevel_info, "start run test");
 
-  n = cf_Array_size(&testList);
+  n = cf_ArrayTest_size(&testList);
   for (i=0; i<n; ++i) {
-    test = (cf_Test*)cf_Array_get(&testList, i);
+    test = cf_ArrayTest_get(&testList, i);
     if (cf_Str_startsWith(test->name, nameFilter) && test->attr == attrFilter) {
       cf_Log_log("test", cf_LogLevel_info, "run: %s", test->name);
       snapshot = cf_Test_errorCount;

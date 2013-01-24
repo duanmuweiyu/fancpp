@@ -26,7 +26,11 @@ typedef struct cf_Test_ {
   unsigned int line;
 } cf_Test;
 
-extern cf_Array testList;
+#define cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
+cf_ArrayTemplate(cf_ArrayTest, cf_Test)
+#undef cmopFunc
+
+extern cf_ArrayTest testList;
 extern long cf_Test_errorCount;
 
 /**
@@ -42,7 +46,7 @@ void cf_Test_init(void);
 inline void cf_Test_doAdd(void (*func)(), int attr, const char *name
                         , const char *file, const unsigned int line) {
   cf_Test test = { func, attr, name, file, line };
-  cf_Array_add(&testList, &test);
+  cf_ArrayTest_add(&testList, &test);
 }
 
 /**

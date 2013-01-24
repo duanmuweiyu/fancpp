@@ -12,7 +12,7 @@
 #include "cfan/cfan.h"
 
 void cf_ArrayTest_testAdd(void) {
-  cf_Array array = { sizeof(int) };
+  cf_ArrayI array;
   int a = 1;
   int b = 2;
   int c = 3;
@@ -21,24 +21,24 @@ void cf_ArrayTest_testAdd(void) {
   int *value;
   CF_ENTRY_FUNC
 
-  cf_Array_make(&array, 0, 2, sizeof(int));
-  cf_Array_add(&array, &a);
-  cf_Array_add(&array, &b);
-  cf_Array_add(&array, &c);
-  size = cf_Array_size(&array);
+  cf_ArrayI_make(&array, 0, 2);
+  cf_ArrayI_add(&array, &a);
+  cf_ArrayI_add(&array, &b);
+  cf_ArrayI_add(&array, &c);
+  size = cf_ArrayI_size(&array);
 
   for (i=0; i<size; ++i) {
-    value = (int*)cf_Array_get(&array, i);
+    value = (int*)cf_ArrayI_get(&array, i);
     printf("%d\n", *value);
   }
 
-  cf_Array_dispose(&array);
+  cf_ArrayI_dispose(&array);
 
   CF_EXIT_FUNC
 }
 
 void cf_ArrayTest_testSort(void) {
-  cf_Array array = { sizeof(int) };
+  cf_ArrayI array;
   int a = 2;
   int b = 3;
   int c = 1;
@@ -48,30 +48,30 @@ void cf_ArrayTest_testSort(void) {
   long index;
   CF_ENTRY_FUNC
 
-  cf_Array_make(&array, 0, 2, sizeof(int));
-  cf_Array_add(&array, &a);
-  cf_Array_add(&array, &b);
-  cf_Array_add(&array, &c);
-  size = cf_Array_size(&array);
+  cf_ArrayI_make(&array, 0, 2);
+  cf_ArrayI_add(&array, &a);
+  cf_ArrayI_add(&array, &b);
+  cf_ArrayI_add(&array, &c);
+  size = cf_ArrayI_size(&array);
 
   cf_ArrayI_sort(&array);
 
   for (i=0; i<size; ++i) {
-    value = (int*)cf_Array_get(&array, i);
+    value = (int*)cf_ArrayI_get(&array, i);
     printf("%d\n", *value);
   }
 
-  value = (int*)cf_Array_get(&array, 0);
+  value = (int*)cf_ArrayI_get(&array, 0);
   cf_verify(*value == 1);
-  value = (int*)cf_Array_get(&array, 1);
+  value = (int*)cf_ArrayI_get(&array, 1);
   cf_verify(*value == 2);
-  value = (int*)cf_Array_get(&array, 2);
+  value = (int*)cf_ArrayI_get(&array, 2);
   cf_verify(*value == 3);
 
   index = cf_ArrayI_bsearch(&array, value);
   cf_verify(index == 2);
 
-  cf_Array_dispose(&array);
+  cf_ArrayI_dispose(&array);
 
   CF_EXIT_FUNC
 }
