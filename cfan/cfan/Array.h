@@ -25,9 +25,9 @@ CF_BEGIN
  *
  */
 typedef struct cf_Array_ {
+  const unsigned int elemSize;
   size_t    size;        //current number of items
   size_t    capacity;    //The number of items can hold without allocating more memory.
-  unsigned int elemSize;
   char *data;
 } cf_Array;
 
@@ -37,9 +37,9 @@ typedef struct cf_Array_ {
  */
 inline cf_Error cf_Array_make(cf_Array *self, size_t size, size_t capacity, const unsigned int elemSize) {
   CF_ENTRY_FUNC
+  *((unsigned int*)(&self->elemSize)) = elemSize;
   self->size = size;
   self->capacity = capacity;
-  self->elemSize = elemSize;
   self->data = (char*)cf_malloc(capacity * elemSize);
   if (NULL == self->data) {
     CF_EXIT_FUNC return cf_Error_alloc;
@@ -52,11 +52,10 @@ inline cf_Error cf_Array_make(cf_Array *self, size_t size, size_t capacity, cons
  * return array size
  *
  */
-inline size_t cf_Array_size(cf_Array *self) {
-  cf_assert(self);
-  return self->size;
-}
+#define cf_Array_size(self) ((self)->size)
 
+#define cf_Array_get_(self, index )\
+  ((char*)(self)->data + ((index) * (self)->elemSize))
 /**
  * get element pointer by index
  *
@@ -65,7 +64,7 @@ inline void *cf_Array_get(cf_Array *self, size_t index) {
   cf_assert(self);
   cf_assert(index < self->size);
 
-  return (char*)self->data + (index * self->elemSize);
+  return cf_Array_get_(self, index);
 }
 
 /**
@@ -126,18 +125,13 @@ inline void cf_Array_dispose(cf_Array *self) {
 
 /**
  * change two element position
+ * @param buffer is one element size temp space.
  *
  */
-inline void cf_Array_swap(cf_Array *self, int i, int j) {
-  int n = self->elemSize - 1;
-  char *s1 = (char *)cf_Array_get(self, i);
-  char *s2 = (char *)cf_Array_get(self, j);
-  char t;
-  for (; n != -1; --n) {
-    t = s1[n];
-    s1[n] = s2[n];
-    s2[n] = t;
-  }
+inline void cf_Array_swap(cf_Array *self, int i, int j, void *swapBuffer) {
+  memcpy(swapBuffer, cf_Array_get_(self, i), self->elemSize);
+  memcpy(cf_Array_get_(self, i), cf_Array_get_(self, j), self->elemSize);
+  memcpy(cf_Array_get_(self, j), swapBuffer, self->elemSize);
 }
 
 /**
@@ -147,10 +141,32 @@ inline void cf_Array_swap(cf_Array *self, int i, int j) {
  */
 #define cf_Array_sortTemplate(Array)\
 \
-void Array##_quickSort(cf_Array *self, int left, int right);\
+void Array##_quickSort(cf_Array *self, int left, int right, void *swapBuffer);\
+/**\
+ * @param buffer is one element size temp space.\
+ */\
+inline void Array##_insertSort(cf_Array *self, int left, int right, void *buffer){\
+  int j;\
+  for (;left < right; left++) {\
+    memcpy(buffer, cf_Array_get_(self, left+1), self->elemSize);\
+    j = left;\
+    while (j>-1 && (cmopFunc(buffer, cf_Array_get_(self, j)) < 0)) {\
+      memcpy(cf_Array_get_(self, j+1), cf_Array_get_(self, j), self->elemSize);\
+      --j;\
+    }\
+    memcpy(cf_Array_get_(self, j+1), buffer, self->elemSize);\
+  }\
+}\
 \
-inline void Array##_qsort(cf_Array *self) {\
-  Array##_quickSort(self, 0, self->size-1);\
+inline cf_Error Array##_sort(cf_Array *self) {\
+  void *swapBuffer;\
+  swapBuffer = cf_malloc(self->elemSize);\
+  if (swapBuffer == NULL) {\
+    return cf_Error_alloc;\
+  }\
+  Array##_quickSort(self, 0, self->size-1, swapBuffer);\
+  cf_free(swapBuffer);\
+  return cf_Error_ok;\
 }\
 \
 inline long Array##_bsearch(cf_Array *self, void *elem) {\
@@ -183,20 +199,25 @@ inline long Array##_bsearch(cf_Array *self, void *elem) {\
  */
 #define cf_Array_sortTemplate_impl(Array)\
 \
-void Array##_quickSort(cf_Array *self, int left, int right) {\
+void Array##_quickSort(cf_Array *self, int left, int right, void *swapBuffer) {\
   int i, last;\
   CF_ENTRY_FUNC\
   if (left >= right) {\
     return;\
   }\
-  cf_Array_swap(self, left, (left + right) / 2);\
+  /*if too small using insert sort*/\
+  if (self->size < 20) {\
+    Array##_insertSort(self, left, right, swapBuffer);\
+    return;\
+  }\
+  cf_Array_swap(self, left, (left + right) / 2, swapBuffer);\
   last = left;\
   for (i = left + 1; i <= right; i++)\
     if (cmopFunc(cf_Array_get(self, i), cf_Array_get(self, left)) < 0)\
-      cf_Array_swap(self, ++last, i);\
-  cf_Array_swap(self, left, last);\
-  Array##_quickSort(self, left, last-1);\
-  Array##_quickSort(self, last+1, right);\
+      cf_Array_swap(self, ++last, i, swapBuffer);\
+  cf_Array_swap(self, left, last, swapBuffer);\
+  Array##_quickSort(self, left, last-1, swapBuffer);\
+  Array##_quickSort(self, last+1, right, swapBuffer);\
   CF_EXIT_FUNC\
 }\
 

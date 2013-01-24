@@ -37,10 +37,6 @@ void cf_Log_doLog(const char *tag, const char *file, const char *func, const uns
     (*(cf_Log_listenerList[i]))(tag, file, func, line, level, msg, args);
   }
 
-//  printf("%s:%d(%s,%d) ", tag, level, func, line);
-//  vprintf(msg, args);
-//  printf("\n");
-
   va_end(args);
 }
 

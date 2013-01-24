@@ -12,7 +12,7 @@
 #include "cfan/cfan.h"
 
 void cf_ArrayTest_testAdd(void) {
-  cf_Array array;
+  cf_Array array = { sizeof(int) };
   int a = 1;
   int b = 2;
   int c = 3;
@@ -38,7 +38,7 @@ void cf_ArrayTest_testAdd(void) {
 }
 
 void cf_ArrayTest_testSort(void) {
-  cf_Array array;
+  cf_Array array = { sizeof(int) };
   int a = 2;
   int b = 3;
   int c = 1;
@@ -54,12 +54,19 @@ void cf_ArrayTest_testSort(void) {
   cf_Array_add(&array, &c);
   size = cf_Array_size(&array);
 
-  cf_ArrayI_qsort(&array);
+  cf_ArrayI_sort(&array);
 
   for (i=0; i<size; ++i) {
     value = (int*)cf_Array_get(&array, i);
     printf("%d\n", *value);
   }
+
+  value = (int*)cf_Array_get(&array, 0);
+  cf_verify(*value == 1);
+  value = (int*)cf_Array_get(&array, 1);
+  cf_verify(*value == 2);
+  value = (int*)cf_Array_get(&array, 2);
+  cf_verify(*value == 3);
 
   index = cf_ArrayI_bsearch(&array, value);
   cf_verify(index == 2);

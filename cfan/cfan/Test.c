@@ -11,7 +11,7 @@
 #include "cfan/Test.h"
 #include "cfan/Str.h"
 
-cf_Array testList;
+cf_Array testList = { sizeof(cf_Test) };
 long cf_Test_errorCount = 0;
 
 void cf_Test_init(void) {

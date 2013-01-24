@@ -19,6 +19,6 @@ class Build : BuildCpp
     outType = TargetType.lib
     version = Version("1.0.0")
     srcDirs = [`tinyCThread/`]
-    define = ["_DEBUG"]
+    //define = ["_DEBUG"]
   }
 }

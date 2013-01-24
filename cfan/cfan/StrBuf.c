@@ -18,7 +18,14 @@
  */
 cf_Error cf_StrBuf_reserver_(cf_StrBuf *self, const long addSize) {
   void *tmp;
-  size_t newCapacity = self->capacity * 2 + addSize;
+  size_t newCapacity;
+
+  //increase 1.5 if large than 1M.
+  if (self->capacity > 1000000) {
+    newCapacity = (self->capacity * 3) / 2 + addSize;
+  } else {
+    newCapacity = self->capacity * 2 + addSize;
+  }
 
   CF_ENTRY_FUNC
   cf_assert(self);

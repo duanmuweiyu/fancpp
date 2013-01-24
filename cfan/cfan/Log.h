@@ -72,7 +72,7 @@ void cf_Log_doLog(const char *tag, const char *file, const char *func, const uns
 #ifdef CF_DEBUG
   #define cf_Log_cfDebug(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_debug, msg, ## __VA_ARGS__)
 #else
-  #define cf_Log_cfDebug
+  #define cf_Log_cfDebug(msg, ...)
 #endif
 
 

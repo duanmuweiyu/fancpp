@@ -98,23 +98,23 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
 
   #define cf_malloc(size) cf_Memory_malloc(__FILE__, __func__, __LINE__, size)
   #define cf_calloc(nobj, size) cf_Memory_calloc(__FILE__, __func__, __LINE__, nobj, size)
-  #define cf_realloc cf_Memory_realloc
+  #define cf_realloc(p, size) cf_Memory_realloc(p, size)
   #define cf_free(p) cf_Memory_free(__FILE__, __func__, __LINE__, p)
 
   #define cf_check(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
-  #define cf_dumpMem cf_Memory_dumpMem
-  #define cf_checkMem cf_Memory_checkMem
+  #define cf_dumpMem() cf_Memory_dumpMem()
+  #define cf_checkMem() cf_Memory_checkMem()
 
 #else
 
-  #define cf_malloc malloc
-  #define cf_calloc calloc
-  #define cf_realloc realloc
-  #define cf_free free
+  #define cf_malloc(size) malloc(size)
+  #define cf_calloc(nobj, size) calloc(nobj, size)
+  #define cf_realloc(nobj, size) realloc(nobj, size)
+  #define cf_free(p) free(p)
 
-  #define cf_check
-  #define cf_dumpMem
-  #define cf_checkMem
+  #define cf_check(p)
+  #define cf_dumpMem()
+  #define cf_checkMem()
 
 #endif
 

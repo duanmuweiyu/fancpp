@@ -48,7 +48,7 @@ typedef enum cf_Error_ {
       }\
     } while(0);
 #else
-  #define cf_assert
+  #define cf_assert(exp)
 #endif
 
 /**
