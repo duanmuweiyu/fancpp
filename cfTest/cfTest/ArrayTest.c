@@ -54,7 +54,7 @@ void cf_ArrayTest_testSort(void) {
   cf_ArrayI_add(&array, &c);
   size = cf_ArrayI_size(&array);
 
-  cf_ArrayI_sort(&array);
+  cf_ArrayI_sort(array.data, array.size);
 
   for (i=0; i<size; ++i) {
     value = (int*)cf_ArrayI_get(&array, i);
@@ -68,7 +68,7 @@ void cf_ArrayTest_testSort(void) {
   value = (int*)cf_ArrayI_get(&array, 2);
   cf_verify(*value == 3);
 
-  index = cf_ArrayI_bsearch(&array, value);
+  index = cf_ArrayI_bsearch(array.data, array.size, value);
   cf_verify(index == 2);
 
   cf_ArrayI_dispose(&array);

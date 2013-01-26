@@ -11,9 +11,7 @@
 #include "cfan/Test.h"
 #include "cfan/Str.h"
 
-#define cf_cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
 cf_ArrayTemplate_impl(cf_ArrayTest, cf_Test)
-#undef cf_cmopFunc
 
 cf_ArrayTest testList;
 long cf_Test_errorCount = 0;

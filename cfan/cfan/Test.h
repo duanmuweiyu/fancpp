@@ -26,9 +26,7 @@ typedef struct cf_Test_ {
   unsigned int line;
 } cf_Test;
 
-#define cf_cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
 cf_ArrayTemplate(cf_ArrayTest, cf_Test)
-#undef cf_cmopFunc
 
 extern cf_ArrayTest testList;
 extern long cf_Test_errorCount;

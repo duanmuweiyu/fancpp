@@ -47,7 +47,7 @@ namespace stdext
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-#define array_size 1000
+#define array_size 10000
 int testData[array_size];
 
 Int64 cfanArrayMakeTime = 0;
@@ -78,7 +78,7 @@ void testCfanArray()
   cfanArrayMakeTime += (t2-t1);
 
   Int64 t3 = nowTicks();
-  cf_ArrayI_sort(&array);
+  cf_ArrayI_sort(array.data, cf_ArrayI_size(&array));
   Int64 t4 = nowTicks();
   cfanArraySortTime += (t4-t3);
 
@@ -172,7 +172,7 @@ void testPerformance()
   testCfanMap();
 }
 
-int main2()
+int runTestPerformance()
 {
   int i;
 

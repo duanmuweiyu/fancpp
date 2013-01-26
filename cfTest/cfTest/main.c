@@ -41,12 +41,21 @@ void registerAll(void) {
   cf_ExecutorTest_register();
 }
 
+//int runTestPerformance();
+
 /**
  * execute the test.
  *
  */
 int main(int argc, char **argv) {
   const char *name;
+
+  //run performance test;
+//  if (argc == 2 && strcmp(argv[1],"performance") == 0) {
+//    return runTestPerformance();
+//  }
+
+  //run test
   cf_Test_init();
   registerAll();
 

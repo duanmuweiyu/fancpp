@@ -31,7 +31,8 @@ HEADERS += \
     tinyCThread/tinycthread.h \
     cfan/Queue.h \
     cfan/Executor.h \
-    cfan/BlockingQueue.h
+    cfan/BlockingQueue.h \
+    cfan/Sort.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -46,7 +47,8 @@ SOURCES += \
     cfan/File_win.c \
     cfan/Test.c \
     tinyCThread/tinycthread.c \
-    cfan/Executor.c
+    cfan/Executor.c\
+    cfan/Sort.c
 
 
 

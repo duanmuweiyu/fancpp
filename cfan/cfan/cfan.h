@@ -21,6 +21,7 @@
 #include "cfan/Memory.h"
 #include "cfan/Log.h"
 #include "cfan/Array.h"
+#include "cfan/Sort.h"
 #include "cfan/HashMap.h"
 #include "cfan/StrBuf.h"
 #include "cfan/File.h"
