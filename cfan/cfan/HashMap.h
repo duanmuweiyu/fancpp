@@ -134,8 +134,8 @@ cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue) {\
   cf_assert(self);\
   cf_assert(oldValue);\
 \
-  for (elem = self->table + (hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
-    if (compFunc(key, elem->key) == 0) {\
+  for (elem = self->table + (cf_hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
+    if (cf_compFunc(key, elem->key) == 0) {\
       if (oldKey) *oldKey = elem->key;\
       *oldValue = elem->value;\
       CF_EXIT_FUNC\
@@ -155,12 +155,12 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
   CF_ENTRY_FUNC\
   cf_assert(self);\
 \
-  hashValue = hashFunc(key) % self->size;\
+  hashValue = cf_hashFunc(key) % self->size;\
   \
   elem = self->table + hashValue;\
   while ( elem->used ) {\
     /* if found*/\
-    if (compFunc(key, elem->key) == 0) {\
+    if (cf_compFunc(key, elem->key) == 0) {\
       if (oldKey) *oldKey = elem->key;\
       if (oldValue) *oldValue = elem->value;\
       elem->key = key;\
@@ -207,8 +207,8 @@ cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue) {\
   CF_ENTRY_FUNC\
   cf_assert(self);\
 \
-  for (elem = self->table + (hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
-    if (compFunc(key, elem->key) == 0) {\
+  for (elem = self->table + (cf_hashFunc(key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
+    if (cf_compFunc(key, elem->key) == 0) {\
       if (oldKey) *oldKey = elem->key;\
       if (oldValue) *oldValue = elem->value;\
       if (temp != NULL) {\

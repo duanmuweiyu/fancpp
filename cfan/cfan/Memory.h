@@ -118,6 +118,13 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
 
 #endif
 
+#ifdef __cplusplus
+  #include <new>
+
+  #define NEW(Type, ...) (new ((void*)cf_malloc(sizeof(Type))) Type(## __VA_ARGS__))
+  #define DELETE(Type, p) {p->~Type(); cf_free(p);}
+#endif
+
 CF_END
 
 #endif //_CF_MEMORY_H_

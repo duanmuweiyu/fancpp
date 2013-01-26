@@ -166,16 +166,17 @@ void Array##_quickSort(Array *self, int left, int right, T *swapBuffer);\
 /**\
  * @param swapBuffer is one element size temp space.\
  */\
-inline void Array##_insertSort(Array *self, int left, int right, T *swapBuffer){\
+inline void Array##_insertSort(Array *self, int left, int right){\
   int j;\
+  T swapBuffer;\
   for (;left < right; left++) {\
-    *swapBuffer = self->data[left+1];\
+    swapBuffer = self->data[left+1];\
     j = left;\
-    while (j>-1 && (cmopFunc(swapBuffer, self->data + j) < 0)) {\
+    while (j>-1 && (cf_cmopFunc(swapBuffer, self->data[j]) < 0)) {\
       self->data[j+1] = self->data[j];\
       --j;\
     }\
-    self->data[j+1] = *swapBuffer;\
+    self->data[j+1] = swapBuffer;\
   }\
 }\
 \
@@ -195,7 +196,7 @@ inline long Array##_bsearch(Array *self, T *elem) {\
   high = n - 1;\
   while (low <= high) {\
     mid = (low+high) / 2;\
-    if ((cond = cmopFunc(elem, self->data + mid)) < 0) {\
+    if ((cond = cf_cmopFunc(*elem, self->data[mid])) < 0) {\
       high = mid - 1;\
     } else if (cond > 0) {\
       low = mid + 1;\
@@ -239,29 +240,38 @@ cf_Error Array##_reserver_(Array *self) {\
   return cf_Error_ok;\
 }\
 \
-void Array##_quickSort(Array *self, int left, int right, T *swapBuffer) {\
-  int i, last;\
+void Array##_quickSort(Array *self, int low, int high, T *temp) {\
+  int i = low, j = high;\
   CF_ENTRY_FUNC\
-  cf_assert(left < right);\
+  cf_assert(low < high);\
   \
   /*if too small using insert sort*/\
-  if (right - left < 30) {\
-    Array##_insertSort(self, left, right, swapBuffer);\
+  if (high - low < 30) {\
+    Array##_insertSort(self, low, high);\
     CF_EXIT_FUNC\
     return;\
   }\
-  Array##_swap(self, left, (left + right) / 2, swapBuffer);\
-  last = left;\
-  for (i = left + 1; i <= right; i++)\
-    if (cmopFunc(self->data + i, self->data + left) < 0)\
-      Array##_swap(self, ++last, i, swapBuffer);\
-  Array##_swap(self, left, last, swapBuffer);\
-  \
-  if (left < last -1) {\
-    Array##_quickSort(self, left, last-1, swapBuffer);\
+  *temp = self->data[low];\
+\
+  while (i < j) {\
+    while (i<j && cf_cmopFunc(*temp, self->data[j]) <= 0 ) --j;\
+    if (i < j) {\
+      self->data[i] = self->data[j];\
+      ++i;\
+    }\
+\
+    while (i<j && cf_cmopFunc(self->data[i], *temp) < 0) ++i;\
+    if (i < j) {\
+      self->data[j] = self->data[i];\
+      --j;\
+    }\
   }\
-  if (last+1 < right) {\
-    Array##_quickSort(self, last+1, right, swapBuffer);\
+  self->data[i] = *temp;\
+  if (low < i-1) {\
+    Array##_quickSort(self, low, i-1, temp);\
+  }\
+  if (i+1 < high) {\
+    Array##_quickSort(self, j+1, high, temp);\
   }\
   CF_EXIT_FUNC\
 }\
@@ -269,11 +279,15 @@ void Array##_quickSort(Array *self, int left, int right, T *swapBuffer) {\
 /**
  * define int array
  */
-#define cf_Array_defaultCmopFunc(v1, v2) (*((int*)(v1)) - *((int*)(v2)))
-#define cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
+
+#define cf_cmopFunc(v1, v2) ((v1) - (v2))
 cf_ArrayTemplate(cf_ArrayI, int)
+#undef cf_cmopFunc
+
+#define cf_Array_defaultCmopFunc(v1, v2) (&(v1) - &(v2))
+#define cf_cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
 cf_ArrayTemplate(cf_ArrayP, void*)
-#undef cmopFunc
+#undef cf_cmopFunc
 
 CF_END
 

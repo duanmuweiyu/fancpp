@@ -47,7 +47,7 @@ namespace stdext
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-#define array_size 10000
+#define array_size 1000
 int testData[array_size];
 
 Int64 cfanArrayMakeTime = 0;
@@ -164,7 +164,7 @@ void testPerformance()
   int i;
   for (i=0; i<array_size; ++i)
   {
-    testData[i] = rand();
+    testData[i] = rand();//(((double)rand())/RAND_MAX)*100;
   }
   testStlVector();
   testCfanArray();
@@ -176,7 +176,7 @@ int main2()
 {
   int i;
 
-  for (i=0; i<100; ++i)
+  for (i=0; i<1000; ++i)
   {
     testPerformance();
   }

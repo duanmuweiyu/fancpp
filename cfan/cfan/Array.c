@@ -12,7 +12,11 @@
 
 
 
-#define cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
+#define cf_cmopFunc(v1, v2) ((v1) - (v2))
 cf_ArrayTemplate_impl(cf_ArrayI, int)
+#undef cf_cmopFunc
+
+#define cf_Array_defaultCmopFunc(v1, v2) (&(v1) - &(v2))
+#define cf_cmopFunc(v1, v2) cf_Array_defaultCmopFunc(v1, v2)
 cf_ArrayTemplate_impl(cf_ArrayP, void*)
-#undef cmopFunc
+#undef cf_cmopFunc
