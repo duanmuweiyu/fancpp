@@ -36,14 +36,12 @@ typedef struct Array##_ {\
  *\
  */\
 static inline cf_Error Array##_make(Array *self, size_t size, size_t capacity) {\
-  CF_ENTRY_FUNC\
   self->size = size;\
   self->capacity = capacity;\
   self->data = (T*)cf_malloc(capacity * sizeof(T));\
   if (NULL == self->data) {\
-    CF_EXIT_FUNC return cf_Error_alloc;\
+    return cf_Error_alloc;\
   }\
-  CF_EXIT_FUNC\
   return cf_Error_ok;\
 }\
 \
@@ -63,6 +61,17 @@ static inline T *Array##_get(Array *self, size_t index) {\
   cf_assert(index < self->size);\
 \
   return self->data + index;\
+}\
+/**\
+ * remove last element and return it.\
+ * if empty return NULL;\
+ */\
+static inline T *Array##_pop(Array *self) {\
+  if (self->size == 0) {\
+    return NULL;\
+  }\
+  self->size--;\
+  return self->data + self->size;\
 }\
 \
 /**\
@@ -88,34 +97,30 @@ cf_Error Array##_reserver_(Array *self);\
 static inline cf_Error Array##_add(Array *self, T *elem) {\
   cf_Error err;\
 \
-  CF_ENTRY_FUNC\
 \
   cf_assert(self);\
   cf_assert(elem);\
 \
   if (self->size == self->capacity) {\
     err = Array##_reserver_(self);\
-    if (err) { CF_EXIT_FUNC return err; }\
+    if (err) { return err; }\
   }\
 \
   self->data[self->size] = *elem;\
   self->size++;\
 \
-  CF_EXIT_FUNC\
   return cf_Error_ok;\
 }\
 static inline cf_Error Array##_addCopy(Array *self, T elem) {\
   cf_Error err;\
-  CF_ENTRY_FUNC\
   if (self->size == self->capacity) {\
     err = Array##_reserver_(self);\
-    if (err) { CF_EXIT_FUNC return err; }\
+    if (err) { return err; }\
   }\
 \
   self->data[self->size] = elem;\
   self->size++;\
 \
-  CF_EXIT_FUNC\
   return cf_Error_ok;\
 }\
 \
@@ -152,7 +157,6 @@ static inline void Array##_dispose(Array *self) {\
 cf_Error Array##_reserver_(Array *self) {\
   void *tmp;\
   size_t newCapacity;\
-  CF_ENTRY_FUNC\
   cf_assert(self);\
   if (self->capacity > 1000000) {\
     newCapacity = ((self->capacity * 3) / 2 + 1);\
@@ -162,14 +166,12 @@ cf_Error Array##_reserver_(Array *self) {\
 \
   tmp = cf_realloc(self->data, newCapacity * sizeof(T));\
   if (!tmp) {\
-    CF_EXIT_FUNC\
     return cf_Error_alloc;\
   }\
 \
   self->data = (T*)tmp;\
   self->capacity = newCapacity;\
 \
-  CF_EXIT_FUNC\
   return cf_Error_ok;\
 }\
 
@@ -178,6 +180,7 @@ cf_Error Array##_reserver_(Array *self) {\
  */
 cf_ArrayTemplate(cf_ArrayI, int)
 cf_ArrayTemplate(cf_ArrayP, void*)
+cf_ArrayTemplate(cf_ArrayS, char*)
 
 CF_END
 

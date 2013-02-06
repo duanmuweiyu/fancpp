@@ -20,11 +20,9 @@
  */
 size_t cf_HashMap_strHash(const char *str) {
   size_t hashValue;
-  CF_ENTRY_FUNC
   for (hashValue = 0; *str != '\0'; str++) {
     hashValue = *(str) + 31 * hashValue;
   }
-  CF_EXIT_FUNC
   return hashValue;
 }
 

@@ -12,3 +12,4 @@
 
 cf_ArrayTemplate_impl(cf_ArrayI, int)
 cf_ArrayTemplate_impl(cf_ArrayP, void*)
+cf_ArrayTemplate_impl(cf_ArrayS, char*)

@@ -37,6 +37,8 @@ extern long cf_Test_errorCount;
  */
 void cf_Test_init(void);
 
+void cf_Test_dispose();
+
 /**
  * add a test case
  *

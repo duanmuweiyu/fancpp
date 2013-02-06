@@ -20,6 +20,10 @@ void cf_Test_init(void) {
   cf_ArrayTest_make(&testList, 0, 100);
 }
 
+void cf_Test_dispose() {
+  cf_ArrayTest_dispose(&testList);
+}
+
 void cf_Test_run(const char *nameFilter, const int attrFilter) {
   long n;
   long i;

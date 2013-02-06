@@ -84,3 +84,20 @@ cf_Error cf_Config_make(cf_Config *self, const char *path) {
   CF_EXIT_FUNC
   return cf_Error_ok;
 }
+
+void cf_Config_dispose(cf_Config *self) {
+  cf_HashMapSSIterator iter;
+
+  const char *key2;
+  char *value2;
+  cf_Error err;
+
+  cf_HashMapSS_createIterator(&self->map, &iter);
+  while (!(err=cf_HashMapSSIterator_next(&iter))) {
+    cf_HashMapSSIterator_get(&iter, &key2, &value2);
+    cf_free((void*)key2);
+    cf_free(value2);
+  }
+
+  cf_HashMapSS_dispose(&self->map);
+}

@@ -51,6 +51,11 @@ typedef enum cf_Error_ {
   #define cf_assert(exp)
 #endif
 
+#define cf_abort(msg) {\
+  cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", msg);\
+  abort();\
+}
+
 /**
  * exit function if condition is true.
  */

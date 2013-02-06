@@ -34,6 +34,7 @@ void cf_HashMapTest_testGet(void)
   cf_HashMapSS_get(&map, key, NULL, &value );
   printf("%s:%s\n", key, value);
 
+  cf_HashMapSS_dispose(&map);
   CF_EXIT_FUNC
 }
 
@@ -62,6 +63,7 @@ void cf_HashMapTest_testIter(void)
     printf("%s:%s\n", key2, value2);
   }
 
+  cf_HashMapSS_dispose(&map);
   CF_EXIT_FUNC
 }
 

@@ -49,6 +49,7 @@ void registerAll(void) {
  */
 int main(int argc, char **argv) {
   const char *name;
+  name = argc >= 2 ? argv[1] : "";
 
   //run performance test;
 //  if (argc == 2 && strcmp(argv[1],"performance") == 0) {
@@ -59,8 +60,14 @@ int main(int argc, char **argv) {
   cf_Test_init();
   registerAll();
 
-  name = argc >= 2 ? argv[1] : "";
   cf_Test_run(name, 0);
+  cf_Test_dispose();
+
+  cf_FuncTrace_traceStack();
+  cf_FuncTrace_reportPerformance();
+  cf_FuncTrace_dispose();
+  cf_dumpMem();
+
   return 0;
 }
 

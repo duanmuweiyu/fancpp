@@ -13,6 +13,7 @@
 
 #include "cfan/macro.h"
 #include "cfan/miss.h"
+#include "cfan/FuncTrace.h"
 
 #include <stdarg.h>
 

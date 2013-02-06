@@ -56,6 +56,7 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
   chunk->refCount = 0;
   chunk->next = NULL;
   chunk->size = size;
+  chunk->trace = cf_FuncTrace_getTraceString();
   //set last 4 byte as check code
   cf_Memory_setTailCheckCode(chunk, cf_Memory_checkCode);
   //cf_Memory_doCheck(chunk);
@@ -181,10 +182,11 @@ void cf_Memory_dumpMem() {
   mtx_lock(&cf_Memory_mutex);
 #endif
   chunk = cf_Memory_memManager.first;
+  printf("memory dump:\n");
   for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
-    cf_Log_cfDebug("func:%s, line:%d, size:%d, refCount:%d"
-      , chunk->func, chunk->line, chunk->size, chunk->refCount);
+    printf("func:%s(%s), line:%d, size:%ld\n"
+      , chunk->func, chunk->trace, chunk->line, chunk->size);
   }
 #ifndef CF_NO_THREAD_SAFE
   mtx_unlock(&cf_Memory_mutex);

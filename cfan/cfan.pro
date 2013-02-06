@@ -32,7 +32,8 @@ HEADERS += \
     cfan/Queue.h \
     cfan/Executor.h \
     cfan/BlockingQueue.h \
-    cfan/Sort.h
+    cfan/Sort.h \
+    cfan/FuncTrace.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -48,7 +49,8 @@ SOURCES += \
     cfan/Test.c \
     tinyCThread/tinycthread.c \
     cfan/Executor.c\
-    cfan/Sort.c
+    cfan/Sort.c\
+    cfan/FuncTrace.c
 
 
 

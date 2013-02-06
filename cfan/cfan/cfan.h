@@ -15,8 +15,7 @@
  * assemble all head file.
  *
  */
-#include "cfan/macro.h"
-#include "cfan/miss.h"
+
 #include "cfan/Error.h"
 #include "cfan/Memory.h"
 #include "cfan/Log.h"

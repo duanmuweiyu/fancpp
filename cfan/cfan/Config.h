@@ -49,6 +49,12 @@ static inline const char *cf_Config_get(cf_Config *self, const char *key, const 
   return value;
 }
 
+/**
+ * dispose config and release memory
+ *
+ */
+void cf_Config_dispose(cf_Config *self);
+
 CF_END
 
 #endif

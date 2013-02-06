@@ -33,6 +33,7 @@ CF_BEGIN
 typedef struct cf_MemChunk_ {
   const char *file;
   const char *func;
+  const char *trace;
   unsigned int line;
   struct cf_MemChunk_ *next; //next chunk
   struct cf_MemChunk_ *prev; //previous chunk

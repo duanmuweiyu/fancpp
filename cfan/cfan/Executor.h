@@ -96,6 +96,7 @@ static inline void cf_Executor_dispose(cf_Executor *self) {
   }
 
   cf_BlockingQueue_dispose(&self->taskQueue);
+  cf_free(self->threadList);
 }
 
 CF_END

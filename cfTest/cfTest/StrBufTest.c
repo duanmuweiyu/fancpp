@@ -23,6 +23,7 @@ void cf_StrBufTest_testPrintf(void) {
   cf_verify(strcmp(cf_StrBuf_str(&strBuf), "hello world, 2") == 0);
 
   cf_StrBuf_dispose(&strBuf);
+  CF_EXIT_FUNC
 }
 
 void cf_StrBufTest_testAdd(void) {

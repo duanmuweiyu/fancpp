@@ -31,6 +31,8 @@ void cf_ConfigTest_test(void)
     printf("%s:%s\n", key2, value2);
   }
 
+  cf_Config_dispose(&map);
+
   CF_EXIT_FUNC
 }
 

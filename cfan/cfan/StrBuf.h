@@ -69,6 +69,16 @@ static inline char *cf_StrBuf_str(cf_StrBuf *self) {
   return self->buffer;
 }
 
+static inline char *cf_StrBuf_detach(cf_StrBuf *self) {
+  char * str;
+  cf_assert(self);
+  if (self->buffer != self->array) return self->buffer;
+  str = (char*)cf_malloc(self->size+1);
+  if (str == NULL) return NULL;
+  strcpy(str, self->array);
+  return str;
+}
+
 /**
  * free resource
  */
@@ -89,6 +99,7 @@ static inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
   cf_assert(self);
   if (self->size == 0) return cf_Error_eof;
   self->size--;
+  *(self->buffer + self->size) = '\0';
   return cf_Error_ok;
 }
 
