@@ -16,7 +16,7 @@
 
 CF_BEGIN
 
-/*************************************************************************
+/*========================================================================
  * OutputStream
  */
 
@@ -38,7 +38,7 @@ static inline void cf_FileOutputStream_make(cf_FileOutputStream *self, FILE *fil
   CF_VTABLE(cf_OutputStream, self)->write = cf_FileOutputStream_write;
 }
 
-/*************************************************************************
+/*========================================================================
  * InputStream
  */
 typedef struct cf_FileInputStreamVTable_ {

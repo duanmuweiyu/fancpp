@@ -11,9 +11,9 @@
 #include "cfan/HashMap.h"
 
 
-/*************************************************************************
-* string to string
-*/
+/*========================================================================
+ * string to string
+ */
 
 /**
  * hash function
@@ -36,9 +36,9 @@ cf_HashMapTemplate_impl(cf_HashMapSS, const char*, char*)
 #undef cf_hashFunc
 #undef cf_compFunc
 
-/*************************************************************************
-* int to int
-*/
+/*========================================================================
+ * int to int
+ */
 
 #define cf_hashFunc(key) key
 #define cf_compFunc(v1, v2) ((v1)-(v2))

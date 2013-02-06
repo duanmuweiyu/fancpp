@@ -141,7 +141,8 @@ static inline void Array##_dispose(Array *self) {\
   CF_EXIT_FUNC\
 }\
 
-/*************************************************************************
+/*======================================================================*/
+/**
  * Array template implemention macro.
  * need macro:
  *   cmpFunc

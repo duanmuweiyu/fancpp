@@ -29,9 +29,9 @@ CF_BEGIN
 *   compFunc
 */
 
-/*************************************************************************
-* Template head file define
-*/
+/*========================================================================
+ * Template head file define
+ */
 #define cf_HashMapTemplate(HashMap, K, V) \
 \
 /**\
@@ -106,10 +106,9 @@ static inline void HashMap##_createIterator(HashMap *self, HashMap##Iterator *it
   iter->position = 0;\
 }\
 
-
-/*************************************************************************
-* Implemention macro
-*/
+/*========================================================================
+ * Implemention macro
+ */
 #define cf_HashMapTemplate_impl(HashMap, K, V) \
 \
 cf_Error HashMap##_make(HashMap *self, size_t size) {\
@@ -275,9 +274,9 @@ cf_Error HashMap##Iterator_get(HashMap##Iterator *self, K *key, V *value) {\
   CF_EXIT_FUNC return cf_Error_ok;\
 }\
 
-/*************************************************************************
-* Default define
-*/
+/*========================================================================
+ * Default define
+ */
 
 /**
  * string to string map
