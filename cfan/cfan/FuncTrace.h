@@ -15,7 +15,7 @@
 #include "cfan/miss.h"
 
 #ifdef CF_DEBUG
-  //#define CF_FUNCTRACE
+  #define CF_FUNCTRACE
 #else
   #undef CF_FUNCTRACE
 #endif
@@ -63,12 +63,12 @@ void cf_FuncTrace_dispose();
 /**
  * print stack trace
  */
-void cf_FuncTrace_traceStack();
+void cf_FuncTrace_printStackTrace();
 
 /**
  * print performance profile count
  */
-void cf_FuncTrace_reportPerformance();
+void cf_FuncTrace_printPerformance();
 
 /**
  * get a formated trace string

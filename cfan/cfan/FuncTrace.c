@@ -83,14 +83,14 @@ void cf_FuncTrace_onLeave(const char *name) {
     item.name = name;
     item.callTimes = 1;
     item.duration = (leaveFuncTime - entryFuncTime);
-    cf_HashMapSP_set(&funcMap, name, item, NULL, NULL);
   }
+  cf_HashMapSP_set(&funcMap, name, item, NULL, NULL);
 }
 
 /**
  * print stack trace
  */
-void cf_FuncTrace_traceStack() {
+void cf_FuncTrace_printStackTrace() {
   int i;
   int size;
   const char *name;
@@ -108,7 +108,7 @@ void cf_FuncTrace_traceStack() {
 /**
  * print performance profile count
  */
-void cf_FuncTrace_reportPerformance() {
+void cf_FuncTrace_printPerformance() {
   cf_HashMapSPIterator iter;
   cf_PerformanceItem item;
   cf_Error err;

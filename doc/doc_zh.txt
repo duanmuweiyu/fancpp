@@ -27,6 +27,13 @@ cf_Log_log(tag, level, msg, ...) 用来统一记录日志，其中tag参数是�
 调用int cf_Log_addListener(cf_Log_listener listener)可以添加一个自定义的日志监听器。
 cf_Log_cfDebug记录的日志在非Debug模式下将被忽略。
 
+堆栈跟踪
+-------
+程序崩溃时打印函数调用堆栈能快速定位Bug，内存泄露时打印调用堆栈能定位泄露点。
+也许某些调试程序能在Debug模式下进行堆栈跟踪，但是不能方便在程序中获得，有些时候也经常会跟踪出错。
+在这里我们手动跟踪了函数调用堆栈，在函数进入时调用CF_ENTRY_FUNC，返回时调用CF_EXIT_FUNC。
+调用cf_FuncTrace_printStackTrace()打印调用堆栈，调用cf_FuncTrace_printPerformance()打印性能统计。
+
 字符串
 ------
 StrBuf是可以动态扩增的字符串缓冲，可以进行快速的字符串连接操作。

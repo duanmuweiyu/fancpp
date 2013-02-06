@@ -47,11 +47,13 @@ int cf_Log_addListener(cf_Log_listener listener) {
   return cf_Log_size - 1;
 }
 
-bool cf_Log_removeListener(int id) {
+cf_Log_listener cf_Log_removeListener(int id) {
+  cf_Log_listener old;
   if (id < 0 || id > 255) {
-    return false;
+    return NULL;
   }
+  old = cf_Log_listenerList[id];
   memmove(&cf_Log_listenerList[id], &cf_Log_listenerList[id+1], sizeof(cf_Log_listener));
   --cf_Log_size;
-  return true;
+  return old;
 }

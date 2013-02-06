@@ -63,8 +63,8 @@ int main(int argc, char **argv) {
   cf_Test_run(name, 0);
   cf_Test_dispose();
 
-  cf_FuncTrace_traceStack();
-  cf_FuncTrace_reportPerformance();
+  cf_FuncTrace_printStackTrace();
+  cf_FuncTrace_printPerformance();
   cf_FuncTrace_dispose();
   cf_dumpMem();
 

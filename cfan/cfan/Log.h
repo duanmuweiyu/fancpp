@@ -43,9 +43,9 @@ typedef void (*cf_Log_listener)(const char *tag, const char *file, const char *f
 int cf_Log_addListener(cf_Log_listener listener);
 
 /**
- * remove listener by id. if success return true, else return false.
+ * remove listener by id. if success return old func, else return NULL.
  */
-bool cf_Log_removeListener(int id);
+cf_Log_listener cf_Log_removeListener(int id);
 
 /**
  * do log
