@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= qt
 
 QMAKE_CC += -std=c99
-QMAKE_CC += -O3
+#QMAKE_CC += -O3
 
 
 DEFINES += _DEBUG

@@ -98,7 +98,7 @@ cf_Error HashMap##Iterator_next(HashMap##Iterator *self);\
 \
 cf_Error HashMap##Iterator_get(HashMap##Iterator *self, K *key, V *value);\
 \
-inline void HashMap##_createIterator(HashMap *self, HashMap##Iterator *iter) {\
+static inline void HashMap##_createIterator(HashMap *self, HashMap##Iterator *iter) {\
   cf_assert(self);\
   cf_assert(iter);\
   iter->parent = self;\

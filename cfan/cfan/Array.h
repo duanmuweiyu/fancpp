@@ -35,7 +35,7 @@ typedef struct Array##_ {\
  * constructor\
  *\
  */\
-inline cf_Error Array##_make(Array *self, size_t size, size_t capacity) {\
+static inline cf_Error Array##_make(Array *self, size_t size, size_t capacity) {\
   CF_ENTRY_FUNC\
   self->size = size;\
   self->capacity = capacity;\
@@ -51,14 +51,14 @@ inline cf_Error Array##_make(Array *self, size_t size, size_t capacity) {\
  * return array size\
  *\
  */\
-inline size_t Array##_size(Array *self) {\
+static inline size_t Array##_size(Array *self) {\
   return self->size;\
 }\
 /**\
  * get element pointer by index\
  *\
  */\
-inline T *Array##_get(Array *self, size_t index) {\
+static inline T *Array##_get(Array *self, size_t index) {\
   cf_assert(self);\
   cf_assert(index < self->size);\
 \
@@ -69,7 +69,7 @@ inline T *Array##_get(Array *self, size_t index) {\
  * get element copy by index\
  *\
  */\
-inline T Array##_getCopy(Array *self, size_t index) {\
+static inline T Array##_getCopy(Array *self, size_t index) {\
   cf_assert(self);\
   cf_assert(index < self->size);\
 \
@@ -85,7 +85,7 @@ cf_Error Array##_reserver_(Array *self);\
  * add to back\
  *\
  */\
-inline cf_Error Array##_add(Array *self, T *elem) {\
+static inline cf_Error Array##_add(Array *self, T *elem) {\
   cf_Error err;\
 \
   CF_ENTRY_FUNC\
@@ -104,7 +104,7 @@ inline cf_Error Array##_add(Array *self, T *elem) {\
   CF_EXIT_FUNC\
   return cf_Error_ok;\
 }\
-inline cf_Error Array##_addCopy(Array *self, T elem) {\
+static inline cf_Error Array##_addCopy(Array *self, T elem) {\
   cf_Error err;\
   CF_ENTRY_FUNC\
   if (self->size == self->capacity) {\
@@ -124,7 +124,7 @@ inline cf_Error Array##_addCopy(Array *self, T elem) {\
  * Before removed must free the element resource by yourself.\
  *\
  */\
-inline void Array##_remove(Array *self, const unsigned int index) {\
+static inline void Array##_remove(Array *self, const unsigned int index) {\
   memmove(self->data + (index)\
           , self->data + ((index+1)), sizeof(T));\
   self->size--;\
@@ -134,7 +134,7 @@ inline void Array##_remove(Array *self, const unsigned int index) {\
  * destroy content\
  *\
  */\
-inline void Array##_dispose(Array *self) {\
+static inline void Array##_dispose(Array *self) {\
   CF_ENTRY_FUNC\
   cf_assert(self);\
   cf_free(self->data);\
@@ -142,7 +142,7 @@ inline void Array##_dispose(Array *self) {\
 }\
 
 /*************************************************************************
- * Array sort template implemention macro.
+ * Array template implemention macro.
  * need macro:
  *   cmpFunc
  */

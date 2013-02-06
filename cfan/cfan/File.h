@@ -36,7 +36,7 @@ typedef struct cf_File_ {
  * constructor
  *
  */
-inline void cf_File_make(cf_File *self, char *path) {
+static inline void cf_File_make(cf_File *self, char *path) {
   strncpy(self->path, path, CF_PATH_MAX);
   self->exists = false;
   self->path[CF_PATH_MAX] = 0;
@@ -53,7 +53,7 @@ cf_Error cf_File_loadInfo(cf_File *self);
  * return file size.
  *
  */
-inline size_t cf_File_size(cf_File *self) {
+static inline size_t cf_File_size(cf_File *self) {
   return self->size;
 }
 
@@ -61,7 +61,7 @@ inline size_t cf_File_size(cf_File *self) {
  * is directory
  *
  */
-inline bool cf_File_isDir(cf_File *self) {
+static inline bool cf_File_isDir(cf_File *self) {
   return self->isDir;
 }
 
@@ -81,7 +81,7 @@ cf_Error CF_File_delete(cf_File *self);
  * get file modify time
  *
  */
-inline time_t cf_File_mtime(cf_File *self) {
+static inline time_t cf_File_mtime(cf_File *self) {
   return self->mtime;
 }
 

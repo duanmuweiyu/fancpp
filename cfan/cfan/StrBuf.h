@@ -38,7 +38,7 @@ typedef struct cf_StrBuf_ {
 /**
  * constructor
  */
-inline void cf_StrBuf_make(cf_StrBuf *self) {
+static inline void cf_StrBuf_make(cf_StrBuf *self) {
   cf_assert(self);
   self->capacity = 256;
   self->buffer = self->array;
@@ -49,7 +49,7 @@ inline void cf_StrBuf_make(cf_StrBuf *self) {
  * return string size
  *
  */
-inline size_t cf_StrBuf_size(cf_StrBuf *self) {
+static inline size_t cf_StrBuf_size(cf_StrBuf *self) {
   cf_assert(self);
   return self->size;
 }
@@ -64,7 +64,7 @@ cf_Error cf_StrBuf_add(cf_StrBuf *self, const char *str, long size);
 /**
  * To c style string.
  */
-inline char *cf_StrBuf_str(cf_StrBuf *self) {
+static inline char *cf_StrBuf_str(cf_StrBuf *self) {
   cf_assert(self);
   return self->buffer;
 }
@@ -72,7 +72,7 @@ inline char *cf_StrBuf_str(cf_StrBuf *self) {
 /**
  * free resource
  */
-inline void cf_StrBuf_dispose(cf_StrBuf *self) {
+static inline void cf_StrBuf_dispose(cf_StrBuf *self) {
   cf_assert(self);
   if (self->buffer == self->array) return;
   cf_free(self->buffer);
@@ -85,7 +85,7 @@ inline void cf_StrBuf_dispose(cf_StrBuf *self) {
 /**
  * remove last char
  */
-inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
+static inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
   cf_assert(self);
   if (self->size == 0) return cf_Error_eof;
   self->size--;
@@ -95,7 +95,7 @@ inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
 /**
  * remove char at index.
  */
-inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
+static inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
   cf_assert(self);
   cf_assert(index < self->size);
   memmove(self->buffer+index, self->buffer+index+1, 1);
@@ -104,7 +104,7 @@ inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
 /**
  * set char at index.
  */
-inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
+static inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
   cf_assert(self);
   cf_assert(index < self->size);
   self->buffer[index] = c;
@@ -113,7 +113,7 @@ inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
 /**
  * get char at index.
  */
-inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
+static inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
   cf_assert(self);
   cf_assert(index < self->size);
   *c = self->buffer[index];
@@ -122,7 +122,7 @@ inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
 /**
  * get sub string at range.
  */
-inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
+static inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
   cf_assert(self);
   cf_assert(offset+size <= self->size);
   memcpy(self->buffer + offset, out, size);
@@ -131,7 +131,7 @@ inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
 /**
  * clear the content, set size to zero.
  */
-inline void cf_StrBuf_clear(cf_StrBuf *self) {
+static inline void cf_StrBuf_clear(cf_StrBuf *self) {
   cf_assert(self);
   self->size = 0;
 }

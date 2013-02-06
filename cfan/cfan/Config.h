@@ -39,7 +39,7 @@ cf_Error cf_Config_make(cf_Config *self, const char *path);
  * get value by key
  *
  */
-inline const char *cf_Config_get(cf_Config *self, const char *key, const char *defVal) {
+static inline const char *cf_Config_get(cf_Config *self, const char *key, const char *defVal) {
   cf_Error err;
   char *value;
   err = cf_HashMapSS_get(&self->map, key, NULL, &value );

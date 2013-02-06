@@ -32,7 +32,7 @@ typedef struct cf_Queue_ {
 /**
  * constructor
  */
-inline cf_Error cf_Queue_make(cf_Queue *self, size_t capacity, unsigned int elemSize) {
+static inline cf_Error cf_Queue_make(cf_Queue *self, size_t capacity, unsigned int elemSize) {
   self->capacity = capacity+1;//add one at here
   self->elemSize = elemSize;
   self->buf = (char*)cf_malloc((capacity+1) * elemSize);
@@ -47,7 +47,7 @@ inline cf_Error cf_Queue_make(cf_Queue *self, size_t capacity, unsigned int elem
 /**
  * current num of elements
  */
-inline size_t cf_Queue_size(cf_Queue *self) {
+static inline size_t cf_Queue_size(cf_Queue *self) {
   if (self->rear > self->front) {
     return self->rear - self->front;
   } else if (self->rear < self->front) {
@@ -61,7 +61,7 @@ inline size_t cf_Queue_size(cf_Queue *self) {
 /**
  * queue is empty
  */
-inline bool cf_Queue_isEmpty(cf_Queue *self) {
+static inline bool cf_Queue_isEmpty(cf_Queue *self) {
   if (self->front == self->rear) {
     return true;
   }
@@ -71,7 +71,7 @@ inline bool cf_Queue_isEmpty(cf_Queue *self) {
 /**
  * push element to back.
  */
-inline cf_Error cf_Queue_add(cf_Queue *self, void *elem) {
+static inline cf_Error cf_Queue_add(cf_Queue *self, void *elem) {
   size_t npos;
   npos = (self->rear + 1) % self->capacity;
   if (npos == self->front) {
@@ -85,7 +85,7 @@ inline cf_Error cf_Queue_add(cf_Queue *self, void *elem) {
 /**
  * pop element from front.
  */
-inline void *cf_Queue_delete(cf_Queue *self) {
+static inline void *cf_Queue_delete(cf_Queue *self) {
   void *elem;
   if (self->front == self->rear) {
     return NULL;
@@ -98,7 +98,7 @@ inline void *cf_Queue_delete(cf_Queue *self) {
 /**
  * get first element but pop out.
  */
-inline void *cf_Queue_peek(cf_Queue *self) {
+static inline void *cf_Queue_peek(cf_Queue *self) {
   if (self->front == self->rear) {
     return NULL;
   }
@@ -108,7 +108,7 @@ inline void *cf_Queue_peek(cf_Queue *self) {
 /**
  * destroy
  */
-inline void cf_Queue_dispose(cf_Queue *self) {
+static inline void cf_Queue_dispose(cf_Queue *self) {
   cf_free(self->buf);
 }
 

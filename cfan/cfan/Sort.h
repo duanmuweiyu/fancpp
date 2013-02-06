@@ -33,7 +33,7 @@ void Array##_quickSort(T *self, int left, int right, T *swapBuffer);\
 /**\
  * @param swapBuffer is one element size temp space.\
  */\
-inline void Array##_insertSort(T *self, int left, int right){\
+static inline void Array##_insertSort(T *self, int left, int right){\
   int j;\
   T swapBuffer;\
   for (;left < right; left++) {\
@@ -47,13 +47,13 @@ inline void Array##_insertSort(T *self, int left, int right){\
   }\
 }\
 \
-inline void Array##_sort(T *self, size_t size) {\
+static inline void Array##_sort(T *self, size_t size) {\
   T swapBuffer;\
   if (size < 2) return;\
   Array##_quickSort(self, 0, size-1, &swapBuffer);\
 }\
 \
-inline long Array##_bsearch(T *self, size_t size, T *elem) {\
+static inline long Array##_bsearch(T *self, size_t size, T *elem) {\
   int cond;\
   int low, high, mid;\
   int n;\

@@ -70,7 +70,7 @@ void *cf_Memory_calloc(const char *file, const char *func, const unsigned int li
   return temp;
 }
 
-inline void cf_Memory_doCheck_(cf_MemChunk *chunk) {
+static inline void cf_Memory_doCheck_(cf_MemChunk *chunk) {
   if (chunk->checkCode != cf_Memory_checkCode) {
     cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, front overflow.");
     exit(2);

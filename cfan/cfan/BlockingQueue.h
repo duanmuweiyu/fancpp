@@ -37,7 +37,7 @@ typedef struct cf_BlockingQueue_ {
  * constructor
  *
  */
-inline cf_Error cf_BlockingQueue_make(cf_BlockingQueue *self, size_t capacity, unsigned int elemSize) {
+static inline cf_Error cf_BlockingQueue_make(cf_BlockingQueue *self, size_t capacity, unsigned int elemSize) {
   cf_Error err;
   int terr;
   err = cf_Queue_make(&self->queue, capacity, elemSize);
@@ -63,7 +63,7 @@ inline cf_Error cf_BlockingQueue_make(cf_BlockingQueue *self, size_t capacity, u
 /**
  * current num of elements
  */
-inline size_t cf_BlockingQueue_size(cf_BlockingQueue *self) {
+static inline size_t cf_BlockingQueue_size(cf_BlockingQueue *self) {
   register size_t size;
   mtx_lock(&self->mutex);
   size = cf_Queue_size(&self->queue);
@@ -74,7 +74,7 @@ inline size_t cf_BlockingQueue_size(cf_BlockingQueue *self) {
 /**
  * queue is empty
  */
-inline bool cf_BlockingQueue_isEmpty(cf_BlockingQueue *self) {
+static inline bool cf_BlockingQueue_isEmpty(cf_BlockingQueue *self) {
   register bool result;
   mtx_lock(&self->mutex);
   result = cf_Queue_isEmpty(&self->queue);
@@ -86,7 +86,7 @@ inline bool cf_BlockingQueue_isEmpty(cf_BlockingQueue *self) {
  * push element to back.
  * If block arg is true and queue is full will be blocked.
  */
-inline cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, bool block) {
+static inline cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, bool block) {
   register cf_Error result;
   mtx_lock(&self->mutex);
   while (!self->cancelAdd) {
@@ -111,7 +111,7 @@ inline cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, bool bl
 /**
  * Release all blocked thread.
  */
-inline void cf_BlockingQueue_cancel(cf_BlockingQueue *self) {
+static inline void cf_BlockingQueue_cancel(cf_BlockingQueue *self) {
   mtx_lock(&self->mutex);
   self->cancelAdd = true;
   self->cancelDelete = true;
@@ -124,7 +124,7 @@ inline void cf_BlockingQueue_cancel(cf_BlockingQueue *self) {
  * pop out a front element.
  * If queue is empty will be blocked.
  */
-inline void *cf_BlockingQueue_delete(cf_BlockingQueue *self) {
+static inline void *cf_BlockingQueue_delete(cf_BlockingQueue *self) {
   register void *result;
   int rc;
   rc = mtx_lock(&self->mutex);
@@ -162,7 +162,7 @@ inline void *cf_BlockingQueue_delete(cf_BlockingQueue *self) {
 /**
  * get first element but pop out.
  */
-inline void *cf_BlockingQueue_peek(cf_BlockingQueue *self) {
+static inline void *cf_BlockingQueue_peek(cf_BlockingQueue *self) {
   register void *result;
   mtx_lock(&self->mutex);
   result = cf_Queue_peek(&self->queue);
@@ -174,7 +174,7 @@ inline void *cf_BlockingQueue_peek(cf_BlockingQueue *self) {
  * Destroy queue.
  * Must guarantee call cf_BlockingQueue_cancel before.
  */
-inline void cf_BlockingQueue_dispose(cf_BlockingQueue *self) {
+static inline void cf_BlockingQueue_dispose(cf_BlockingQueue *self) {
   //cf_BlockingQueue_cancel(self);
   mtx_destroy(&self->mutex);
   cnd_destroy(&self->addCond);

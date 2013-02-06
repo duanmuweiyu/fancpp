@@ -25,7 +25,7 @@ CF_BEGIN
 /**
  * Return if this string contains the specified string.
  */
-inline bool cf_StrBuf_contains(const char *self, const char *s) {
+static inline bool cf_StrBuf_contains(const char *self, const char *s) {
   return strstr(self, s) != NULL;
 }
 
@@ -33,13 +33,13 @@ inline bool cf_StrBuf_contains(const char *self, const char *s) {
  * Return the first occurance of the specified substring searching forward,
  * starting at the specified offset index.
  */
-inline long cf_StrBuf_index(const char *self, const char *s) {
+static inline long cf_StrBuf_index(const char *self, const char *s) {
   const char *r = strstr(self, s);
   if (r == NULL) return -1;
   return r-self;
 }
 
-inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
+static inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
   char *pos;
   int len = strlen(self);
   int n = strlen(s);
@@ -57,7 +57,7 @@ inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
   return -1;
 }
 
-inline bool cf_Str_startsWith(const char *self, const char *s) {
+static inline bool cf_Str_startsWith(const char *self, const char *s) {
   int i;
   if (*s == '\0') return true;
   for (i = 0; self[i] == s[i] && s[i] != '\0'; ++i ) {
@@ -71,7 +71,7 @@ inline bool cf_Str_startsWith(const char *self, const char *s) {
   return false;
 }
 
-inline bool cf_Str_endsWith(const char *self, const char *s) {
+static inline bool cf_Str_endsWith(const char *self, const char *s) {
   int i = strlen(self)-1;
   int j = strlen(s)-1;
   for (; i != -1; --i, --j ) {
@@ -85,19 +85,19 @@ inline bool cf_Str_endsWith(const char *self, const char *s) {
   return false;
 }
 
-inline bool cf_Str_equals(const char *self, const char *s) {
+static inline bool cf_Str_equals(const char *self, const char *s) {
   return strcmp(self, s) == 0;
 }
 
-inline bool cf_Str_equalsIgnoreCase(const char *self, const char *s) {
+static inline bool cf_Str_equalsIgnoreCase(const char *self, const char *s) {
   return strcasecmp(self, s) == 0;
 }
 
-inline bool cf_Str_isEmpty(const char *self) {
+static inline bool cf_Str_isEmpty(const char *self) {
   return *self == '\0';
 }
 
-inline void cf_Str_replaceChar(char *self, char old, char new_) {
+static inline void cf_Str_replaceChar(char *self, char old, char new_) {
   for (; *self != '\0'; ++self) {
     if (*self == old) {
       *self = new_;
@@ -105,7 +105,7 @@ inline void cf_Str_replaceChar(char *self, char old, char new_) {
   }
 }
 
-inline void cf_Str_trimEnd(char *self) {
+static inline void cf_Str_trimEnd(char *self) {
   int i = strlen(self)-1;
   if (!isspace(self[i])) {
     return;
@@ -118,7 +118,7 @@ inline void cf_Str_trimEnd(char *self) {
   }
 }
 
-inline void cf_Str_trimStart(char *self) {
+static inline void cf_Str_trimStart(char *self) {
   char *pos = self;
   while (isspace(*pos)) {
     ++pos;
@@ -127,12 +127,12 @@ inline void cf_Str_trimStart(char *self) {
   memmove(self, pos, strlen(pos)+1);
 }
 
-inline void cf_Str_trim(char *self) {
+static inline void cf_Str_trim(char *self) {
   cf_Str_trimEnd(self);
   cf_Str_trimStart(self);
 }
 
-inline char *cf_Str_dup(const char *self) {
+static inline char *cf_Str_dup(const char *self) {
   int n = strlen(self);
   char *s;
   s = (char *)cf_malloc(n+1);
@@ -150,13 +150,13 @@ typedef struct cf_StrToken_ {
   long delimLen;
 } cf_StrToken;
 
-inline void cf_StrToken_make(cf_StrToken *self, char *src, const char *delim) {
+static inline void cf_StrToken_make(cf_StrToken *self, char *src, const char *delim) {
   self->next = src;
   self->delim = delim;
   self->delimLen = strlen(delim);
 }
 
-inline char *cf_StrToken_next(cf_StrToken *self) {
+static inline char *cf_StrToken_next(cf_StrToken *self) {
   char *current = self->next;
   char *last;
   if (current == NULL) return NULL;

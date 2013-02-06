@@ -43,7 +43,7 @@ int *cf_Executor_thread_(void *arg);
 /**
  * construcotr
  */
-inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t threadSize) {
+static inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t threadSize) {
   cf_Error err;
   int terr;
   size_t i;
@@ -72,7 +72,7 @@ inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t thre
 /**
  * add a task
  */
-inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void*), void *args) {
+static inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void*), void *args) {
   cf_ExecutorTask task = { func, args };
   return cf_BlockingQueue_add(&self->taskQueue, &task, true);
 }
@@ -81,7 +81,7 @@ inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void*), voi
  * Destroy executor.
  * wait until all threads return.
  */
-inline void cf_Executor_dispose(cf_Executor *self) {
+static inline void cf_Executor_dispose(cf_Executor *self) {
   size_t i;
   int rc;
 

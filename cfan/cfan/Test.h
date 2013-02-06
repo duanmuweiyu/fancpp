@@ -41,7 +41,7 @@ void cf_Test_init(void);
  * add a test case
  *
  */
-inline void cf_Test_doAdd(void (*func)(), int attr, const char *name
+static inline void cf_Test_doAdd(void (*func)(), int attr, const char *name
                         , const char *file, const unsigned int line) {
   cf_Test test = { func, attr, name, file, line };
   cf_ArrayTest_add(&testList, &test);
