@@ -103,6 +103,10 @@ freely, subject to the following restrictions:
   #endif
 #endif
 
+#ifdef  __cplusplus
+  extern  "C" {
+#endif
+
 /* Workaround for missing clock_gettime (most Windows compilers, afaik) */
 #if defined(_TTHREAD_WIN32_)
 #define _TTHREAD_EMULATE_CLOCK_GETTIME_
@@ -432,6 +436,9 @@ void *tss_get(tss_t key);
 */
 int tss_set(tss_t key, void *val);
 
+#ifdef  __cplusplus
+  } //end extern  "C" {
+#endif
 
 #endif /* _TINYTHREAD_H_ */
 

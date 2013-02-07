@@ -21,6 +21,33 @@
   mtx_t cf_Memory_mutex;
 #endif
 
+/*========================================================================
+ * Memory manage define
+ */
+
+/**
+ * A block of memory that alloced.
+ */
+typedef struct cf_MemChunk_ {
+  const char *file;
+  const char *func;
+  const char *trace;
+  unsigned int line;
+  struct cf_MemChunk_ *next; //next chunk
+  struct cf_MemChunk_ *prev; //previous chunk
+  size_t size;
+  size_t refCount;
+  int checkCode;
+} cf_MemChunk;
+
+/**
+ * Momory manager contains a MemChunk linked list.
+ */
+typedef struct cf_MemManager_ {
+  cf_MemChunk *first;
+  cf_MemChunk *last;
+} cf_MemManager;
+
 cf_MemManager cf_Memory_memManager = { NULL, NULL };
 /**
  * memory overflow check code
@@ -31,6 +58,10 @@ cf_MemManager cf_Memory_memManager = { NULL, NULL };
 
 #define cf_Memory_getTailCheckCode(chunk) (*((int*)(((char*)(chunk + 1))+chunk->size)))
 #define cf_Memory_setTailCheckCode(chunk, code) cf_Memory_getTailCheckCode(chunk) = code
+
+/*========================================================================
+ * methods
+ */
 
 void *cf_Memory_malloc(const char *file, const char *func, const unsigned int line, size_t size) {
   cf_MemChunk *chunk;

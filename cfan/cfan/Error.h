@@ -13,6 +13,8 @@
 
 #include "cfan/Log.h"
 
+#include <assert.h>
+
 /**
  * Error code list.
  * The 0 represents no error.
@@ -41,12 +43,12 @@ typedef enum cf_Error_ {
  * Only effective at CF_DEBUG macro define.
  */
 #ifdef CF_DEBUG
-  #define cf_assert(exp) do {\
+  #define cf_assert(exp) {\
       if (!(exp)) {\
         cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
-        exit(2);\
+        assert(exp);\
       }\
-    } while(0);
+    }
 #else
   #define cf_assert(exp)
 #endif
@@ -59,22 +61,22 @@ typedef enum cf_Error_ {
 /**
  * exit function if condition is true.
  */
-#define cf_returnErrorIf(exp, val) do {\
+#define cf_returnErrorIf(exp, val) {\
     if (!(exp)) {\
       cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
       CF_EXIT_FUNC\
       return val;\
     }\
-  } while(0);
+  }
 
 /**
  * goto error label if condition is true.
  */
-#define cf_gotoErrorIf(exp) do {\
+#define cf_gotoErrorIf(exp) {\
     if (!(exp)) {\
       cf_Log_log(cf_Log_tag, cf_LogLevel_err, "error: %s", #exp);\
       goto error;\
     }\
-  } while(0);
+  }
 
 #endif
