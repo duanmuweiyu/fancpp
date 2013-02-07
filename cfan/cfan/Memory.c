@@ -22,6 +22,12 @@
 #endif
 
 cf_MemManager cf_Memory_memManager = { NULL, NULL };
+/**
+ * memory overflow check code
+ */
+#define cf_Memory_headCheckCode 0xABCD
+#define cf_Memory_tailCheckCode 0xDCBA
+#define cf_Memory_clearCode 0xCC
 
 #define cf_Memory_getTailCheckCode(chunk) (*((int*)(((char*)(chunk + 1))+chunk->size)))
 #define cf_Memory_setTailCheckCode(chunk, code) cf_Memory_getTailCheckCode(chunk) = code
@@ -52,13 +58,17 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
   chunk->file = file;
   chunk->func = func;
   chunk->line = line;
-  chunk->checkCode = cf_Memory_checkCode;
+  chunk->checkCode = cf_Memory_headCheckCode;
   chunk->refCount = 0;
   chunk->next = NULL;
   chunk->size = size;
-  chunk->trace = cf_FuncTrace_getTraceString();
+  chunk->trace = cf_FuncTrace_getTraceString_();
+
   //set last 4 byte as check code
-  cf_Memory_setTailCheckCode(chunk, cf_Memory_checkCode);
+  cf_Memory_setTailCheckCode(chunk, cf_Memory_tailCheckCode);
+
+  //do default clear
+  memset(chunk+1, cf_Memory_clearCode, size);
   //cf_Memory_doCheck(chunk);
   return chunk + 1;
 }
@@ -72,12 +82,12 @@ void *cf_Memory_calloc(const char *file, const char *func, const unsigned int li
 }
 
 static inline void cf_Memory_doCheck_(cf_MemChunk *chunk) {
-  if (chunk->checkCode != cf_Memory_checkCode) {
+  if (chunk->checkCode != cf_Memory_headCheckCode) {
     cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, front overflow.");
     exit(2);
   }
 
-  if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_checkCode  ) {
+  if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_tailCheckCode  ) {
     printf("checkcode %d\n", cf_Memory_getTailCheckCode(chunk));
     cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, back overflow.");
     exit(2);
@@ -88,12 +98,12 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
   cf_MemChunk *chunk;
   if (p == NULL) return;
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
-  if (chunk->checkCode != cf_Memory_checkCode) {
+  if (chunk->checkCode != cf_Memory_headCheckCode) {
     cf_Log_doLog(cf_Log_tag, file, func, line, cf_LogLevel_err, "bad heap, front overflow.");
     exit(2);
   }
 
-  if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_checkCode  ) {
+  if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_tailCheckCode  ) {
     printf("checkcode %d\n", cf_Memory_getTailCheckCode(chunk));
     cf_Log_doLog(cf_Log_tag, file, func, line, cf_LogLevel_err, "bad heap, back overflow.");
     exit(2);
@@ -111,8 +121,14 @@ void *cf_Memory_realloc(void *p, size_t size) {
 #endif
   chunk = (cf_MemChunk *)realloc(chunk, size + sizeof(cf_MemChunk) + sizeof(int));
   if (!chunk) return NULL;
+
+  //if size > old size clear bit.
+  if (size > chunk->size) {
+    memset(((char*)(chunk + 1))+chunk->size, cf_Memory_clearCode, size - chunk->size);
+  }
+
   chunk->size = size;
-  cf_Memory_setTailCheckCode(chunk, cf_Memory_checkCode);
+  cf_Memory_setTailCheckCode(chunk, cf_Memory_tailCheckCode);
   cf_Memory_doCheck_(chunk);
   if (chunk->prev) {
     chunk->prev->next = chunk;
@@ -156,6 +172,7 @@ void cf_Memory_free(const char *file, const char *func, const unsigned int line,
 
   chunk->checkCode = 0;
   cf_Memory_setTailCheckCode(chunk, 0);
+  memset(chunk, cf_Memory_clearCode, chunk->size + sizeof(cf_MemChunk) + sizeof(int));
   free(chunk);
 #ifndef CF_NO_THREAD_SAFE
   mtx_unlock(&cf_Memory_mutex);

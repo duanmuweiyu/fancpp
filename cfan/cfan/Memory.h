@@ -13,6 +13,7 @@
 
 
 #include "cfan/macro.h"
+#include "cfan/Error.h"
 
 #include <stdlib.h>
 
@@ -21,11 +22,6 @@ CF_BEGIN
 /*========================================================================
  * Memory manage
  */
-
-/**
- * memory overflow check code
- */
-#define cf_Memory_checkCode 0xABCD
 
 /**
  * A block of memory that alloced.
@@ -59,17 +55,45 @@ extern cf_MemManager cf_Memory_memManager;
 /**
  * actually do memory alloc.
  */
-void *cf_Memory_malloc(const char *file, const char *func, const unsigned int line, size_t size);
+void *cf_Memory_malloc(const char *file, const char *func
+                      , const unsigned int line, size_t size);
+static inline void *cf_Memory_checkedMalloc(const char *file
+     , const char *func, const unsigned int line, size_t size) {
+  void *t;
+  t = cf_Memory_malloc(file, func, line, size);
+  if (t == NULL) {
+    cf_abort("bad malloc");
+  }
+  return t;
+}
 
 /**
  * actually do clear memory alloc.
  */
-void *cf_Memory_calloc(const char *file, const char *func, const unsigned int line, size_t nobj, size_t size);
+void *cf_Memory_calloc(const char *file, const char *func
+                       , const unsigned int line, size_t nobj, size_t size);
+static inline void *cf_Memory_checkedCalloc(const char *file
+    , const char *func, const unsigned int line, size_t nobj, size_t size) {
+  void *t;
+  t = cf_Memory_calloc(file, func, line, nobj, size);
+  if (t == NULL) {
+    cf_abort("bad calloc");
+  }
+  return t;
+}
 
 /**
  * re alloc memory.
  */
 void *cf_Memory_realloc(void *p, size_t size);
+static inline void *cf_Memory_checkedRealloc(void *p, size_t size) {
+  void *t;
+  t = cf_Memory_realloc(p, size);
+  if (t == NULL) {
+    cf_abort("bad realloc");
+  }
+  return t;
+}
 
 /**
  * free memory.
@@ -120,10 +144,14 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
 
 #endif
 
+#define cf_checkedMalloc(size) cf_Memory_checkedMalloc(__FILE__, __func__, __LINE__, size)
+#define cf_checkedCalloc(nobj, size) cf_Memory_checkedCalloc(__FILE__, __func__, __LINE__, nobj, size)
+#define cf_checkedRealloc(p, size) cf_Memory_checkedRealloc(p, size)
+
 #ifdef __cplusplus
   #include <new>
 
-  #define NEW(Type, ...) (new ((void*)cf_malloc(sizeof(Type))) Type(## __VA_ARGS__))
+  #define NEW(Type, ...) (new ((void*)cf_checkedMalloc(sizeof(Type))) Type(## __VA_ARGS__))
   #define DELETE(Type, p) {p->~Type(); cf_free(p);}
 #endif
 

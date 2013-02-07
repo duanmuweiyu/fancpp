@@ -14,21 +14,17 @@
 #include "cfan/macro.h"
 #include "cfan/miss.h"
 
+CF_BEGIN
+
 #ifdef CF_DEBUG
   #define CF_FUNCTRACE
 #else
   #undef CF_FUNCTRACE
 #endif
 
-#ifdef CF_FUNCTRACE
-  #define CF_ENTRY_FUNC cf_FuncTrace_onEntry(__func__);
-  #define CF_EXIT_FUNC  cf_FuncTrace_onLeave(__func__);
-#else
-  #define CF_ENTRY_FUNC
-  #define CF_EXIT_FUNC
-#endif
-
-
+/*========================================================================
+ * time ticks
+ */
 #ifdef WIN32
   #include <windows.h>
   static inline uint64_t cf_nowTicks() {
@@ -44,6 +40,10 @@
     return clock();
   }
 #endif
+
+/*========================================================================
+ * stack trace
+ */
 
 /**
  * entry a function
@@ -71,8 +71,24 @@ void cf_FuncTrace_printStackTrace();
 void cf_FuncTrace_printPerformance();
 
 /**
- * get a formated trace string
+ * get a formated trace string.
+ * alloc by malloc not cf_malloc.
  */
-char *cf_FuncTrace_getTraceString();
+char *cf_FuncTrace_getTraceString_();
 
+/*========================================================================
+ * stack trace macro
+ */
+#ifdef CF_FUNCTRACE
+  #define CF_ENTRY_FUNC_ cf_FuncTrace_onEntry(__func__);
+  #define CF_EXIT_FUNC_  cf_FuncTrace_onLeave(__func__);
+#else
+  #define CF_ENTRY_FUNC_
+  #define CF_EXIT_FUNC_
+#endif
+
+#define CF_ENTRY_FUNC CF_ENTRY_FUNC_
+#define CF_EXIT_FUNC CF_EXIT_FUNC_
+
+CF_END
 #endif

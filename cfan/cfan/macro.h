@@ -39,7 +39,7 @@
     #define CF_API __declspec(dllimport)
   #endif
 #else
-  #define  CF_API
+  #define CF_API
 #endif
 
 /*========================================================================
