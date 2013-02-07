@@ -76,6 +76,11 @@ void cf_FuncTrace_printPerformance();
  */
 char *cf_FuncTrace_getTraceString_();
 
+/**
+ * print stack trace on system exit.
+ */
+void cf_FuncTrace_traceOnExit();
+
 /*========================================================================
  * stack trace macro
  */
@@ -89,6 +94,29 @@ char *cf_FuncTrace_getTraceString_();
 
 #define CF_ENTRY_FUNC CF_ENTRY_FUNC_
 #define CF_EXIT_FUNC CF_EXIT_FUNC_
+
+/*========================================================================
+ * define CF_CPP_FUNCTRACE for C++ stack trace
+ */
+#ifdef __cplusplus
+  class cf_FuncTraceClass {
+    const char *funcName;
+  public:
+    cf_FuncTraceClass(const char *name) : funcName(name) {
+      cf_FuncTrace_onEntry(name);
+    }
+    ~cf_FuncTraceClass() {
+      cf_FuncTrace_onLeave(funcName);
+    }
+  };
+  #ifdef CF_FUNCTRACE
+    #define CF_CPP_FUNCTRACE_ cf_FuncTraceClass __cf_funcTraceObj(__func__);
+  #else
+    #define CF_CPP_FUNCTRACE_
+  #endif
+  #define CF_CPP_FUNCTRACE CF_CPP_FUNCTRACE_
+#endif
+
 
 CF_END
 #endif
