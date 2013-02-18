@@ -25,43 +25,17 @@ CF_BEGIN
  */
 void *cf_Memory_malloc(const char *file, const char *func
                       , const unsigned int line, size_t size);
-static inline void *cf_Memory_checkedMalloc(const char *file
-     , const char *func, const unsigned int line, size_t size) {
-  void *t;
-  t = cf_Memory_malloc(file, func, line, size);
-  if (t == NULL) {
-    cf_abort("bad malloc");
-  }
-  return t;
-}
 
 /**
  * actually do clear memory alloc.
  */
 void *cf_Memory_calloc(const char *file, const char *func
                        , const unsigned int line, size_t nobj, size_t size);
-static inline void *cf_Memory_checkedCalloc(const char *file
-    , const char *func, const unsigned int line, size_t nobj, size_t size) {
-  void *t;
-  t = cf_Memory_calloc(file, func, line, nobj, size);
-  if (t == NULL) {
-    cf_abort("bad calloc");
-  }
-  return t;
-}
 
 /**
  * re alloc memory.
  */
 void *cf_Memory_realloc(void *p, size_t size);
-static inline void *cf_Memory_checkedRealloc(void *p, size_t size) {
-  void *t;
-  t = cf_Memory_realloc(p, size);
-  if (t == NULL) {
-    cf_abort("bad realloc");
-  }
-  return t;
-}
 
 /**
  * free memory.
@@ -85,6 +59,66 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
 
 
 /*========================================================================
+ * checked alloc
+ */
+
+static inline void *cf_Memory_checkedMalloc(const char *file
+     , const char *func, const unsigned int line, size_t size) {
+  void *t;
+  t = cf_Memory_malloc(file, func, line, size);
+  if (t == NULL) {
+    cf_abort("bad malloc");
+  }
+  return t;
+}
+
+static inline void *cf_Memory_stdCheckedMalloc(size_t size) {
+  void *t;
+  t = malloc(size);
+  if (t == NULL) {
+    cf_abort("bad malloc");
+  }
+  return t;
+}
+
+static inline void *cf_Memory_checkedCalloc(const char *file
+    , const char *func, const unsigned int line, size_t nobj, size_t size) {
+  void *t;
+  t = cf_Memory_calloc(file, func, line, nobj, size);
+  if (t == NULL) {
+    cf_abort("bad calloc");
+  }
+  return t;
+}
+
+static inline void *cf_Memory_stdCheckedCalloc(size_t nobj, size_t size) {
+  void *t;
+  t = calloc(nobj, size);
+  if (t == NULL) {
+    cf_abort("bad calloc");
+  }
+  return t;
+}
+
+static inline void *cf_Memory_checkedRealloc(void *p, size_t size) {
+  void *t;
+  t = cf_Memory_realloc(p, size);
+  if (t == NULL) {
+    cf_abort("bad realloc");
+  }
+  return t;
+}
+
+static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
+  void *t;
+  t = realloc(p, size);
+  if (t == NULL) {
+    cf_abort("bad realloc");
+  }
+  return t;
+}
+
+/*========================================================================
  * Memory manage macro define
  */
 
@@ -99,6 +133,10 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
   #define cf_dumpMem() cf_Memory_dumpMem()
   #define cf_checkMem() cf_Memory_checkMem()
 
+  #define cf_checkedMalloc(size) cf_Memory_checkedMalloc(__FILE__, __func__, __LINE__, size)
+  #define cf_checkedCalloc(nobj, size) cf_Memory_checkedCalloc(__FILE__, __func__, __LINE__, nobj, size)
+  #define cf_checkedRealloc(p, size) cf_Memory_checkedRealloc(p, size)
+
 #else
 
   #define cf_malloc(size) malloc(size)
@@ -110,11 +148,12 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
   #define cf_dumpMem()
   #define cf_checkMem()
 
+  #define cf_checkedMalloc(size) cf_Memory_stdCheckedMalloc(size)
+  #define cf_checkedCalloc(nobj, size) cf_Memory_stdCheckedCalloc(nobj, size)
+  #define cf_checkedRealloc(p, size) cf_Memory_stdCheckedRealloc(p, size)
+
 #endif
 
-#define cf_checkedMalloc(size) cf_Memory_checkedMalloc(__FILE__, __func__, __LINE__, size)
-#define cf_checkedCalloc(nobj, size) cf_Memory_checkedCalloc(__FILE__, __func__, __LINE__, nobj, size)
-#define cf_checkedRealloc(p, size) cf_Memory_checkedRealloc(p, size)
 
 #ifdef __cplusplus
   #include <new>

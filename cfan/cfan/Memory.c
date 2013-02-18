@@ -114,14 +114,12 @@ void *cf_Memory_calloc(const char *file, const char *func, const unsigned int li
 
 static inline void cf_Memory_doCheck_(cf_MemChunk *chunk) {
   if (chunk->checkCode != cf_Memory_headCheckCode) {
-    cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, front overflow.");
-    exit(2);
+    cf_abort("bad heap, front overflow.");
   }
 
   if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_tailCheckCode  ) {
     printf("checkcode %d\n", cf_Memory_getTailCheckCode(chunk));
-    cf_Log_log(cf_Log_tag, cf_LogLevel_err, "bad heap, back overflow.");
-    exit(2);
+    cf_abort("bad heap, back overflow.");
   }
 }
 
@@ -131,13 +129,13 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
   if (chunk->checkCode != cf_Memory_headCheckCode) {
     cf_Log_doLog(cf_Log_tag, file, func, line, cf_LogLevel_err, "bad heap, front overflow.");
-    exit(2);
+    abort();
   }
 
   if (cf_Memory_getTailCheckCode(chunk) != cf_Memory_tailCheckCode  ) {
     printf("checkcode %d\n", cf_Memory_getTailCheckCode(chunk));
     cf_Log_doLog(cf_Log_tag, file, func, line, cf_LogLevel_err, "bad heap, back overflow.");
-    exit(2);
+    abort();
   }
 }
 

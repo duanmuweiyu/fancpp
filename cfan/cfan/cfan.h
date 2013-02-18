@@ -30,5 +30,6 @@
 #include "cfan/Queue.h"
 #include "cfan/BlockingQueue.h"
 #include "cfan/Executor.h"
+#include "cfan/MemoryPool.h"
 
 #endif
