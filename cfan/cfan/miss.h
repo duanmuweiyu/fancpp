@@ -78,8 +78,8 @@ typedef union cf_Value_ {
   #define isnan(x)   _isnan(x)
 #endif
 
-#if (NULL != 0)
-  #error NULL is not 0
-#endif
+//#if (NULL != 0)
+//  #error NULL is not 0
+//#endif
 
 #endif
