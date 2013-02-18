@@ -24,14 +24,7 @@ CF_BEGIN
  * time ticks
  */
 #ifdef WIN32
-  #include <windows.h>
-  static inline uint64_t cf_nowTicks() {
-    LARGE_INTEGER m_nBeginTime;
-    LARGE_INTEGER m_nFreq;
-    QueryPerformanceFrequency(&m_nFreq);
-    QueryPerformanceCounter(&m_nBeginTime);
-    return (m_nBeginTime.QuadPart*1000000)/m_nFreq.QuadPart;
-  }
+  uint64_t cf_nowTicks();
 #else
   #include <time.h>
   static inline uint64_t cf_nowTicks() {

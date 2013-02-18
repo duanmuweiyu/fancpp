@@ -33,7 +33,9 @@
     typedef unsigned long long  uint64_t;
   #endif
 
-  #define _Bool char
+  #ifndef _MSC_VER
+    #define _Bool char
+  #endif
 #endif
 
 /*========================================================================
@@ -76,8 +78,8 @@ typedef union cf_Value_ {
   #define isnan(x)   _isnan(x)
 #endif
 
-#ifndef offsetof
-#define offsetof(struct_,field_) ((int)((char*)&((struct_*)0)->field_))
+#if (NULL != 0)
+  #error NULL is not 0
 #endif
 
 #endif

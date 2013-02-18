@@ -18,7 +18,8 @@
 cf_Error cf_File_loadInfo(cf_File *self) {
   HANDLE hFile;
   FILETIME ftCreate, ftAccess, ftWrite;
-  LPDWORD lpFileSizeHigh;
+  DWORD lpFileSizeHigh;
+  DWORD lpFileSizeLow;
   DWORD rc;
   __int64 ll;
 
@@ -46,12 +47,12 @@ cf_Error cf_File_loadInfo(cf_File *self) {
     goto error;
   }
 
-  rc = GetFileSize(hFile, lpFileSizeHigh);
-  if (rc == INVALID_FILE_SIZE) {
+  lpFileSizeLow = GetFileSize(hFile, &lpFileSizeHigh);
+  if (lpFileSizeLow == INVALID_FILE_SIZE) {
     goto error;
   }
 
-  self->size = (size_t)lpFileSizeHigh;
+  self->size = (size_t)lpFileSizeLow;
 
   //FILETIME to time_t
   ll = ftWrite.dwHighDateTime << 32 + ftWrite.dwLowDateTime;

@@ -17,7 +17,21 @@
 #include <signal.h>
 
 /*========================================================================
- * Performace counter
+ * time ticks
+ */
+#ifdef WIN32
+  #include <windows.h>
+  uint64_t cf_nowTicks() {
+    LARGE_INTEGER m_nBeginTime;
+    LARGE_INTEGER m_nFreq;
+    QueryPerformanceFrequency(&m_nFreq);
+    QueryPerformanceCounter(&m_nBeginTime);
+    return (m_nBeginTime.QuadPart*1000000)/m_nFreq.QuadPart;
+  }
+#endif
+
+/*========================================================================
+ * define
  */
 
 #undef CF_ENTRY_FUNC
@@ -87,6 +101,10 @@ void cf_FuncTrace_onLeave(const char *name) {
 #ifdef CF_PRINT_FUNC
   cf_Log_log("func", cf_LogLevel_debug, "leave function: %s", name);
 #endif
+
+  if (!cf_FuncTrace_inited) {
+    cf_abort("func trace not init");
+  }
 
   popName = *cf_ArrayFuncTrace_pop(&cf_FuncTrace_callStack);
   if (strcmp(popName, name) != 0) {
@@ -161,6 +179,8 @@ char *cf_FuncTrace_getTraceString_() {
   int size;
   const char *name;
 
+  if (!cf_FuncTrace_inited) return NULL;
+
   str = (char*)malloc(256);
   if (str == NULL) {
     cf_abort("bad alloc");
@@ -190,6 +210,10 @@ char *cf_FuncTrace_getTraceString_() {
   }
   return str;
 }
+
+/*========================================================================
+ * signal
+ */
 
 typedef void (*cf_FuncTrace_sighandler) (int);
 cf_FuncTrace_sighandler cf_FuncTrace_SIGABRT;

@@ -154,14 +154,44 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
 
 #endif
 
-
-#ifdef __cplusplus
-  #include <new>
-
-  #define CF_NEW(Type, ...) (new ((void*)cf_checkedMalloc(sizeof(Type))) Type(## __VA_ARGS__))
-  #define CF_DELETE(Type, p) {p->~Type(); cf_free(p);}
-#endif
+#define cf_safeFree(p) { cf_free(p); p = NULL; }
 
 CF_END
+
+#ifdef __cplusplus
+  #ifdef CF_DEBUG
+    #include <new>
+
+    #define CF_NEW(Type, ...) (new ((void*)cf_checkedMalloc(sizeof(Type))) Type(## __VA_ARGS__))
+    #define CF_DELETE(Type, p) {p->~Type(); cf_free(p);}
+
+    #define CF_NEW_ARRAY(out, Type, size, ...){\
+      int i;\
+      char *buffer;\
+      long *count = (long*)cf_checkedMalloc(sizeof(Type)*size + sizeof(long));\
+      *count = size;\
+      buffer = (char*)(count+1);\
+      *(out) = (Type*)buffer;\
+      for (i=0; i<size; i++) {\
+        new (buffer+(sizeof(Type)*i)) Type(## __VA_ARGS__);\
+      }\
+    }
+
+    #define CF_DELETE_ARRAY(Type, p){\
+      int i;\
+      char *buffer = (char*)p;\
+      long size = *((long*)buffer-1);\
+      for (i=0; i<size; i++) {\
+        ((Type*)(buffer+(sizeof(Type)*i)))->~Type();\
+      }\
+      cf_free((long*)buffer-1);\
+    }
+  #else
+    #define CF_NEW(Type, ...) (new Type(## __VA_ARGS__))
+    #define CF_DELETE(Type, p) (delete p)
+    #define CF_NEW_ARRAY(out, Type, size, ...) (new Type[size])
+    #define CF_DELETE_ARRAY(Type, p) (delete[] p)
+  #endif
+#endif
 
 #endif //_CF_MEMORY_H_

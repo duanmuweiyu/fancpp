@@ -14,14 +14,14 @@
 
 #ifdef __GNUC__
   #include <ext/hash_map>
+
+  namespace stdext
+  {
+    using namespace __gnu_cxx;
+  }
 #else
   #include <hash_map>
 #endif
-
-namespace stdext
-{
-  using namespace __gnu_cxx;
-}
 
 #ifdef _WIN32
   #include <windows.h>

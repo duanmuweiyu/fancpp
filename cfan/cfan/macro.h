@@ -77,6 +77,7 @@
 #ifdef _DEBUG
   #undef NDEBUG
 #else
+  #undef NDEBUG
   #define NDEBUG
 #endif
 
