@@ -49,12 +49,24 @@ typedef struct cf_MemoryPool_ {
  */
 void cf_MemoryPool_make(cf_MemoryPool *self, size_t objSize, size_t objCount);
 
+/**
+ * alloc from pool, please using cf_MemoryPool_alloc replace.
+ */
 void *cf_MemoryPool_alloc_(cf_MemoryPool *self, const char *name);
 
+/**
+ * free memory which alloc from this pool.
+ */
 void cf_MemoryPool_free(cf_MemoryPool *self, void *p);
 
+/**
+ * free this pool.
+ */
 void cf_MemoryPool_dispose(cf_MemoryPool *self);
 
+/**
+ * alloc from pool.
+ */
 #define cf_MemoryPool_alloc(self) cf_MemoryPool_alloc_(self, __func__)
 
 CF_END

@@ -158,8 +158,8 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
 #ifdef __cplusplus
   #include <new>
 
-  #define NEW(Type, ...) (new ((void*)cf_checkedMalloc(sizeof(Type))) Type(## __VA_ARGS__))
-  #define DELETE(Type, p) {p->~Type(); cf_free(p);}
+  #define CF_NEW(Type, ...) (new ((void*)cf_checkedMalloc(sizeof(Type))) Type(## __VA_ARGS__))
+  #define CF_DELETE(Type, p) {p->~Type(); cf_free(p);}
 #endif
 
 CF_END

@@ -12,6 +12,9 @@
 
 #include <stdio.h>
 
+/**
+ * a magic code.
+ */
 #define cf_MemoryPool_headCheckCode 0xA9C5
 
 void cf_MemoryPool_make(cf_MemoryPool *self, size_t objSize, size_t objCount) {
