@@ -23,6 +23,7 @@ void cf_QueueTest_register(void);
 void cf_BlockingQueueTest_register(void);
 void cf_ExecutorTest_register(void);
 void cf_MemoryPoolTest_register(void);
+void cf_LinkedListTest_register(void);
 
 /**
  * register all test case.
@@ -41,6 +42,7 @@ void registerAll(void) {
   cf_BlockingQueueTest_register();
   cf_ExecutorTest_register();
   cf_MemoryPoolTest_register();
+  cf_LinkedListTest_register();
 }
 
 /**

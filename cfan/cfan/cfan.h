@@ -32,5 +32,6 @@
 #include "cfan/BlockingQueue.h"
 #include "cfan/Executor.h"
 #include "cfan/MemoryPool.h"
+#include "cfan/LinkedList.h"
 
 #endif

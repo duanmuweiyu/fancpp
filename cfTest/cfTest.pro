@@ -24,7 +24,8 @@ SOURCES += \
     cfTest/QueueTest.c \
     cfTest/ExecutorTest.c \
     cfTest/BlockingQueueTest.c \
-    cfTest/MemoryPoolTest.c
+    cfTest/MemoryPoolTest.c \
+    cfTest/LinkedListTest.c
 
 LIBS += -pthread
 
@@ -37,3 +38,5 @@ unix: LIBS += -lrt
 
 INCLUDEPATH += $$PWD/../cfan
 DEPENDPATH += $$PWD/../cfan
+
+OTHER_FILES +=

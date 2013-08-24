@@ -34,7 +34,8 @@ HEADERS += \
     cfan/BlockingQueue.h \
     cfan/Sort.h \
     cfan/FuncTrace.h \
-    cfan/MemoryPool.h
+    cfan/MemoryPool.h \
+    cfan/LinkedList.h
 
 SOURCES += \
     cfan/StrBuf.c \
