@@ -69,6 +69,8 @@
 
 #define cf_Math_clamp(a, min, max) (cf_Math_min(cf_Math_max((a), (min)), (max)))
 
+#define cf_Math_round(f) ((int)(f+0.5))
+
 
 /*========================================================================
  * debug macro

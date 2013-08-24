@@ -38,36 +38,36 @@ typedef struct cf_OutputStreamVTable_ {
 
 } cf_OutputStreamVTable;
 
-static inline cf_Error writeInt8(cf_OutputStream *self, int8_t out) {
+static inline cf_Error cf_OutputStream_writeInt8(cf_OutputStream *self, int8_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 1);
 }
-static inline cf_Error writeInt16(cf_OutputStream *self, int16_t out) {
+static inline cf_Error cf_OutputStream_writeInt16(cf_OutputStream *self, int16_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 2);
 }
-static inline cf_Error writeInt32(cf_OutputStream *self, int32_t out) {
+static inline cf_Error cf_OutputStream_writeInt32(cf_OutputStream *self, int32_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 4);
 }
-static inline cf_Error writeInt64(cf_OutputStream *self, int64_t out) {
+static inline cf_Error cf_OutputStream_writeInt64(cf_OutputStream *self, int64_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 8);
 }
 
-static inline cf_Error writeUInt8(cf_OutputStream *self, uint8_t out) {
+static inline cf_Error cf_OutputStream_writeUInt8(cf_OutputStream *self, uint8_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 1);
 }
-static inline cf_Error writeUInt16(cf_OutputStream *self, uint16_t out) {
+static inline cf_Error cf_OutputStream_writeUInt16(cf_OutputStream *self, uint16_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 2);
 }
-static inline cf_Error writeUInt32(cf_OutputStream *self, uint32_t out) {
+static inline cf_Error cf_OutputStream_writeUInt32(cf_OutputStream *self, uint32_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 4);
 }
-static inline cf_Error writeUInt64(cf_OutputStream *self, uint64_t out) {
+static inline cf_Error cf_OutputStream_writeUInt64(cf_OutputStream *self, uint64_t out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 8);
 }
 
-static inline cf_Error writeFloat(cf_OutputStream *self, float out) {
+static inline cf_Error cf_OutputStream_writeFloat(cf_OutputStream *self, float out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 4);
 }
-static inline cf_Error writeDouble(cf_OutputStream *self, double out) {
+static inline cf_Error cf_OutputStream_writeDouble(cf_OutputStream *self, double out) {
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 8);
 }
 
@@ -88,36 +88,36 @@ typedef struct cf_InputStreamVTable_ {
 
 } cf_InputStreamVTable;
 
-static inline cf_Error readInt8(cf_OutputStream *self, int8_t *out) {
+static inline cf_Error cf_InputStream_readInt8(cf_OutputStream *self, int8_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 1);
 }
-static inline cf_Error readInt16(cf_OutputStream *self, int16_t *out) {
+static inline cf_Error cf_InputStream_readInt16(cf_OutputStream *self, int16_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 2);
 }
-static inline cf_Error readInt32(cf_OutputStream *self, int32_t *out) {
+static inline cf_Error cf_InputStream_readInt32(cf_OutputStream *self, int32_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
 }
-static inline cf_Error readInt64(cf_OutputStream *self, int64_t *out) {
+static inline cf_Error cf_InputStream_readInt64(cf_OutputStream *self, int64_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
 }
 
-static inline cf_Error readUInt8(cf_OutputStream *self, uint8_t *out) {
+static inline cf_Error cf_InputStream_readUInt8(cf_OutputStream *self, uint8_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 1);
 }
-static inline cf_Error readUInt16(cf_OutputStream *self, uint16_t *out) {
+static inline cf_Error cf_InputStream_readUInt16(cf_OutputStream *self, uint16_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 2);
 }
-static inline cf_Error readUInt32(cf_OutputStream *self, uint32_t *out) {
+static inline cf_Error cf_InputStream_readUInt32(cf_OutputStream *self, uint32_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
 }
-static inline cf_Error readUInt64(cf_OutputStream *self, uint64_t *out) {
+static inline cf_Error cf_InputStream_readUInt64(cf_OutputStream *self, uint64_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
 }
 
-static inline cf_Error readFloat(cf_OutputStream *self, float *out) {
+static inline cf_Error cf_InputStream_readFloat(cf_OutputStream *self, float *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
 }
-static inline cf_Error readDouble(cf_OutputStream *self, double *out) {
+static inline cf_Error cf_InputStream_readDouble(cf_OutputStream *self, double *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
 }
 
