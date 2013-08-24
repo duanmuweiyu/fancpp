@@ -64,25 +64,126 @@ cf_ArrayTemplate_impl(cf_ArrayFuncTrace, const char*)
 #define CF_EXIT_FUNC CF_EXIT_FUNC_
 
 /*========================================================================
+ * _Thread_local
+ */
+
+static tss_t callStack_;
+static tss_t funcMap_;
+static tss_t entryFuncTime_;
+static tss_t inited_;
+static volatile bool threadLocalVarInited = false;
+
+static void deleteCallStack(void *arg) {
+  cf_ArrayFuncTrace *f = (cf_ArrayFuncTrace*)arg;
+  cf_ArrayFuncTrace_dispose(f);
+  free(f);
+  tss_delete(callStack_);
+}
+
+static void deleteFuncMap(void *arg) {
+  cf_HashMapFuncTrace *f = (cf_HashMapFuncTrace*)arg;
+  cf_HashMapFuncTrace_dispose(f);
+  free(f);
+  tss_delete(funcMap_);
+}
+
+static void deleteEntryFuncTime(void *arg) {
+  uint64_t *f = (uint64_t*)arg;
+  free(f);
+  tss_delete(entryFuncTime_);
+}
+
+static void initThreadLocal() {
+  tss_create(&callStack_, (tss_dtor_t)deleteCallStack);
+  tss_create(&funcMap_, (tss_dtor_t)deleteFuncMap);
+  tss_create(&entryFuncTime_, (tss_dtor_t)deleteEntryFuncTime);
+  tss_create(&inited_, NULL);
+}
+
+static bool cf_FuncTrace_isInited() {
+  void *t = tss_get(inited_);
+  return t;
+}
+
+static bool cf_FuncTrace_setInited(bool b) {
+  tss_set(inited_, (void*)b);
+}
+
+static cf_ArrayFuncTrace *cf_FuncTrace_callStack() {
+  cf_ArrayFuncTrace *t = (cf_ArrayFuncTrace*)(tss_get(callStack_));
+  if (t == NULL) {
+    t = (cf_ArrayFuncTrace*)malloc(sizeof(cf_ArrayFuncTrace));
+    cf_ArrayFuncTrace_make(t, 0, 100);
+    tss_set(callStack_, t);
+  }
+  return t;
+}
+
+static cf_HashMapFuncTrace *cf_FuncTrace_funcMap() {
+  cf_HashMapFuncTrace *t = (cf_HashMapFuncTrace*)(tss_get(funcMap_));
+  if (t == NULL) {
+    t = (cf_HashMapFuncTrace*)malloc(sizeof(cf_HashMapFuncTrace));
+    cf_HashMapFuncTrace_make(t, 1000);
+    tss_set(funcMap_, t);
+  }
+  return t;
+}
+
+static uint64_t *cf_FuncTrace_entryFuncTime() {
+  uint64_t *t = (uint64_t*)(tss_get(entryFuncTime_));
+  if (t == NULL) {
+    t = (uint64_t*)malloc(sizeof(uint64_t));
+    *t = 0;
+    tss_set(entryFuncTime_, t);
+  }
+  return t;
+}
+
+/*========================================================================
  * Stack trace
  */
-//_Thread_local
-_Thread_local cf_ArrayFuncTrace cf_FuncTrace_callStack;
-_Thread_local cf_HashMapFuncTrace cf_FuncTrace_funcMap;
-_Thread_local uint64_t cf_FuncTrace_entryFuncTime;
-_Thread_local bool cf_FuncTrace_inited = false;
+
+void cf_FuncTrace_init() {
+  if (!threadLocalVarInited) {
+    initThreadLocal();
+    threadLocalVarInited = true;
+  }
+}
+
+void cf_FuncTrace_dispose() {
+  cf_ArrayFuncTrace *f = cf_FuncTrace_callStack();
+  cf_ArrayFuncTrace_dispose(f);
+  free(f);
+  tss_delete(callStack_);
+
+  cf_HashMapFuncTrace *f2 = cf_FuncTrace_funcMap();
+  cf_HashMapFuncTrace_dispose(f2);
+  free(f2);
+  tss_delete(funcMap_);
+
+  uint64_t *f3 = cf_FuncTrace_entryFuncTime();
+  free(f3);
+  tss_delete(entryFuncTime_);
+
+  tss_delete(inited_);
+}
 
 /**
  * entry a function
  */
 void cf_FuncTrace_onEntry(const char *name) {
-  if (!cf_FuncTrace_inited) {
-    cf_ArrayFuncTrace_make(&cf_FuncTrace_callStack, 0, 100);
-    cf_HashMapFuncTrace_make(&cf_FuncTrace_funcMap, 1000);
-    cf_FuncTrace_inited = true;
+  if (!threadLocalVarInited) {
+    initThreadLocal();
+    threadLocalVarInited = true;
   }
-  cf_FuncTrace_entryFuncTime = cf_nowTicks();
-  cf_ArrayFuncTrace_addCopy(&cf_FuncTrace_callStack, (char*)name);
+
+  //do init
+  cf_FuncTrace_funcMap();
+
+  *cf_FuncTrace_entryFuncTime() = cf_nowTicks();
+  cf_ArrayFuncTrace_addCopy(cf_FuncTrace_callStack(), (char*)name);
+
+  cf_FuncTrace_setInited(true);
 
 #ifdef CF_PRINT_FUNC
   cf_Log_log("func", cf_LogLevel_debug, "entry function: %s", name);
@@ -97,32 +198,34 @@ void cf_FuncTrace_onLeave(const char *name) {
   uint64_t leaveFuncTime;
   cf_PerformanceItem item;
   cf_Error err;
+  cf_HashMapFuncTrace *map;
+
+  if (!cf_FuncTrace_isInited()) {
+    return;
+  }
 
 #ifdef CF_PRINT_FUNC
   cf_Log_log("func", cf_LogLevel_debug, "leave function: %s", name);
 #endif
 
-  if (!cf_FuncTrace_inited) {
-    cf_abort("func trace not init");
-  }
-
-  popName = *cf_ArrayFuncTrace_pop(&cf_FuncTrace_callStack);
+  popName = *cf_ArrayFuncTrace_pop(cf_FuncTrace_callStack());
   if (strcmp(popName, name) != 0) {
     cf_abort("function trace mismatch");
   }
 
-  err = cf_HashMapFuncTrace_get(&cf_FuncTrace_funcMap, name, NULL, &item);
+  map = cf_FuncTrace_funcMap();
+  err = cf_HashMapFuncTrace_get(map, name, NULL, &item);
   leaveFuncTime = cf_nowTicks();
 
   if (err == cf_Error_ok) {
     item.callTimes++;
-    item.duration += (leaveFuncTime - cf_FuncTrace_entryFuncTime);
+    item.duration += (leaveFuncTime - *cf_FuncTrace_entryFuncTime());
   } else {
     item.name = name;
     item.callTimes = 1;
-    item.duration = (leaveFuncTime - cf_FuncTrace_entryFuncTime);
+    item.duration = (leaveFuncTime - *cf_FuncTrace_entryFuncTime());
   }
-  cf_HashMapFuncTrace_set(&cf_FuncTrace_funcMap, name, item, NULL, NULL);
+  cf_HashMapFuncTrace_set(map, name, item, NULL, NULL);
 }
 
 /**
@@ -132,15 +235,22 @@ void cf_FuncTrace_printStackTrace() {
   int i;
   int size;
   const char *name;
+  cf_ArrayFuncTrace *trace;
 
-  if (!cf_FuncTrace_inited) return;
+  if (!cf_FuncTrace_isInited()) {
+    return;
+  }
+
   printf("stack trace:\n");
 
-  size = cf_ArrayFuncTrace_size(&cf_FuncTrace_callStack);
+  trace = cf_FuncTrace_callStack();
+  size = cf_ArrayFuncTrace_size(trace);
   for (i=0; i<size; ++i) {
-    name = cf_ArrayFuncTrace_getCopy(&cf_FuncTrace_callStack, i);
+    name = cf_ArrayFuncTrace_getCopy(trace, i);
     printf("  %s\n", name);
   }
+
+  printf("end stack trace\n");
 }
 
 /**
@@ -152,21 +262,16 @@ void cf_FuncTrace_printPerformance() {
   cf_Error err;
   const char *name;
 
-  if (!cf_FuncTrace_inited) return;
+  if (!cf_FuncTrace_isInited()) {
+    return;
+  }
+
   printf("performance profile:\ntimes\tduration\tname\n");
 
-  cf_HashMapFuncTrace_createIterator(&cf_FuncTrace_funcMap, &iter);
+  cf_HashMapFuncTrace_createIterator(cf_FuncTrace_funcMap(), &iter);
   while (!(err=cf_HashMapFuncTraceIterator_next(&iter))) {
     cf_HashMapFuncTraceIterator_get(&iter, &name, &item);
     printf("%ld\t%ld\t%s\n", item.callTimes, item.duration, item.name);
-  }
-}
-
-void cf_FuncTrace_dispose() {
-  if (cf_FuncTrace_inited) {
-    cf_ArrayFuncTrace_dispose(&cf_FuncTrace_callStack);
-    cf_HashMapFuncTrace_dispose(&cf_FuncTrace_funcMap);
-    cf_FuncTrace_inited = false;
   }
 }
 
@@ -178,8 +283,11 @@ char *cf_FuncTrace_getTraceString_() {
   int i;
   int size;
   const char *name;
+  cf_ArrayFuncTrace *trace;
 
-  if (!cf_FuncTrace_inited) return NULL;
+  if (!cf_FuncTrace_isInited()) {
+    return NULL;
+  }
 
   str = (char*)malloc(256);
   if (str == NULL) {
@@ -187,9 +295,10 @@ char *cf_FuncTrace_getTraceString_() {
   }
   strAlloc = 255;
 
-  size = cf_ArrayFuncTrace_size(&cf_FuncTrace_callStack);
+  trace = cf_FuncTrace_callStack();
+  size = cf_ArrayFuncTrace_size(trace);
   for (i=0; i<size; ++i) {
-    name = cf_ArrayFuncTrace_getCopy(&cf_FuncTrace_callStack, i);
+    name = cf_ArrayFuncTrace_getCopy(trace, i);
     //+1 for comma
     nameSize = strlen(name)+1;
     if (strSize + nameSize > strAlloc) {

@@ -47,7 +47,12 @@ void cf_FuncTrace_onEntry(const char *name);
 void cf_FuncTrace_onLeave(const char *name);
 
 /**
- * dispose memory
+ * init threadlocal
+ */
+void cf_FuncTrace_init();
+
+/**
+ * release current thread memory
  */
 void cf_FuncTrace_dispose();
 

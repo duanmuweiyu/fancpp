@@ -234,6 +234,7 @@ void cf_Memory_dumpMem() {
     printf("func:%s(%s), line:%d, size:%ld\n"
       , chunk->func, chunk->trace, chunk->line, chunk->size);
   }
+  printf("end memory dump\n");
 #ifndef CF_NO_THREAD_SAFE
   mtx_unlock(&cf_Memory_mutex);
 #endif
