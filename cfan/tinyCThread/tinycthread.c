@@ -21,7 +21,7 @@ freely, subject to the following restrictions:
     distribution.
 */
 
-#include "tinycthread.h"
+#include "tinyCThread/tinycthread.h"
 #include <stdlib.h>
 
 /* Platform specific includes */

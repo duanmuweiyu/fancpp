@@ -21,7 +21,6 @@ CF_BEGIN
  */
 typedef struct cf_VTable_ {
   int offset;
-
 } cf_VTable;
 
 /**

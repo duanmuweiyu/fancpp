@@ -18,7 +18,7 @@
 
 CF_BEGIN
 
-#define CF_PATH_MAX 255
+#define CF_PATH_MAX 256
 
 /**
  * Represents File or Dir
@@ -39,7 +39,7 @@ typedef struct cf_File_ {
 static inline void cf_File_make(cf_File *self, char *path) {
   strncpy(self->path, path, CF_PATH_MAX);
   self->exists = false;
-  self->path[CF_PATH_MAX] = 0;
+  self->path[CF_PATH_MAX-1] = 0;
 }
 
 /**

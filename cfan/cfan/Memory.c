@@ -9,7 +9,7 @@
  */
 
 #include "cfan/Memory.h"
-#include "Error.h"
+#include "cfan/Error.h"
 
 #include <tinyCThread/tinycthread.h>
 #include <stdio.h>

@@ -15,7 +15,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/dir.h>
+#ifndef __IOS__
+  #include <sys/dir.h>
+#endif
 #include <dirent.h>
 
 cf_Error cf_File_loadInfo(cf_File *self) {

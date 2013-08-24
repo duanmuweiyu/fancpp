@@ -1,6 +1,9 @@
+
+TARGET   =  cfTest
 TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
+
 
 QMAKE_CC += -std=c99
 #QMAKE_CC += -O3
