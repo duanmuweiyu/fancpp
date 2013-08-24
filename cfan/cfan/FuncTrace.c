@@ -105,7 +105,7 @@ static bool cf_FuncTrace_isInited() {
   return t;
 }
 
-static bool cf_FuncTrace_setInited(bool b) {
+static void cf_FuncTrace_setInited(bool b) {
   tss_set(inited_, (void*)b);
 }
 

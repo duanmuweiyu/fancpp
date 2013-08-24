@@ -21,6 +21,9 @@
 
 CF_BEGIN
 
+#ifndef strcasecmp
+extern int strcasecmp (__const char *__s1, __const char *__s2);
+#endif
 
 /**
  * Return if this string contains the specified string.

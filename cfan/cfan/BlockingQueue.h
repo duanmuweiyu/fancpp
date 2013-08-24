@@ -33,6 +33,13 @@ typedef struct cf_BlockingQueue_ {
   bool cancelDelete;
 } cf_BlockingQueue;
 
+typedef enum cf_BlockingStrategy_ {
+  cf_BlockingStrategy_donothing,
+  cf_BlockingStrategy_blocking,
+  cf_BlockingStrategy_removeLast,
+  cf_BlockingStrategy_removeFirst
+} cf_BlockingStrategy;
+
 /**
  * constructor
  *
@@ -86,15 +93,26 @@ static inline bool cf_BlockingQueue_isEmpty(cf_BlockingQueue *self) {
  * push element to back.
  * If block arg is true and queue is full will be blocked.
  */
-static inline cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, bool block) {
+static inline cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, cf_BlockingStrategy strate) {
   register cf_Error result;
   mtx_lock(&self->mutex);
   while (!self->cancelAdd) {
     result = cf_Queue_add(&self->queue, elem);
     if (result != cf_Error_ok) {
-      if (block) {
+      switch(strate) {
+      case cf_BlockingStrategy_donothing:
+        mtx_unlock(&self->mutex);
+        return cf_Error_overflow;
+      case cf_BlockingStrategy_blocking:
         cnd_wait(&self->addCond, &self->mutex);
-      } else {
+        break;
+      case cf_BlockingStrategy_removeLast:
+        cf_Queue_removeLast(&self->queue);
+        break;
+      case cf_BlockingStrategy_removeFirst:
+        cf_Queue_delete(&self->queue);
+        break;
+      default:
         mtx_unlock(&self->mutex);
         return cf_Error_overflow;
       }

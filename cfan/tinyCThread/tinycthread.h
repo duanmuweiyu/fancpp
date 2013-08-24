@@ -125,7 +125,7 @@ typedef int _tthread_clockid_t;
 int _tthread_clock_gettime(clockid_t clk_id, struct timespec *ts);
 #define clock_gettime _tthread_clock_gettime
 #endif
-
+struct timespec;
 
 /** TinyCThread version (major number). */
 #define TINYCTHREAD_VERSION_MAJOR 1

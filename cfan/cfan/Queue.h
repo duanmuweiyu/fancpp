@@ -96,6 +96,24 @@ static inline void *cf_Queue_delete(cf_Queue *self) {
 }
 
 /**
+ * remove last element
+ */
+static inline void *cf_Queue_removeLast(cf_Queue *self) {
+  void *elem;
+  long pos;
+  if (self->front == self->rear) {
+    return NULL;
+  }
+  elem = self->buf + (self->rear * self->elemSize);
+  pos = self->rear - 1;
+  if (pos < 0) {
+    pos += self->capacity;
+  }
+  self->rear = pos;
+  return elem;
+}
+
+/**
  * get first element but pop out.
  */
 static inline void *cf_Queue_peek(cf_Queue *self) {
