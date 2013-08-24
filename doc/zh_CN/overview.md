@@ -46,6 +46,7 @@ Str包含对标准库补充的字符串处理函数。
 Array是动态数组容器，能通过索引快速访问。其中还实现了快速排序和二分查找算法。
 HashMap是哈希表，提供K-V对的快速访问。采用模版编程技术，最大限度提高效率。
 Queue是固定容量的先进先出队列实现。
+LinkedList是链表
 
 单元测试
 ------
@@ -74,16 +75,15 @@ Stream定义了一个多态的流对象。
 
 cfan采用两个独立的构建系统，fmake和QMake，凭自己的爱好任选一个就行。
 
-fmake
--------
-fmake是新型的基于约定大于配置的C++/C构建系统，源码随cfan一起分发/fmake文件夹下。
-fmake采用Fantom语言开发，所以需要先装Java和Fantom才能使用。
-fmake的主要优点是解决了多个项目之间依赖的问题。之需要添加所依赖的库名和版本就能直接使用第三方库。
-使用方法是用fan命名执行build.fan构建脚本即可。配置方法见/fmake/pod.fandoc文档。
-
 QMake
 -------
 QMake是Qt-Creator使用的构建系统。
 可以使用qmake命令将.pro构建文件转化为GNUMakefile或者Microsoft Visual Studio工程文件等。
 或者直接使用Qt-Creator打开fancpp.pro。
 
+fmake
+-------
+fmake是新型的基于约定大于配置的C++/C构建系统，源码随cfan一起分发/fmake文件夹下。
+fmake采用Fantom语言开发，所以需要先装Java和Fantom才能使用。
+fmake的主要优点是解决了多个项目之间依赖的问题。之需要添加所依赖的库名和版本就能直接使用第三方库。
+使用方法是用fan命名执行build.fan构建脚本即可。配置方法见/fmake/pod.fandoc文档。
