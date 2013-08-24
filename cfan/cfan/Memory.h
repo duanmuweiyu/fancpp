@@ -194,4 +194,21 @@ CF_END
   #endif
 #endif
 
+
+#ifdef __cplusplus
+  #ifdef CF_OVERLOAD_NEW
+
+    void* operator new(size_t sz) throw (std::bad_alloc) {
+      void* mem = cf_malloc(sz);
+      if (mem) return mem;
+      else throw std::bad_alloc();
+    }
+
+    void operator delete(void* ptr) throw() {
+      cf_free(ptr);
+    }
+
+  #endif
+#endif
+
 #endif //_CF_MEMORY_H_
