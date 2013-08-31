@@ -74,7 +74,7 @@ static inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size
  */
 static inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void*), void *args) {
   cf_ExecutorTask task = { func, args };
-  return cf_BlockingQueue_add(&self->taskQueue, &task, true);
+  return cf_BlockingQueue_add(&self->taskQueue, &task, cf_BlockingStrategy_blocking);
 }
 
 /**
