@@ -35,7 +35,8 @@ HEADERS += \
     cfan/Sort.h \
     cfan/FuncTrace.h \
     cfan/MemoryPool.h \
-    cfan/LinkedList.h
+    cfan/LinkedList.h \
+    cfan/Actor.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -53,7 +54,8 @@ SOURCES += \
     cfan/Executor.c \
     cfan/Sort.c \
     cfan/FuncTrace.c \
-    cfan/MemoryPool.c
+    cfan/MemoryPool.c \
+    cfan/Actor.c
 
 
 

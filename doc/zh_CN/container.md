@@ -15,6 +15,15 @@ cfan提供了Array动态数组和HashMap哈希表，因为这两个容器是最�
 暂时没有提供链表和树状数据结构。
 这两个容器为了获得更好的性能采用模版技术实现，所以使用前先需要根据模版宏定义自己的类型。
 
+模版编程
+------------
+使用void*会迫使内存在堆上分配，模版编程能在不损失性能的情况下复用代码。
+例如一个Point对象，需要有doble类型和int类型两方。使用模版实现如下：
+  #deinf Point_template(Name, T) struct Point##Name { T x; T y; }
+  Point_template(D, double)
+  Point_template(I, int)
+这样我们就能同时得到两个Point类, PointD和PointI。类似方法函数也可以用模版来实现。
+
 Array定义
 ------------
 Array采用模版技术实现，使用前需要先定义。

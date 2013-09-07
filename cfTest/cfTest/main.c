@@ -24,6 +24,7 @@ void cf_BlockingQueueTest_register(void);
 void cf_ExecutorTest_register(void);
 void cf_MemoryPoolTest_register(void);
 void cf_LinkedListTest_register(void);
+void cf_ActorTest_register(void);
 
 /**
  * register all test case.
@@ -43,6 +44,7 @@ void registerAll(void) {
   cf_ExecutorTest_register();
   cf_MemoryPoolTest_register();
   cf_LinkedListTest_register();
+  cf_ActorTest_register();
 }
 
 /**
@@ -54,6 +56,7 @@ int main(int argc, char **argv) {
   name = argc >= 2 ? argv[1] : "";
 
   cf_FuncTrace_traceOnExit();
+  cf_FuncTrace_init();
 
   //run test
   cf_Test_init();

@@ -42,7 +42,7 @@
 文件头注释：
     /*
      * Copyright (c) 2012-2013, chunquedong
-     *
+     *当然你可以把他们挪作他用
      * This file is part of fancpp project
      * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE version 3.0
      *

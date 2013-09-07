@@ -33,5 +33,6 @@
 #include "cfan/Executor.h"
 #include "cfan/MemoryPool.h"
 #include "cfan/LinkedList.h"
+#include "cfan/Actor.h"
 
 #endif

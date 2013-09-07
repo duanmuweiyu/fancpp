@@ -46,14 +46,20 @@
  * Endian
  */
 
-#ifndef CF_ENDIAN
-  extern const int __one;
-#else
-  const int __one = 1;
-#endif
+static inline int cf_Endian_isBigEndian(){
+  int __one = 1;
+  return (*(char *)(&__one)==0);
+}
 
-#define CF_BIG_ENDIAN    (*(char *)(&__one)==0)
-#define CF_LITTLE_ENDIAN (*(char *)(&__one)==1)
+//#if !defined(CF_BIG_ENDIAN) && !defined(CF_LITTLE_ENDIAN)
+//  #if (('1234' >> 24) == '1')
+//    #define CF_LITTLE_ENDIAN
+//  #elif (('4321' >> 24) == '1')
+//    #define CF_BIG_ENDIAN
+//  #else
+//    #error "Couldn't determine the endianness!"
+//  #endif
+//#endif
 
 /*========================================================================
  * Math

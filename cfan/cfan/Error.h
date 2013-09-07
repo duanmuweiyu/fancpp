@@ -21,7 +21,7 @@
  *
  */
 typedef enum cf_Error_ {
-  cf_Error_ok,
+  cf_Error_ok = 0,
   cf_Error_error,
   cf_Error_arg,
   cf_Error_io,

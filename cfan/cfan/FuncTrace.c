@@ -31,6 +31,40 @@
 #endif
 
 /*========================================================================
+ * undefine memory func( the Memory depends FuncTrace )
+ */
+
+#undef cf_malloc
+#undef cf_calloc
+#undef cf_realloc
+#undef cf_free
+
+#undef cf_check
+#undef cf_dumpMem
+#undef cf_checkMem
+
+#undef cf_checkedMalloc
+#undef cf_checkedCalloc
+#undef cf_checkedRealloc
+
+/**
+ * redefine
+ */
+#define cf_malloc(size) malloc(size)
+#define cf_calloc(nobj, size) calloc(nobj, size)
+#define cf_realloc(nobj, size) realloc(nobj, size)
+#define cf_free(p) free(p)
+
+#define cf_check(p)
+#define cf_dumpMem()
+#define cf_checkMem()
+
+#define cf_checkedMalloc(size) cf_Memory_stdCheckedMalloc(size)
+#define cf_checkedCalloc(nobj, size) cf_Memory_stdCheckedCalloc(nobj, size)
+#define cf_checkedRealloc(p, size) cf_Memory_stdCheckedRealloc(p, size)
+
+
+/*========================================================================
  * define
  */
 
@@ -93,11 +127,15 @@ static void deleteEntryFuncTime(void *arg) {
   tss_delete(entryFuncTime_);
 }
 
+static void deleteInited(void *arg) {
+  tss_delete(inited_);
+}
+
 static void initThreadLocal() {
   tss_create(&callStack_, (tss_dtor_t)deleteCallStack);
   tss_create(&funcMap_, (tss_dtor_t)deleteFuncMap);
   tss_create(&entryFuncTime_, (tss_dtor_t)deleteEntryFuncTime);
-  tss_create(&inited_, NULL);
+  tss_create(&inited_, deleteInited);
 }
 
 static bool cf_FuncTrace_isInited() {

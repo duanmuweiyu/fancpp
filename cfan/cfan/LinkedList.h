@@ -12,6 +12,7 @@
 #define _CF_LINKEDLIST_H_
 
 #include "cfan/Error.h"
+#include "cfan/MemoryPool.h"
 
 CF_BEGIN
 
@@ -38,6 +39,9 @@ static inline void LinkedList##_add(LinkedList *self, LinkedListElem *elem) {\
   self->tail = elem;\
 }\
 \
+/** \
+ * insert at first \
+ */ \
 static inline void LinkedList##_insert(LinkedList *self, LinkedListElem *elem) {\
   if (self->head == NULL || self->tail == NULL) {\
     self->head = elem;\
@@ -72,6 +76,7 @@ static inline void LinkedList##_insertBefore(LinkedList *self\
 }\
 \
 static inline void LinkedList##_remove(LinkedList *self, LinkedListElem *elem) {\
+  if (elem == NULL) return;\
   if (elem->previous) {\
     elem->previous->next = elem->next;\
   } else {\
@@ -109,14 +114,18 @@ static inline int LinkedList##_getSize(LinkedList *self) {\
   return i;\
 }\
 \
-static inline void LinkedList##_dispose(LinkedList *self) {\
+static inline void LinkedList##_dispose(LinkedList *self, cf_MemoryPool *pool) {\
   LinkedListElem *elem;\
   LinkedListElem *prev;\
   elem = self->head;\
   while (elem) {\
     prev = elem;\
     elem = elem->next;\
-    cf_free(prev);\
+    if (pool != NULL) {\
+      cf_MemoryPool_free(pool, prev);\
+    } else {\
+      cf_free(prev);\
+    }\
   }\
   self->head = NULL;\
   self->tail = NULL;\
