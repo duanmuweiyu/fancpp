@@ -64,16 +64,17 @@ void cf_Log_doLog(const char *tag, const char *file, const char *func, const uns
  * convenience log macro.
  *
  */
-#define cf_Log_tag "cf"
-#define cf_Log_cfError(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_err, msg, ## __VA_ARGS__)
-#define cf_Log_cfWarn(msg, ...)  cf_Log_log(cf_Log_tag, cf_LogLevel_warn, msg, ## __VA_ARGS__)
-#define cf_Log_cfInfo(msg, ...)  cf_Log_log(cf_Log_tag, cf_LogLevel_info, msg, ## __VA_ARGS__)
+#define cf_Log_error(tag, msg, ...) cf_Log_log(tag, cf_LogLevel_err, msg, ## __VA_ARGS__)
+#define cf_Log_warn(tag, msg, ...)  cf_Log_log(tag, cf_LogLevel_warn, msg, ## __VA_ARGS__)
+#define cf_Log_info(tag, msg, ...)  cf_Log_log(tag, cf_LogLevel_info, msg, ## __VA_ARGS__)
 
 #ifdef CF_DEBUG
-  #define cf_Log_cfDebug(msg, ...) cf_Log_log(cf_Log_tag, cf_LogLevel_debug, msg, ## __VA_ARGS__)
+  #define cf_Log_debug(tag, msg, ...) cf_Log_log(tag, cf_LogLevel_debug, msg, ## __VA_ARGS__)
 #else
-  #define cf_Log_cfDebug(msg, ...)
+  #define cf_Log_debug(tag, msg, ...)
 #endif
+
+#define cf_Log_tag "cf"
 
 
 CF_END

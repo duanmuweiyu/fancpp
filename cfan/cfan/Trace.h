@@ -11,8 +11,6 @@
 #ifndef _CF_TRACE_H_
 #define _CF_TRACE_H_
 
-#define CF_FUNCTRACE
-
 #include "cfan/FuncTrace.h"
 #include "cfan/StackTrace.h"
 

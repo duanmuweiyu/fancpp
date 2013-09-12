@@ -32,7 +32,7 @@ void cf_MemoryPoolTest_test(void)
   cf_MemoryPool_free(&pool, pointer3);
   cf_MemoryPool_free(&pool, pointer4);
 
-  cf_Log_cfInfo("will dispose\n");
+  cf_Log_info(cf_Log_tag, "will dispose\n");
   cf_MemoryPool_dispose(&pool);
 
   CF_EXIT_FUNC

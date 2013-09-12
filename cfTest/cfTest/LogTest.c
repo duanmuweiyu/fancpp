@@ -16,7 +16,7 @@ void cf_LogTest_test(void)
   //int tmp = 0;
   CF_ENTRY_FUNC
 
-  cf_Log_cfDebug("hello %f", 2.1);
+  cf_Log_debug(cf_Log_tag, "hello %f", 2.1);
 
   printf("Hello Wrold\n");
 
