@@ -14,7 +14,6 @@
 #include "tinyCThread/tinycthread.h"
 #include "cfan/StrBuf.h"
 
-#include <signal.h>
 
 /*========================================================================
  * time ticks
@@ -269,7 +268,7 @@ void cf_FuncTrace_onLeave(const char *name) {
 /**
  * print stack trace
  */
-void cf_FuncTrace_printStackTrace() {
+void cf_FuncTrace_printTrace() {
   int i;
   int size;
   const char *name;
@@ -313,7 +312,7 @@ void cf_FuncTrace_printPerformance() {
   }
 }
 
-char *cf_FuncTrace_getTraceString_() {
+char *cf_FuncTrace_getTraceString() {
   char *str;
   int strSize = 0;
   int strAlloc;
@@ -358,59 +357,3 @@ char *cf_FuncTrace_getTraceString_() {
   return str;
 }
 
-/*========================================================================
- * signal
- */
-
-typedef void (*cf_FuncTrace_sighandler) (int);
-cf_FuncTrace_sighandler cf_FuncTrace_SIGABRT;
-cf_FuncTrace_sighandler cf_FuncTrace_SIGFPE;
-cf_FuncTrace_sighandler cf_FuncTrace_SIGILL;
-cf_FuncTrace_sighandler cf_FuncTrace_SIGINT;
-cf_FuncTrace_sighandler cf_FuncTrace_SIGSEGV;
-cf_FuncTrace_sighandler cf_FuncTrace_SIGTERM;
-
-static void printTrace(int i) {
-  printf("received signal: %d\n", i);
-  cf_FuncTrace_printStackTrace();
-
-  switch (i) {
-  case SIGABRT:
-    //if (cf_FuncTrace_SIGABRT != NULL) cf_FuncTrace_SIGABRT(i);
-    //abort();
-    break;
-  case SIGFPE:
-    if (cf_FuncTrace_SIGFPE != NULL) cf_FuncTrace_SIGFPE(i);
-    else abort();
-    break;
-  case SIGILL:
-    if (cf_FuncTrace_SIGILL != NULL) cf_FuncTrace_SIGILL(i);
-    else abort();
-    break;
-  case SIGINT:
-    if (cf_FuncTrace_SIGINT != NULL) cf_FuncTrace_SIGINT(i);
-    else abort();
-    break;
-  case SIGSEGV:
-    if (cf_FuncTrace_SIGSEGV != NULL) cf_FuncTrace_SIGSEGV(i);
-    else abort();
-    break;
-  case SIGTERM:
-    if (cf_FuncTrace_SIGTERM != NULL) cf_FuncTrace_SIGTERM(i);
-    else abort();
-    break;
-  default:
-    abort();
-    break;
-  }
-}
-
-void cf_FuncTrace_traceOnExit() {
-  atexit(cf_FuncTrace_printStackTrace);
-  cf_FuncTrace_SIGABRT = signal(SIGABRT, printTrace);
-  cf_FuncTrace_SIGFPE = signal(SIGFPE, printTrace);
-  cf_FuncTrace_SIGILL = signal(SIGILL, printTrace);
-  cf_FuncTrace_SIGINT = signal(SIGINT, printTrace);
-  cf_FuncTrace_SIGSEGV = signal(SIGSEGV, printTrace);
-  cf_FuncTrace_SIGTERM = signal(SIGTERM, printTrace);
-}

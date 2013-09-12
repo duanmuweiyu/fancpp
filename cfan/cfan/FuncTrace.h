@@ -16,10 +16,6 @@
 
 CF_BEGIN
 
-#ifdef CF_DEBUG
-  #define CF_FUNCTRACE
-#endif
-
 /*========================================================================
  * time ticks
  */
@@ -59,7 +55,7 @@ void cf_FuncTrace_dispose();
 /**
  * print stack trace
  */
-void cf_FuncTrace_printStackTrace();
+void cf_FuncTrace_printTrace();
 
 /**
  * print performance profile count
@@ -70,12 +66,8 @@ void cf_FuncTrace_printPerformance();
  * get a formated trace string.
  * alloc by malloc not cf_malloc.
  */
-char *cf_FuncTrace_getTraceString_();
+char *cf_FuncTrace_getTraceString();
 
-/**
- * print stack trace on system exit.
- */
-void cf_FuncTrace_traceOnExit();
 
 /*========================================================================
  * stack trace macro

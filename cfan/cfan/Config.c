@@ -9,7 +9,7 @@
  */
 
 #include "cfan/Config.h"
-
+#include "cfan/Trace.h"
 
 cf_Error cf_Config_make(cf_Config *self, const char *path) {
   FILE *file;

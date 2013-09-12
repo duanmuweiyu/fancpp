@@ -13,6 +13,7 @@
 
 #include "cfan/Error.h"
 #include "cfan/Memory.h"
+#include "cfan/Trace.h"
 
 #include <string.h>
 

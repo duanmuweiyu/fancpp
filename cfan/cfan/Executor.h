@@ -12,6 +12,7 @@
 #define _CF_EXECUTOR_H_
 
 #include "cfan/BlockingQueue.h"
+#include "cfan/Trace.h"
 #include <stdio.h>
 
 CF_BEGIN

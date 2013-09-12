@@ -9,7 +9,7 @@ QMAKE_CC += -std=c99
 #QMAKE_CC += -O3
 
 DEFINES += CF_EXPORT
-DEFINES += _DEBUG
+DEFINES += _DEBUG CF_STACKTRACE
 
 HEADERS += \
     cfan/Stream.h \
@@ -36,7 +36,9 @@ HEADERS += \
     cfan/FuncTrace.h \
     cfan/MemoryPool.h \
     cfan/LinkedList.h \
-    cfan/Actor.h
+    cfan/Actor.h \
+    cfan/StackTrace.h \
+    cfan/Trace.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -55,7 +57,9 @@ SOURCES += \
     cfan/Sort.c \
     cfan/FuncTrace.c \
     cfan/MemoryPool.c \
-    cfan/Actor.c
+    cfan/Actor.c \
+    cfan/StackTrace.c \
+    cfan/Trace.c
 
 
 

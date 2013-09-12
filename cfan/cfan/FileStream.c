@@ -9,7 +9,7 @@
  */
 
 #include "cfan/FileStream.h"
-
+#include "cfan/Trace.h"
 
 cf_Error cf_FileOutputStream_write(cf_OutputStream *self, char *buf, size_t size) {
   FILE *file;

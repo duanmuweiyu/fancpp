@@ -10,7 +10,7 @@
 
 #include "cfan/Memory.h"
 #include "cfan/Error.h"
-
+#include "cfan/Trace.h"
 #include <tinyCThread/tinycthread.h>
 #include <stdio.h>
 
@@ -93,7 +93,7 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
   chunk->refCount = 0;
   chunk->next = NULL;
   chunk->size = size;
-  chunk->trace = cf_FuncTrace_getTraceString_();
+  chunk->trace = cf_Trace_getTraceString();
 
   //set last 4 byte as check code
   cf_Memory_setTailCheckCode(chunk, cf_Memory_tailCheckCode);

@@ -9,7 +9,7 @@
  */
 
 #include "cfan/HashMap.h"
-
+#include "cfan/Trace.h"
 
 /*========================================================================
  * string to string

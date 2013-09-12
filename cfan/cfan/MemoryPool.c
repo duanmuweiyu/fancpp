@@ -9,7 +9,7 @@
  */
 
 #include "cfan/MemoryPool.h"
-
+#include "cfan/Trace.h"
 #include <stdio.h>
 
 /**

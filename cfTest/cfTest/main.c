@@ -55,8 +55,8 @@ int main(int argc, char **argv) {
   const char *name;
   name = argc >= 2 ? argv[1] : "";
 
-  cf_FuncTrace_traceOnExit();
-  cf_FuncTrace_init();
+  cf_Trace_traceOnExit();
+  cf_Trace_init();
 
   //run test
   cf_Test_init();
@@ -65,9 +65,9 @@ int main(int argc, char **argv) {
   cf_Test_run(name, 0);
   cf_Test_dispose();
 
-  cf_FuncTrace_printStackTrace();
-  cf_FuncTrace_printPerformance();
-  cf_FuncTrace_dispose();
+  cf_Trace_printTrace();
+  cf_Trace_printPerformance();
+  cf_Trace_dispose();
   cf_dumpMem();
 
   return 0;

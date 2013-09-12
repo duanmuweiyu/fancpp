@@ -9,6 +9,7 @@
  */
 
 #include "cfan/StrBuf.h"
+#include "cfan/Trace.h"
 
 #include <stdarg.h>
 #include <stdio.h>

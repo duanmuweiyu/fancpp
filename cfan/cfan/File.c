@@ -9,6 +9,7 @@
  */
 
 #include "cfan/File.h"
+#include "cfan/Trace.h"
 
 cf_Error cf_File_inputStream(cf_File *self, cf_FileInputStream *in) {
   CF_ENTRY_FUNC
