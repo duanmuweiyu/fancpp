@@ -8,7 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#ifdef CF_STACKTRACE
+#ifndef WIN32
 
 #include "cfan/StackTrace.h"
 #include "cfan/Error.h"
@@ -48,6 +48,7 @@ char *cf_StackTrace_getTraceString() {
   int strAlloc;
   int nameSize;
   char *str;
+  char *name;
 
   str = (char*)malloc(256);
   if (str == NULL) {
@@ -63,7 +64,10 @@ char *cf_StackTrace_getTraceString() {
   }
 
   for (i = 0; i < size; i++) {
-    nameSize = strlen(strings[i])+1;
+    name = strrchr(strings[i], '/');
+    if (!name) continue;
+
+    nameSize = strlen(name)+1;
     if (strSize + nameSize > strAlloc) {
       strAlloc = (strSize + nameSize)*3/2;
       str = (char*)realloc(str, strAlloc+1);
@@ -71,7 +75,7 @@ char *cf_StackTrace_getTraceString() {
         cf_abort("bad alloc");
       }
     }
-    strcpy(str+strSize, strings[i]);
+    strcpy(str+strSize, name);
     strSize += nameSize;
     str[strSize-1] = ',';
     str[strSize] = '\0';

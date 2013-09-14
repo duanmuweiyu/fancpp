@@ -14,13 +14,21 @@
 #include "cfan/FuncTrace.h"
 #include "cfan/StackTrace.h"
 
+#ifdef CF_DEBUG
+  #define CF_FUNCTRACE
+#endif
+
+#ifndef WIN32
+  #define CF_STACKTRACE
+#endif
+
 CF_BEGIN
 
 /**
  * print stack trace
  */
 static inline void cf_Trace_printTrace(void) {
-#ifdef CF_FUNCTRACE
+#if defined(CF_FUNCTRACE)
   cf_FuncTrace_printTrace();
 #elif defined(CF_STACKTRACE)
   cf_StackTrace_printTrace();
@@ -37,7 +45,7 @@ static inline void cf_Trace_printPerformance(void) {
  * get stack trace string
  */
 static inline char *cf_Trace_getTraceString(void) {
-#ifdef CF_FUNCTRACE
+#if defined(CF_FUNCTRACE)
   return cf_FuncTrace_getTraceString();
 #elif defined(CF_STACKTRACE)
   return cf_StackTrace_getTraceString();

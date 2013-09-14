@@ -43,9 +43,9 @@ void cf_ActorTest_test(void) {
 
   while (flag < times) {}
 
-  cf_Actor_dispose(&actor);
-
   cf_assert(count == times);
+
+  cf_Actor_dispose(&actor);
 
   CF_EXIT_FUNC
 }

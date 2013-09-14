@@ -20,7 +20,9 @@ void *cf_Actor_run(void *arg) {
     cf_ActorMessageQueue_remove(&self->queue, msg);
     mtx_unlock(&self->mutex);
     self->receive(self, msg);
+    mtx_lock(&self->allocMutex);
     cf_MemoryPool_free(&self->msgFacory, msg);
+    mtx_unlock(&self->allocMutex);
   } while (true);
   self->isRuning = false;
   mtx_unlock(&self->mutex);
@@ -32,7 +34,9 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
 
   //copy
   mtx_lock(&self->mutex);
+  mtx_lock(&self->allocMutex);
   msgCopy = (cf_ActorMessage*)cf_MemoryPool_alloc(&self->msgFacory);
+  mtx_unlock(&self->allocMutex);
   memcpy(msgCopy, amsg, sizeof(cf_ActorMessage));
 
   cf_ActorMessageQueue_add(&self->queue, msgCopy);

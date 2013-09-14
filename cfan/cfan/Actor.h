@@ -48,6 +48,7 @@ typedef struct cf_Actor_ {
   bool isRuning;
   cf_Executor *executor;
   mtx_t mutex;
+  mtx_t allocMutex;
   cf_MemoryPool msgFacory;
 } cf_Actor;
 
@@ -62,6 +63,9 @@ static inline cf_Error cf_Actor_make(cf_Actor *self, cf_Executor *executor, cf_A
   cf_MemoryPool_make(&self->msgFacory, sizeof(cf_ActorMessage), 100);
 
   if (mtx_init(&self->mutex, mtx_recursive) != thrd_success) {
+    return cf_Error_thread;
+  }
+  if (mtx_init(&self->allocMutex, mtx_recursive) != thrd_success) {
     return cf_Error_thread;
   }
   return cf_Error_ok;
