@@ -51,6 +51,6 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
 void cf_Actor_dispose(cf_Actor *self) {
   cf_Executor_dispose(self->executor);
   mtx_destroy(&self->mutex);
-  cf_ActorMessageQueue_dispose(&self->queue, &self->msgFacory);
+  cf_ActorMessageQueue_dispose_(&self->queue, &self->msgFacory);
   cf_MemoryPool_dispose(&self->msgFacory);
 }

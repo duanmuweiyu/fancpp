@@ -34,5 +34,6 @@
 #include "cfan/MemoryPool.h"
 #include "cfan/LinkedList.h"
 #include "cfan/Actor.h"
+#include "cfan/Cache.h"
 
 #endif

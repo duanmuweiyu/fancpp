@@ -26,7 +26,8 @@ SOURCES += \
     cfTest/BlockingQueueTest.c \
     cfTest/MemoryPoolTest.c \
     cfTest/LinkedListTest.c \
-    cfTest/ActorTest.c
+    cfTest/ActorTest.c \
+    cfTest/CacheTest.c
 
 LIBS += -pthread
 

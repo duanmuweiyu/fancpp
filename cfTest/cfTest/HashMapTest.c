@@ -38,6 +38,35 @@ void cf_HashMapTest_testGet(void)
   CF_EXIT_FUNC
 }
 
+void cf_HashMapTest_testRemove(void)
+{
+  cf_HashMapSS map;
+
+  const char *key1 = "key1";
+  char *value1 = NULL;
+  const char *key2 = "key2";
+  char *value2 = NULL;
+  const char *key3 = "key3";
+  char *value3 = NULL;
+  char *val = NULL;
+
+  CF_ENTRY_FUNC
+
+  cf_HashMapSS_make(&map, 2);
+
+  cf_HashMapSS_set(&map, key1, value1, NULL, NULL);
+  cf_HashMapSS_set(&map, key2, value2, NULL, NULL);
+
+  cf_HashMapSS_remove(&map, key1, NULL, NULL);
+  cf_HashMapSS_set(&map, key3, value3, NULL, NULL);
+
+  cf_HashMapSS_get(&map, key3, NULL, &val);
+  cf_verify(val == value3);
+
+  cf_HashMapSS_dispose(&map);
+  CF_EXIT_FUNC
+}
+
 void cf_HashMapTest_testIter(void)
 {
   cf_HashMapSS map;

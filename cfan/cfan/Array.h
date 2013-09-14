@@ -180,6 +180,7 @@ cf_Error Array##_reserver_(Array *self) {\
  * define int array
  */
 cf_ArrayTemplate(cf_ArrayI, int)
+cf_ArrayTemplate(cf_ArrayL, long)
 cf_ArrayTemplate(cf_ArrayP, void*)
 cf_ArrayTemplate(cf_ArrayS, char*)
 

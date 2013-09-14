@@ -31,6 +31,8 @@ size_t cf_HashMap_strHash(const char *str) {
 
 cf_HashMapTemplate_impl(cf_HashMapSS, const char*, char*)
 
+cf_HashMapTemplate_impl(cf_HashMapSP, const char*, void*)
+
 #undef cf_hashFunc
 #undef cf_compFunc
 
@@ -42,6 +44,8 @@ cf_HashMapTemplate_impl(cf_HashMapSS, const char*, char*)
 #define cf_compFunc(v1, v2) ((v1)-(v2))
 
 cf_HashMapTemplate_impl(cf_HashMapII, int, int)
+
+cf_HashMapTemplate_impl(cf_HashMapLP, long, void*)
 
 #undef cf_hashFunc
 #undef cf_compFunc

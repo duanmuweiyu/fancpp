@@ -203,9 +203,17 @@ cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue) {\
       if (oldKey) *oldKey = elem->key;\
       if (oldValue) *oldValue = elem->value;\
       if (temp != NULL) {\
-        temp->next = NULL;\
+        temp->next = elem->next;\
         elem->next = self->idle;\
         self->idle = elem;\
+      } else if (temp == NULL && elem->next) {\
+        temp = elem->next;\
+        *elem = *(elem->next);\
+        temp->next = self->idle;\
+        self->idle = temp;\
+        elem->used = true;\
+        CF_EXIT_FUNC\
+        return cf_Error_ok;\
       }\
       elem->used = false;\
       CF_EXIT_FUNC\
@@ -302,9 +310,19 @@ cf_Error HashMap##Iterator_get(HashMap##Iterator *self, K *key, V *value) {\
 cf_HashMapTemplate(cf_HashMapSS, const char*, char*)
 
 /**
+ * string to void* map
+ */
+cf_HashMapTemplate(cf_HashMapSP, const char*, void*)
+
+/**
  * int to int map
  */
 cf_HashMapTemplate(cf_HashMapII, int, int)
+
+/**
+ * long to void* map
+ */
+cf_HashMapTemplate(cf_HashMapLP, long, void*)
 
 /**
  * default string hash function

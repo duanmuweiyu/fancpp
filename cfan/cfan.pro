@@ -38,7 +38,8 @@ HEADERS += \
     cfan/LinkedList.h \
     cfan/Actor.h \
     cfan/StackTrace.h \
-    cfan/Trace.h
+    cfan/Trace.h \
+    cfan/Cache.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -59,7 +60,8 @@ SOURCES += \
     cfan/MemoryPool.c \
     cfan/Actor.c \
     cfan/StackTrace.c \
-    cfan/Trace.c
+    cfan/Trace.c \
+    cfan/Cache.c
 
 
 

@@ -25,6 +25,7 @@ void cf_ExecutorTest_register(void);
 void cf_MemoryPoolTest_register(void);
 void cf_LinkedListTest_register(void);
 void cf_ActorTest_register(void);
+void cf_CacheTest_register(void);
 
 /**
  * register all test case.
@@ -45,6 +46,7 @@ void registerAll(void) {
   cf_MemoryPoolTest_register();
   cf_LinkedListTest_register();
   cf_ActorTest_register();
+  cf_CacheTest_register();
 }
 
 /**

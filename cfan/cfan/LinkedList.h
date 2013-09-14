@@ -114,7 +114,7 @@ static inline int LinkedList##_getSize(LinkedList *self) {\
   return i;\
 }\
 \
-static inline void LinkedList##_dispose(LinkedList *self, cf_MemoryPool *pool) {\
+static inline void LinkedList##_dispose_(LinkedList *self, cf_MemoryPool *pool) {\
   LinkedListElem *elem;\
   LinkedListElem *prev;\
   elem = self->head;\
@@ -150,22 +150,49 @@ typedef struct cf_LinkedListElem_ {
 typedef struct cf_LinkedList_ {
   cf_LinkedListElem *head;
   cf_LinkedListElem *tail;
+  cf_MemoryPool allocator;
 } cf_LinkedList;
 
 /**
  * default ctor
  */
-static inline void cf_LinkedList_make(cf_LinkedList *self) {
+static inline void cf_LinkedList_make(cf_LinkedList *self, size_t objCount) {
   self->head = NULL;
   self->tail = NULL;
+  cf_MemoryPool_make(&self->allocator, sizeof(cf_LinkedListElem), objCount);
 }
-
 
 /**
  * define methods
  */
 cf_LinkedListTemplate(cf_LinkedList, cf_LinkedListElem)
 
+static inline void cf_LinkedList_dispose(cf_LinkedList *self) {
+  cf_LinkedList_dispose_(self, &self->allocator);
+  cf_MemoryPool_dispose(&self->allocator);
+}
+
+/**
+ * add to last
+ */
+static inline void cf_LinkedList_pushBack(cf_LinkedList *self, void *val) {
+  cf_LinkedListElem *elem = (cf_LinkedListElem*)cf_MemoryPool_alloc(&self->allocator);
+  elem->value = val;
+  cf_LinkedList_add(self, elem);
+}
+
+/**
+ * remove and return first obj
+ */
+static inline void *cf_LinkedList_removeFirst(cf_LinkedList *self) {
+  cf_LinkedListElem *elem = self->head;
+  if (elem == NULL) return NULL;
+
+  cf_LinkedList_remove(self, elem);
+  void *val = elem->value;
+  cf_MemoryPool_free(&self->allocator, elem);
+  return val;
+}
 
 CF_END
 
