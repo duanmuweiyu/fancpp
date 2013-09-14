@@ -155,8 +155,11 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
 #endif
 
 #define cf_safeFree(p) { cf_free(p); p = NULL; }
+#define cf_new(T) ((T*)cf_malloc(sizeof(T)))
 
 CF_END
+
+/*======================================================================*/
 
 #ifdef __cplusplus
   #ifdef CF_DEBUG
@@ -194,21 +197,29 @@ CF_END
   #endif
 #endif
 
+/*======================================================================*/
 
 #ifdef __cplusplus
-  #ifdef CF_OVERLOAD_NEW
-
-    void* operator new(size_t sz) throw (std::bad_alloc) {
-      void* mem = cf_malloc(sz);
-      if (mem) return mem;
-      else throw std::bad_alloc();
+  #define CF_OVERRIDE_NEW \
+    void* operator new(size_t sz) throw (std::bad_alloc) {\
+      void* mem = cf_malloc(sz);\
+      if (mem) return mem;\
+      else throw std::bad_alloc();\
+    }\
+    \
+    void operator delete(void* ptr) throw() {\
+      cf_free(ptr);\
+    }\
+    \
+    void* operator new[](size_t sz) throw (std::bad_alloc) {\
+      void* mem = cf_malloc(sz);\
+      if (mem) return mem;\
+      else throw std::bad_alloc();\
+    }\
+    \
+    void operator delete[](void* ptr) throw() {\
+      cf_free(ptr);\
     }
-
-    void operator delete(void* ptr) throw() {
-      cf_free(ptr);
-    }
-
-  #endif
 #endif
 
 #endif //_CF_MEMORY_H_
