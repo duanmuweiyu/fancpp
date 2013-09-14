@@ -39,7 +39,8 @@ HEADERS += \
     cfan/Actor.h \
     cfan/StackTrace.h \
     cfan/Trace.h \
-    cfan/Cache.h
+    cfan/Cache.h \
+    cfan/FileLogListener.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -61,7 +62,8 @@ SOURCES += \
     cfan/Actor.c \
     cfan/StackTrace.c \
     cfan/Trace.c \
-    cfan/Cache.c
+    cfan/Cache.c \
+    cfan/FileLogListener.c
 
 
 

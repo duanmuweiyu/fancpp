@@ -99,4 +99,9 @@ static inline int cf_Endian_isBigEndian(){
  * misc
  */
 
+/**
+ * suppress unused warning
+ */
+#define cf_unused(p) ((void)p)
+
 #endif

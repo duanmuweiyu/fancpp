@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_LogTest_test(void)
-{
+void cf_LogTest_test(void) {
   //int tmp = 0;
   CF_ENTRY_FUNC
 

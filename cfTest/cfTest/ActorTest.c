@@ -18,6 +18,7 @@ static void receive(cf_Actor *self, cf_ActorMessage *msg) {
   (*count)++;
   msg->arg = NULL;
   ++flag;
+  cf_unused(self);
 }
 
 void cf_ActorTest_test(void) {

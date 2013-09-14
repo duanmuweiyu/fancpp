@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_MemoryTest_testBase(void)
-{
+void cf_MemoryTest_testBase(void) {
   char *pointer;
   CF_ENTRY_FUNC
 
@@ -26,8 +25,7 @@ void cf_MemoryTest_testBase(void)
 }
 
 
-void cf_MemoryTest_testAll(void)
-{
+void cf_MemoryTest_testAll(void) {
   char *pointer1;
   char *pointer2;
   char *pointer3;

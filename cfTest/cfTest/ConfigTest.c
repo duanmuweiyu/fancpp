@@ -12,8 +12,7 @@
 #include "cfan/cfan.h"
 
 
-void cf_ConfigTest_test(void)
-{
+void cf_ConfigTest_test(void) {
   cf_Config map;
   cf_HashMapSSIterator iter;
 

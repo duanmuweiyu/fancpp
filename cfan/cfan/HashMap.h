@@ -211,7 +211,7 @@ cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue) {\
         *elem = *(elem->next);\
         temp->next = self->idle;\
         self->idle = temp;\
-        elem->used = true;\
+        cf_assert(elem->used);\
         CF_EXIT_FUNC\
         return cf_Error_ok;\
       }\

@@ -13,6 +13,7 @@
 
 #include "cfan/macro.h"
 #include "cfan/miss.h"
+#include "tinyCThread/tinycthread.h"
 
 #include <stdarg.h>
 
@@ -30,21 +31,43 @@ typedef enum cf_LogLevel_ {
   cf_LogLevel_silent
 } cf_LogLevel;
 
+extern char *cf_LogLevel_str[];
+
+struct cf_Log_Listener_;
+
 /**
  * Log listener function type.
  */
-typedef void (*cf_Log_listener)(const char *tag, const char *file, const char *func, const unsigned int line
-                          , const cf_LogLevel level, const char *msg, va_list args);
+typedef void (*cf_Log_ListenerFunc)(struct cf_Log_Listener_ *self, const char *tag, const char *file, const char *func, const unsigned int line
+                          , const cf_LogLevel level, const char *msg);
+/**
+ * Log listener
+ */
+typedef struct cf_Log_Listener_ {
+  int id;
+  cf_LogLevel level;
+  cf_Log_ListenerFunc func;
+} cf_Log_Listener;
 
 /**
  * Add listener. if success return id, if fail return -1.
  */
-int cf_Log_addListener(cf_Log_listener listener);
+int cf_Log_addListener(cf_Log_Listener *listener);
 
 /**
  * remove listener by id. if success return old func, else return NULL.
  */
-cf_Log_listener cf_Log_removeListener(int id);
+cf_Log_Listener *cf_Log_removeListener(int id);
+
+/**
+ * set global log level
+ */
+void cf_Log_setLogLevel(cf_LogLevel level);
+
+/**
+ * log level is enable
+ */
+bool cf_Log_isEnableLevel(cf_LogLevel level);
 
 /**
  * do log

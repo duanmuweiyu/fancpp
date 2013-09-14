@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_HashMapTest_testGet(void)
-{
+void cf_HashMapTest_testGet(void) {
   cf_HashMapSS map;
 
   char *removedValue;
@@ -38,8 +37,7 @@ void cf_HashMapTest_testGet(void)
   CF_EXIT_FUNC
 }
 
-void cf_HashMapTest_testRemove(void)
-{
+void cf_HashMapTest_testRemove(void) {
   cf_HashMapSS map;
 
   const char *key1 = "key1";
@@ -67,8 +65,7 @@ void cf_HashMapTest_testRemove(void)
   CF_EXIT_FUNC
 }
 
-void cf_HashMapTest_testIter(void)
-{
+void cf_HashMapTest_testIter(void) {
   cf_HashMapSS map;
   cf_HashMapSSIterator iter;
 
@@ -96,8 +93,7 @@ void cf_HashMapTest_testIter(void)
   CF_EXIT_FUNC
 }
 
-void cf_HashMapTest_register(void)
-{
+void cf_HashMapTest_register(void) {
   cf_Test_add(cf_HashMapTest_testGet);
   cf_Test_add(cf_HashMapTest_testIter);
 }

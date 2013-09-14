@@ -15,10 +15,10 @@ static void onRemove(const char *key, void *val){
   int32_t *i = (int32_t *)val;
   printf("free %d\n", *i);
   cf_free(val);
+  cf_unused(key);
 }
 
-void cf_CacheTest_test(void)
-{
+void cf_CacheTest_test(void) {
   cf_Cache cache;
 
   const char *key1 = "key1";

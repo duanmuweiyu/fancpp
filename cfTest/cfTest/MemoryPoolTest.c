@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-void cf_MemoryPoolTest_test(void)
-{
+void cf_MemoryPoolTest_test(void) {
   char *pointer1;
   char *pointer2;
   char *pointer3;

@@ -35,5 +35,6 @@
 #include "cfan/LinkedList.h"
 #include "cfan/Actor.h"
 #include "cfan/Cache.h"
+#include "cfan/FileLogListener.h"
 
 #endif
