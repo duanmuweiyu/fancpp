@@ -13,6 +13,7 @@
 
 void cf_LogTest_register(void);
 void cf_ArrayTest_register(void);
+void cf_ArrayListTest_register(void);
 void cf_HashMapTest_register(void);
 void cf_StrBufTest_register(void);
 void cf_ConfigTest_register(void);
@@ -35,6 +36,7 @@ void cf_FileLogListenerTest_register(void);
 void registerAll(void) {
   cf_LogTest_register();
   cf_ArrayTest_register();
+  cf_ArrayListTest_register();
   cf_HashMapTest_register();
   cf_StrBufTest_register();
   cf_ConfigTest_register();

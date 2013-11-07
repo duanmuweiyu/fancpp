@@ -24,6 +24,7 @@ void cf_FileLogListenerTest_test(void) {
 
   cf_Log_removeListener(listener->super.id);
   cf_FileLogListener_dispose(listener);
+  cf_free(listener);
 
   CF_EXIT_FUNC
 }
