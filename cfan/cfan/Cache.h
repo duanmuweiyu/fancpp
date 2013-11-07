@@ -54,7 +54,7 @@ static inline void cf_CacheList_make(cf_CacheList *self, size_t objCount) {
 cf_LinkedListTemplate(cf_CacheList, cf_CacheElem)
 
 static inline void cf_CacheList_dispose(cf_CacheList *self) {
-  cf_CacheList_dispose_(self, &self->allocator);
+  cf_CacheList_freeElem(self, &self->allocator);
   cf_MemoryPool_dispose(&self->allocator);
 }
 

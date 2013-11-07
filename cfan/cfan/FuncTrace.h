@@ -16,6 +16,10 @@
 
 CF_BEGIN
 
+#ifdef CF_DEBUG
+  #define CF_FUNCTRACE
+#endif
+
 /*========================================================================
  * time ticks
  */

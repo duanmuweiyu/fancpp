@@ -74,7 +74,7 @@ void cf_LinkedListTest_testAdd(void) {
   cf_verify(size == 3);
   verifyLink(&list);
 
-  //cf_LinkedList_dispose(&list);
+  cf_LinkedList_dispose(&list);
 
   CF_EXIT_FUNC
 }

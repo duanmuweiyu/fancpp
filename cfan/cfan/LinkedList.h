@@ -114,7 +114,7 @@ static inline int LinkedList##_getSize(LinkedList *self) {\
   return i;\
 }\
 \
-static inline void LinkedList##_dispose_(LinkedList *self, cf_MemoryPool *pool) {\
+static inline void LinkedList##_freeElem(LinkedList *self, cf_MemoryPool *pool) {\
   LinkedListElem *elem;\
   LinkedListElem *prev;\
   elem = self->head;\
@@ -168,7 +168,7 @@ static inline void cf_LinkedList_make(cf_LinkedList *self, size_t objCount) {
 cf_LinkedListTemplate(cf_LinkedList, cf_LinkedListElem)
 
 static inline void cf_LinkedList_dispose(cf_LinkedList *self) {
-  cf_LinkedList_dispose_(self, &self->allocator);
+  //cf_LinkedList_dispose_(self, &self->allocator);
   cf_MemoryPool_dispose(&self->allocator);
 }
 
