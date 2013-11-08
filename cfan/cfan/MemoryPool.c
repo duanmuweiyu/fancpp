@@ -24,7 +24,7 @@ void cf_MemoryPool_make(cf_MemoryPool *self, size_t objSize, size_t objCount) {
   CF_ENTRY_FUNC
   cf_assert(self);
 
-  self->itemSize = objSize+sizeof(cf_MemoryPoolElem);
+  self->itemSize = CF_ALIGN(objSize+sizeof(cf_MemoryPoolElem));
   self->buffer = (char *)cf_checkedMalloc((self->itemSize) * objCount);
   self->size = objCount;
   last = (cf_MemoryPoolElem *)self->buffer;
