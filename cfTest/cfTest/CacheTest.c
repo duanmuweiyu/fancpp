@@ -11,11 +11,19 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
-static void onRemove(const char *key, void *val){
+static void onRemove(const void *key, void *val){
   int32_t *i = (int32_t *)val;
   printf("free %d\n", *i);
   cf_free(val);
   cf_unused(key);
+}
+
+static size_t hashFunc(const void *key) {
+  return cf_HashMap_strHash((const char*)key);
+}
+
+static int compFunc(const void *k1, const void *k2) {
+  return strcmp((const char*)k1, (const char*)k2);
 }
 
 void cf_CacheTest_test(void) {
@@ -32,7 +40,7 @@ void cf_CacheTest_test(void) {
 
   CF_ENTRY_FUNC
 
-  cf_Cache_make(&cache, 2, onRemove);
+  cf_Cache_make(&cache, 2, onRemove, hashFunc, compFunc);
 
   value1 = (char*)cf_malloc(4);
   *((int32_t*)value1) = 0;

@@ -80,8 +80,8 @@ typedef struct cf_PerformanceItem_ {
 
 cf_HashMapTemplate(cf_HashMapFuncTrace, const char*, cf_PerformanceItem)
 
-#define cf_hashFunc(key) cf_HashMap_strHash(key)
-#define cf_compFunc(v1, v2) strcmp((v1), (v2))
+#define cf_hashFunc(self, key) cf_HashMap_strHash(key)
+#define cf_compFunc(self, v1, v2) strcmp((v1), (v2))
 
 cf_HashMapTemplate_impl(cf_HashMapFuncTrace, const char*, cf_PerformanceItem)
 

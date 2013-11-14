@@ -150,7 +150,7 @@ static inline void cf_StrBuf_clear(cf_StrBuf *self) {
 /**
  * print format
  */
-cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t size, char *format, ...);
+cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t size, const char *format, ...);
 
 CF_END
 

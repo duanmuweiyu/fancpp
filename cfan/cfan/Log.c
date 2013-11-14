@@ -26,7 +26,7 @@ void cf_Log_print(cf_Log_Listener *self, const char *tag, const char *file, cons
 cf_Log_Listener cf_Log_defaultListener = { -1, cf_LogLevel_debug, cf_Log_print };
 cf_Log_Listener *cf_Log_listenerList[256] = { &cf_Log_defaultListener };
 int cf_Log_size = 1;
-char *cf_LogLevel_str[] = { "debug", "info", "warn", "error", "silent" };
+const char *cf_LogLevel_str[] = { "debug", "info", "warn", "error", "silent" };
 
 mtx_t cf_Log_lock;
 static bool cf_Log_inited = false;

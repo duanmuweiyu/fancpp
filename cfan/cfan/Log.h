@@ -31,7 +31,7 @@ typedef enum cf_LogLevel_ {
   cf_LogLevel_silent
 } cf_LogLevel;
 
-extern char *cf_LogLevel_str[];
+extern const char *cf_LogLevel_str[];
 
 struct cf_Log_Listener_;
 

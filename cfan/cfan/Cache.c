@@ -10,10 +10,13 @@
 
 #include "cfan/Cache.h"
 
-cf_Error cf_Cache_make(cf_Cache *self, unsigned long capacity, cf_CacheOnRemove onRemove) {
+cf_Error cf_Cache_make(cf_Cache *self, unsigned long capacity, cf_CacheOnRemove onRemove
+    , cf_HashMapPPHashFunc hashFunc, cf_HashMapPPCompFunc compFunc) {
   cf_Error err;
-  err = cf_HashMapSP_make(&self->map, capacity);
+  err = cf_HashMapPP_make(&self->map, capacity);
   if (err) return err;
+  self->map.hashFunc = hashFunc;
+  self->map.compFunc = compFunc;
 
   cf_CacheList_make(&self->list, capacity);
   self->capacity = capacity;
@@ -31,7 +34,7 @@ void cf_Cache_dispose(cf_Cache *self) {
     elem = elem->next;
   }
 
-  cf_HashMapSP_dispose(&self->map);
+  cf_HashMapPP_dispose(&self->map);
   cf_CacheList_dispose(&self->list);
 }
 
@@ -42,7 +45,7 @@ void cf_Cache_keepClear_(cf_Cache *self) {
     if (elem == NULL) return;
 
     cf_CacheList_remove(&self->list, elem);
-    cf_HashMapSP_remove(&self->map, elem->key, NULL, NULL);
+    cf_HashMapPP_remove(&self->map, elem->key, NULL, NULL);
     self->size--;
 
     self->onRemove(elem->key, elem->value);
@@ -50,11 +53,11 @@ void cf_Cache_keepClear_(cf_Cache *self) {
   }
 }
 
-cf_Error cf_Cache_get(cf_Cache *self, const char *key, const char **oldKey, void **val) {
+cf_Error cf_Cache_get(cf_Cache *self, const void *key, const void **oldKey, void **val) {
   cf_Error err;
   cf_CacheElem *elem;
 
-  err = cf_HashMapSP_get(&self->map, key, oldKey, (void**)&elem);
+  err = cf_HashMapPP_get(&self->map, key, oldKey, (void**)&elem);
   if (err) return err;
 
   cf_assert(elem);
@@ -67,7 +70,7 @@ cf_Error cf_Cache_get(cf_Cache *self, const char *key, const char **oldKey, void
   return err;
 }
 
-cf_Error cf_Cache_set(cf_Cache *self, const char *key, void *val) {
+cf_Error cf_Cache_set(cf_Cache *self, const void *key, void *val) {
   cf_Error err;
   cf_CacheElem *elem;
 
@@ -76,7 +79,7 @@ cf_Error cf_Cache_set(cf_Cache *self, const char *key, void *val) {
   elem->value = val;
   cf_CacheList_add(&self->list, elem);
 
-  err = cf_HashMapSP_set(&self->map, key, elem, NULL, NULL);
+  err = cf_HashMapPP_set(&self->map, key, elem, NULL, NULL);
   self->size++;
 
   cf_Cache_keepClear_(self);

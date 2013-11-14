@@ -24,7 +24,7 @@ CF_BEGIN
  * LinkedList element
  */
 typedef struct cf_CacheElem_ {
-  const char *key;
+  const void *key;
   void *value;
   struct cf_CacheElem_ *previous;
   struct cf_CacheElem_ *next;
@@ -62,7 +62,7 @@ static inline void cf_CacheList_dispose(cf_CacheList *self) {
  * Cache
  */
 
-typedef void (*cf_CacheOnRemove)(const char*, void *);
+typedef void (*cf_CacheOnRemove)(const void *, void *);
 
 /**
  * Cache
@@ -70,18 +70,19 @@ typedef void (*cf_CacheOnRemove)(const char*, void *);
 typedef struct cf_Cache_ {
   unsigned long capacity;
   unsigned long size;
-  cf_HashMapSP map;
+  cf_HashMapPP map;
   cf_CacheList list;
   cf_CacheOnRemove onRemove;
 } cf_Cache;
 
-cf_Error cf_Cache_make(cf_Cache *self, unsigned long capacity, cf_CacheOnRemove onRemove);
+cf_Error cf_Cache_make(cf_Cache *self, unsigned long capacity, cf_CacheOnRemove onRemove
+    , cf_HashMapPPHashFunc hashFunc, cf_HashMapPPCompFunc compFunc);
 void cf_Cache_dispose(cf_Cache *self);
 
 static inline unsigned long cf_Cahce_size(cf_Cache *self) { return self->size; }
 
-cf_Error cf_Cache_get(cf_Cache *self, const char *key, const char **oldKey, void **val);
-cf_Error cf_Cache_set(cf_Cache *self, const char *key, void *val);
+cf_Error cf_Cache_get(cf_Cache *self, const void *key, const void **oldKey, void **val);
+cf_Error cf_Cache_set(cf_Cache *self, const void *key, void *val);
 
 CF_END
 
