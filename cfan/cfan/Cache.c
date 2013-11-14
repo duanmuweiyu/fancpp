@@ -61,7 +61,7 @@ cf_Error cf_Cache_get(cf_Cache *self, const void *key, const void **oldKey, void
   if (err) return err;
 
   cf_assert(elem);
-  elem->key = key;
+  //elem->key = key;
   cf_CacheList_remove(&self->list, elem);
   cf_CacheList_add(&self->list, elem);
 

@@ -43,7 +43,7 @@ static inline long cf_StrBuf_index(const char *self, const char *s) {
 }
 
 static inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
-  char *pos;
+  const char *pos;
   int len = strlen(self);
   int n = strlen(s);
   int i;
@@ -52,6 +52,7 @@ static inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
   for (i = len-1; i != -1; --i)
   {
     if (self[i] == *s) {
+      pos = self + i;
       if (memcmp(pos, s, n) == 0) {
         return i;
       }

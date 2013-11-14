@@ -52,7 +52,7 @@ static inline cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size
 
   err = cf_BlockingQueue_make(&self->taskQueue, taskSize, sizeof(cf_ExecutorTask));
   if (err == cf_Error_ok) {
-    self->threadList = (thrd_t *)cf_malloc(threadSize * sizeof(thrd_t *));
+    self->threadList = (thrd_t *)cf_malloc(threadSize * sizeof(thrd_t));
     //self->canceled = false;
     self->threadSize = threadSize;
     for (i = 0; i < threadSize; ++i)

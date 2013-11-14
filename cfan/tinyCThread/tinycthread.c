@@ -50,7 +50,7 @@ freely, subject to the following restrictions:
 #ifdef __MACH__
 #include <sys/time.h>
 //clock_gettime is not implemented on OSX
-int clock_gettime(int /*clk_id*/, struct timespec* t) {
+int clock_gettime(int clk_id, struct timespec* t) {
     struct timeval now;
     int rv = gettimeofday(&now, NULL);
     if (rv) return rv;
