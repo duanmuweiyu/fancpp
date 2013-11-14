@@ -26,7 +26,7 @@ CF_BEGIN
  *
  */
 typedef struct cf_ArrayList_ {
-  const unsigned int elemSize;
+  unsigned int elemSize;
   size_t    size;        //current number of items
   size_t    capacity;    //The number of items can hold without allocating more memory.
   char *data;

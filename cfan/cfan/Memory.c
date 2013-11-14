@@ -11,7 +11,7 @@
 #include "cfan/Memory.h"
 #include "cfan/Error.h"
 #include "cfan/Trace.h"
-#include <tinyCThread/tinycthread.h>
+#include "tinyCThread/tinycthread.h"
 #include <stdio.h>
 
 #include <string.h>

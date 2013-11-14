@@ -17,6 +17,6 @@ gcc.objList={objList}.o
 
 gcc.comp=g++ -fPIC -fpermissive -O3 -Wall -c {gcc.define} {gcc.includeDir} -o{outObjFile}.o {srcList}
 gcc.lib=ar cqs {outLibFile}.a {gcc.objList}
-gcc.exe=g++ -o{outFile} -pthread {gcc.objList} {gcc.libDir} {gcc.libList} -lrt
+gcc.exe=g++ -o {outFile} -pthread {gcc.objList} {gcc.libDir} {gcc.libList}
 gcc.dll=g++ -shared -o{outLibFile}.so {gcc.objList} {gcc.libDir} {gcc.libList}
 

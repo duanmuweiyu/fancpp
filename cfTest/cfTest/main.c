@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
   cf_Trace_dispose();
   cf_dumpMem();
 
+  puts("END");
   return 0;
 }
 

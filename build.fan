@@ -16,6 +16,7 @@ class Build : BuildGroup
   {
     childrenScripts =
     [
+      `cfan/buildTinyCThread.fan`,
       `cfan/build.fan`,
       `cfTest/build.fan`,
     ]
