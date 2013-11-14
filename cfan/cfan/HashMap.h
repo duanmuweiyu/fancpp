@@ -53,6 +53,7 @@ typedef size_t (*HashMap##HashFunc)(K);\
 typedef int (*HashMap##CompFunc)(K, K);\
 \
 typedef struct HashMap##_ {\
+  size_t    tableSize;\
   size_t    size;\
   HashMap##Elem *table;\
   HashMap##Elem *idle;/*deleted elements*/\
@@ -97,6 +98,10 @@ cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue);\
  *\
  */\
 void HashMap##_dispose(HashMap *self);\
+/**\
+ * print debug message\
+ */\
+void HashMap##_dump(HashMap *self);\
 \
 \
 cf_Error HashMap##Iterator_next(HashMap##Iterator *self);\
@@ -120,7 +125,8 @@ cf_Error HashMap##_make(HashMap *self, size_t size) {\
 \
   cf_assert(self);\
 \
-  self->size = size;\
+  self->tableSize = size;\
+  self->size = 0;\
   self->idle = NULL;\
   self->hashFunc = NULL;\
   self->compFunc = NULL;\
@@ -137,7 +143,7 @@ cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue) {\
   cf_assert(self);\
   cf_assert(oldValue);\
 \
-  for (elem = self->table + (cf_hashFunc(self, key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
+  for (elem = self->table + (cf_hashFunc(self, key) % self->tableSize); elem != NULL && elem->used; elem = elem->next) {\
     if (cf_compFunc(self, key, elem->key) == 0) {\
       if (oldKey) *oldKey = elem->key;\
       *oldValue = elem->value;\
@@ -155,7 +161,7 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
 \
   cf_assert(self);\
 \
-  hashValue = cf_hashFunc(self, key) % self->size;\
+  hashValue = cf_hashFunc(self, key) % self->tableSize;\
   \
   elem = self->table + hashValue;\
   while ( elem->used ) {\
@@ -195,6 +201,8 @@ cf_Error HashMap##_set(HashMap *self, K key, V value, K *oldKey, V *oldValue) {\
   newElem->key = key;\
   newElem->value = value;\
 \
+  ++self->size;\
+\
   return cf_Error_ok;\
 }\
 \
@@ -205,7 +213,7 @@ cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue) {\
   CF_ENTRY_FUNC\
   cf_assert(self);\
 \
-  for (elem = self->table + (cf_hashFunc(self, key) % self->size); elem != NULL && elem->used; elem = elem->next) {\
+  for (elem = self->table + (cf_hashFunc(self, key) % self->tableSize); elem != NULL && elem->used; elem = elem->next) {\
     if (cf_compFunc(self, key, elem->key) == 0) {\
       if (oldKey) *oldKey = elem->key;\
       if (oldValue) *oldValue = elem->value;\
@@ -219,10 +227,12 @@ cf_Error HashMap##_remove(HashMap *self, K key, K *oldKey, V *oldValue) {\
         temp->next = self->idle;\
         self->idle = temp;\
         cf_assert(elem->used);\
+        --self->size;\
         CF_EXIT_FUNC\
         return cf_Error_ok;\
       }\
       elem->used = false;\
+      --self->size;\
       CF_EXIT_FUNC\
       return cf_Error_ok;\
     }\
@@ -240,7 +250,7 @@ void HashMap##_dispose(HashMap *self) {\
   CF_ENTRY_FUNC\
   cf_assert(self);\
 \
-  for (i=0; i < self->size; ++i) {\
+  for (i=0; i < self->tableSize; ++i) {\
     elem = self->table + i;\
     if (elem->used && elem->next != NULL) {\
       elem = elem->next;\
@@ -264,7 +274,44 @@ void HashMap##_dispose(HashMap *self) {\
   }\
 \
   cf_free(self->table);\
+  self->size = 0;\
   CF_EXIT_FUNC\
+}\
+\
+void HashMap##_dump(HashMap *self) {\
+  size_t i;\
+  HashMap##Elem *elem;\
+  size_t maxCount = 0;\
+  size_t count = 0;\
+  size_t allCount = 0;\
+  size_t emptyCount = 0;\
+  HashMap##Elem *next = NULL;\
+\
+  CF_ENTRY_FUNC\
+  cf_assert(self);\
+  for (i=0; i < self->tableSize; ++i) {\
+    elem = self->table + i;\
+    if (elem->used && elem->next != NULL) {\
+      elem = elem->next;\
+      count = 1;\
+      ++allCount;\
+      while (elem->used) {\
+        next = elem->next;\
+        ++count;\
+        ++allCount;\
+        if (next == NULL) break;\
+        elem = next;\
+      }\
+      if (maxCount < count) {\
+        maxCount = count;\
+      }\
+    } else {\
+      ++emptyCount;\
+    }\
+  }\
+  cf_assert(self->size == allCount);\
+  printf("HashMapCount: tableSize:%d, size:%d=%d, maxList:%d, empty:%d\n"\
+         , self->tableSize, self->size, allCount, maxCount, emptyCount);\
 }\
 \
 \
@@ -284,7 +331,7 @@ cf_Error HashMap##Iterator_next(HashMap##Iterator *self) {\
   /*increase position*/\
   do {\
     ++(self->position);\
-    if ((self->position) == (self->parent->size)){\
+    if ((self->position) == (self->parent->tableSize)){\
       self->elem = NULL;\
       return cf_Error_notfound;\
     }\
