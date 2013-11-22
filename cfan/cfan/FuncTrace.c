@@ -18,7 +18,7 @@
 /*========================================================================
  * time ticks
  */
-#ifdef WIN32
+#ifdef CF_WIN
   #include <windows.h>
   uint64_t cf_nowTicks() {
     LARGE_INTEGER m_nBeginTime;

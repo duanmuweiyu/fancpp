@@ -11,7 +11,7 @@
 #include "cfan/File.h"
 #include "cfan/Memory.h"
 
-#ifdef WIN32
+#ifdef CF_WIN
 
 #include <Windows.h>
 

@@ -23,7 +23,7 @@ CF_BEGIN
 /*========================================================================
  * time ticks
  */
-#ifdef WIN32
+#ifdef CF_WIN
   uint64_t cf_nowTicks();
 #else
   #include <time.h>

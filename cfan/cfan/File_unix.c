@@ -10,7 +10,7 @@
 
 #include "cfan/File.h"
 
-#ifndef WIN32
+#ifndef CF_WIN
 
 #include <fcntl.h>
 #include <sys/types.h>

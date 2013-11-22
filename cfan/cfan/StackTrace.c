@@ -8,7 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#if !defined(WIN32) && !defined(__ANDROID__)
+#if !defined(CF_WIN) && !defined(__ANDROID__)
 
 #include "cfan/StackTrace.h"
 #include "cfan/Error.h"

@@ -18,7 +18,7 @@
   #define CF_FUNCTRACE
 #endif
 
-#if !defined(WIN32) && !defined(__ANDROID__)
+#if !defined(CF_WIN) && !defined(__ANDROID__)
   #define CF_STACKTRACE
 #endif
 

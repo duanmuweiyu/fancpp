@@ -28,11 +28,19 @@
 #endif
 
 /*========================================================================
+ * extern "C"
+ */
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__) \
+    || defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
+  #define CF_WIN
+#endif
+
+/*========================================================================
  * Export API
  */
 
 #undef  CF_API
-#ifdef  WIN32
+#ifdef  CF_WIN
   #ifdef CF_EXPORT
     #define CF_API __declspec(dllexport)
   #else
