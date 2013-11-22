@@ -285,22 +285,17 @@ void HashMap##_dump(HashMap *self) {\
   size_t count = 0;\
   size_t allCount = 0;\
   size_t emptyCount = 0;\
-  HashMap##Elem *next = NULL;\
 \
-  CF_ENTRY_FUNC\
   cf_assert(self);\
   for (i=0; i < self->tableSize; ++i) {\
     elem = self->table + i;\
-    if (elem->used && elem->next != NULL) {\
-      elem = elem->next;\
+    if (elem->used) {\
       count = 1;\
       ++allCount;\
-      while (elem->used) {\
-        next = elem->next;\
+      while (elem->next) {\
+        elem = elem->next;\
         ++count;\
         ++allCount;\
-        if (next == NULL) break;\
-        elem = next;\
       }\
       if (maxCount < count) {\
         maxCount = count;\
@@ -311,7 +306,8 @@ void HashMap##_dump(HashMap *self) {\
   }\
   cf_assert(self->size == allCount);\
   printf("HashMapCount: tableSize:%d, size:%d=%d, maxList:%d, empty:%d\n"\
-         , self->tableSize, self->size, allCount, maxCount, emptyCount);\
+         , (int)self->tableSize, (int)self->size, (int)allCount \
+         , (int)maxCount, (int)emptyCount);\
 }\
 \
 \
