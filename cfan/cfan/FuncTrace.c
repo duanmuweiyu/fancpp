@@ -139,6 +139,7 @@ static void initThreadLocal() {
 }
 
 static bool cf_FuncTrace_isInited() {
+  if (!threadLocalVarInited) return false;
   void *t = tss_get(inited_);
   return t;
 }
