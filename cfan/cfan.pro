@@ -9,7 +9,7 @@ QMAKE_CC += -std=c99
 #QMAKE_CC += -O3
 
 DEFINES += CF_EXPORT
-DEFINES += _DEBUG
+DEFINES += DEBUG
 
 HEADERS += \
     cfan/Stream.h \

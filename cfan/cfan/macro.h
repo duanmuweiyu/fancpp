@@ -90,7 +90,7 @@ static inline int cf_Endian_isBigEndian(){
  * debug macro
  */
 
-#ifdef _DEBUG
+#ifdef DEBUG
   #undef NDEBUG
 #else
   #undef NDEBUG
