@@ -43,7 +43,8 @@ HEADERS += \
     cfan/FileLogListener.h \
     cfan/ArrayList.h \
     cfan/System.h \
-    cfan/Math.h
+    cfan/Math.h \
+    cfan/Util.h
 
 SOURCES += \
     cfan/StrBuf.c \

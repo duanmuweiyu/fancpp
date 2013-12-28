@@ -57,23 +57,6 @@
 #endif
 
 /*========================================================================
- * Any
- */
-
-typedef union cf_Value_ {
-  void *pointer;
-  char charV;
-  short shortV;
-  int intV;
-  long longV;
-  long long longlongV;
-  float floatV;
-  double doubleV;
-} cf_Value;
-
-#define cf_toValue(p) (*((cf_Value*)(&(p))))
-
-/*========================================================================
  * misc
  */
 #ifdef  _MSC_VER

@@ -10,6 +10,7 @@
 
 #include "cfan/StrBuf.h"
 #include "cfan/Trace.h"
+#include "cfan/Util.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -61,7 +62,7 @@ cf_Error cf_StrBuf_add(cf_StrBuf *self, const char *str, long size) {
     if (err) { CF_EXIT_FUNC return err; }
   }
 
-  memcpy(self->buffer + self->size, str, size);
+  cf_memcpy(self->buffer + self->size, str, size);
   self->size += size;
   *(self->buffer + self->size) = '\0';
 

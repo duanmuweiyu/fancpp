@@ -37,7 +37,7 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
   mtx_lock(&self->allocMutex);
   msgCopy = (cf_ActorMessage*)cf_MemoryPool_alloc(&self->msgFacory);
   mtx_unlock(&self->allocMutex);
-  memcpy(msgCopy, amsg, sizeof(cf_ActorMessage));
+  cf_memcpy(msgCopy, amsg, sizeof(cf_ActorMessage));
 
   cf_ActorMessageQueue_add(&self->queue, msgCopy);
 

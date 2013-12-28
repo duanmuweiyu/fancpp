@@ -14,6 +14,7 @@
 #include "cfan/Error.h"
 #include "cfan/Memory.h"
 #include "cfan/Trace.h"
+#include "cfan/Util.h"
 
 #include <string.h>
 
@@ -91,7 +92,7 @@ static inline cf_Error cf_ArrayList_add(cf_ArrayList *self, void *elem) {
   }
   cf_check(self->data);
 
-  memcpy((char*)self->data + (self->size * self->elemSize), elem, self->elemSize);
+  cf_memcpy((char*)self->data + (self->size * self->elemSize), elem, self->elemSize);
   self->size++;
 
   CF_EXIT_FUNC

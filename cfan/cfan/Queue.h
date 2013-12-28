@@ -13,6 +13,7 @@
 
 #include "cfan/Error.h"
 #include "cfan/Memory.h"
+#include "cfan/Util.h"
 
 #include <string.h>
 
@@ -77,7 +78,7 @@ static inline cf_Error cf_Queue_add(cf_Queue *self, void *elem) {
   if (npos == self->front) {
     return cf_Error_error;
   }
-  memcpy(self->buf + (self->rear * self->elemSize), elem, self->elemSize);
+  cf_memcpy(self->buf + (self->rear * self->elemSize), elem, self->elemSize);
   self->rear = npos;
   return cf_Error_ok;
 }

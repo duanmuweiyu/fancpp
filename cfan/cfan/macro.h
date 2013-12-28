@@ -11,7 +11,6 @@
 #ifndef _CF_MACRO_H_
 #define _CF_MACRO_H_
 
-#include "cfan/miss.h"
 
 /*========================================================================
  * extern "C"
@@ -78,6 +77,5 @@
 #define CF_ALIGN_SIZE 4
 #define CF_ALIGNN(size,n) ((size) + ((~((size)&((n)-1))+1)&((n)-1)))
 #define CF_ALIGN(size) CF_ALIGNN(size, CF_ALIGN_SIZE)
-
 
 #endif
