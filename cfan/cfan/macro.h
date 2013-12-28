@@ -45,41 +45,6 @@
   #define CF_API
 #endif
 
-/*========================================================================
- * Endian
- */
-
-static inline int cf_Endian_isBigEndian(){
-  int __one = 1;
-  return (*(char *)(&__one)==0);
-}
-
-//#if !defined(CF_BIG_ENDIAN) && !defined(CF_LITTLE_ENDIAN)
-//  #if (('1234' >> 24) == '1')
-//    #define CF_LITTLE_ENDIAN
-//  #elif (('4321' >> 24) == '1')
-//    #define CF_BIG_ENDIAN
-//  #else
-//    #error "Couldn't determine the endianness!"
-//  #endif
-//#endif
-
-/*========================================================================
- * Math
- */
-
-#define cf_Math_pi       3.14159265358979323846
-
-#define cf_Math_max(a, b)  (((a) > (b)) ? (a) : (b))
-
-#define cf_Math_min(a, b)  (((a) < (b)) ? (a) : (b))
-
-#define cf_Math_abs(a)     (((a) < 0) ? -(a) : (a))
-
-#define cf_Math_clamp(a, min, max) (cf_Math_min(cf_Math_max((a), (min)), (max)))
-
-#define cf_Math_round(f) ((int)(f+0.5))
-
 
 /*========================================================================
  * debug macro
@@ -105,7 +70,7 @@ static inline int cf_Endian_isBigEndian(){
 /**
  * suppress unused warning
  */
-#define cf_unused(p) ((void)p)
+#define CF_UNUSED(p) ((void)p)
 
 /*========================================================================
  * align

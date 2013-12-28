@@ -55,8 +55,8 @@ bool cf_Log_isEnableLevel(cf_LogLevel level) {
 void cf_Log_print(cf_Log_Listener *self, const char *tag, const char *file, const char *func, const unsigned int line
                   , const cf_LogLevel level, const char *msg) {
   printf("%s:%c(%s,%d) %s\n", tag, cf_LogLevel_str[level][0], func, line, msg);
-  cf_unused(self);
-  cf_unused(file);
+  CF_UNUSED(self);
+  CF_UNUSED(file);
 }
 
 void cf_Log_doLog(const char *tag, const char *file, const char *func, const unsigned int line

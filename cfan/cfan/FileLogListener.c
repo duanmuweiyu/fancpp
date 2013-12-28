@@ -53,7 +53,7 @@ void cf_FileLogListener_print(cf_Log_Listener *self, const char *tag, const char
   }
 
   fprintf(f, "[%s;%s:%c(%s,%d)] %s\n", timeStr, tag, cf_LogLevel_str[level][0], func, line, msg);
-  cf_unused(file);
+  CF_UNUSED(file);
 }
 
 void cf_FileLogListener_make(cf_FileLogListener *self, const char *path) {

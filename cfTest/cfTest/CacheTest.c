@@ -15,7 +15,7 @@ static void onRemove(const void *key, void *val){
   int32_t *i = (int32_t *)val;
   printf("free %d\n", *i);
   cf_free(val);
-  cf_unused(key);
+  CF_UNUSED(key);
 }
 
 static size_t hashFunc(const void *key) {

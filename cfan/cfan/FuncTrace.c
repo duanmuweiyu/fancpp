@@ -116,7 +116,7 @@ static void deleteEntryFuncTime(void *arg) {
 
 static void deleteInited(void *arg) {
   tss_delete(inited_);
-  cf_unused(arg);
+  CF_UNUSED(arg);
 }
 
 static void initThreadLocal() {

@@ -42,7 +42,8 @@ HEADERS += \
     cfan/Cache.h \
     cfan/FileLogListener.h \
     cfan/ArrayList.h \
-    cfan/System.h
+    cfan/System.h \
+    cfan/Math.h
 
 SOURCES += \
     cfan/StrBuf.c \

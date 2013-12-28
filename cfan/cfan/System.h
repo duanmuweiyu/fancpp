@@ -37,6 +37,15 @@ unsigned long cf_System_currentThreadId() {
 #endif
 }
 
+/*========================================================================
+ * Endian
+ */
+
+static inline int cf_System_isBigEndian(){
+  int __one = 1;
+  return (*(char *)(&__one)==0);
+}
+
 CF_END
 
 #endif // _CF_SYSTEM_H_
