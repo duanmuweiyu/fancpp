@@ -21,18 +21,6 @@ CF_BEGIN
 #endif
 
 /*========================================================================
- * time ticks
- */
-#ifdef CF_WIN
-  uint64_t cf_nowTicks();
-#else
-  #include <time.h>
-  static inline uint64_t cf_nowTicks() {
-    return clock();
-  }
-#endif
-
-/*========================================================================
  * stack trace
  */
 

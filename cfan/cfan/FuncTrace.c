@@ -15,19 +15,7 @@
 #include "cfan/StrBuf.h"
 
 
-/*========================================================================
- * time ticks
- */
-#ifdef CF_WIN
-  #include <windows.h>
-  uint64_t cf_nowTicks() {
-    LARGE_INTEGER m_nBeginTime;
-    LARGE_INTEGER m_nFreq;
-    QueryPerformanceFrequency(&m_nFreq);
-    QueryPerformanceCounter(&m_nBeginTime);
-    return (m_nBeginTime.QuadPart*1000000)/m_nFreq.QuadPart;
-  }
-#endif
+#define cf_nowTicks clock
 
 /*========================================================================
  * undefine memory func( the Memory depends FuncTrace )

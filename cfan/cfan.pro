@@ -41,7 +41,8 @@ HEADERS += \
     cfan/Trace.h \
     cfan/Cache.h \
     cfan/FileLogListener.h \
-    cfan/ArrayList.h
+    cfan/ArrayList.h \
+    cfan/System.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -65,7 +66,8 @@ SOURCES += \
     cfan/Trace.c \
     cfan/Cache.c \
     cfan/FileLogListener.c \
-    cfan/ArrayList.c
+    cfan/ArrayList.c \
+    cfan/System.c
 
 
 

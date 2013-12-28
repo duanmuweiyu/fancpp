@@ -11,6 +11,8 @@
 #ifndef _CF_MACRO_H_
 #define _CF_MACRO_H_
 
+#include "cfan/miss.h"
+
 /*========================================================================
  * extern "C"
  */
@@ -27,13 +29,6 @@
   #define CF_END
 #endif
 
-/*========================================================================
- * extern "C"
- */
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__) \
-    || defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
-  #define CF_WIN
-#endif
 
 /*========================================================================
  * Export API

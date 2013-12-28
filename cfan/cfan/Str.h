@@ -28,7 +28,7 @@ extern int strcasecmp (__const char *__s1, __const char *__s2);
 /**
  * Return if this string contains the specified string.
  */
-static inline bool cf_StrBuf_contains(const char *self, const char *s) {
+static inline bool cf_Str_contains(const char *self, const char *s) {
   return strstr(self, s) != NULL;
 }
 
@@ -36,13 +36,13 @@ static inline bool cf_StrBuf_contains(const char *self, const char *s) {
  * Return the first occurance of the specified substring searching forward,
  * starting at the specified offset index.
  */
-static inline long cf_StrBuf_index(const char *self, const char *s) {
+static inline long cf_Str_index(const char *self, const char *s) {
   const char *r = strstr(self, s);
   if (r == NULL) return -1;
   return r-self;
 }
 
-static inline long cf_StrBuf_lastIndex(const char *self, const char *s) {
+static inline long cf_Str_lastIndex(const char *self, const char *s) {
   const char *pos;
   int len = strlen(self);
   int n = strlen(s);
