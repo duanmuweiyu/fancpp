@@ -27,7 +27,7 @@ void cf_System_sleep(long millitm);
  */
 cf_Error cf_System_getSelfPath(char *selfname);
 
-unsigned long cf_System_currentThreadId() {
+static inline unsigned long cf_System_currentThreadId() {
 #ifdef CF_WIN
   unsigned long GetCurrentThreadId(void);
   return GetCurrentThreadId();

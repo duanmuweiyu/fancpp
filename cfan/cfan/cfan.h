@@ -18,6 +18,8 @@
 
 
 #include "cfan/Error.h"
+#include "cfan/System.h"
+#include "cfan/Math.h"
 #include "cfan/Memory.h"
 #include "cfan/Log.h"
 #include "cfan/Array.h"
