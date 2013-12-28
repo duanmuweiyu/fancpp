@@ -67,7 +67,8 @@ SOURCES += \
     cfan/Cache.c \
     cfan/FileLogListener.c \
     cfan/ArrayList.c \
-    cfan/System.c
+    cfan/System.c \
+    cfan/Str.c
 
 
 

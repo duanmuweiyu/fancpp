@@ -1,6 +1,7 @@
 #ifndef _CF_SYSTEM_H_
 #define _CF_SYSTEM_H_
 
+#include "cfan/System.h"
 #include "cfan/Error.h"
 
 CF_BEGIN
