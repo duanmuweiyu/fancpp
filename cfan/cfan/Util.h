@@ -24,6 +24,7 @@ typedef union cf_Value_ {
 
 #define cf_toValue(p) (*((cf_Value*)(&(p))))
 
+
 /*========================================================================
  * copy
  */
@@ -31,6 +32,9 @@ typedef union cf_Value_ {
  * fast memory copy
  */
 static inline void *cf_memcpy(void *dest, const void *src, size_t n) {
+  cf_assert(dest);
+  cf_assert(src);
+  cf_assert(((char*)dest + n < (char*)src) || ((char*)dest-n > (char*)src));
   switch(n) {
   case 0:
     return dest;

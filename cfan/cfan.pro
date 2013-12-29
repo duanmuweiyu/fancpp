@@ -44,7 +44,8 @@ HEADERS += \
     cfan/ArrayList.h \
     cfan/System.h \
     cfan/Math.h \
-    cfan/Util.h
+    cfan/Util.h \
+    cfan/HashTable.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -70,7 +71,8 @@ SOURCES += \
     cfan/FileLogListener.c \
     cfan/ArrayList.c \
     cfan/System.c \
-    cfan/Str.c
+    cfan/Str.c \
+    cfan/HashTable.c
 
 
 

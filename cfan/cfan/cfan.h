@@ -26,6 +26,7 @@
 #include "cfan/ArrayList.h"
 #include "cfan/Sort.h"
 #include "cfan/HashMap.h"
+#include "cfan/HashTable.h"
 #include "cfan/StrBuf.h"
 #include "cfan/File.h"
 #include "cfan/Config.h"

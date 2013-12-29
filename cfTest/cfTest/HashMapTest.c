@@ -17,6 +17,7 @@ void cf_HashMapTest_testGet(void) {
   char *removedValue;
   char *value;
   char key[] = "yjd";
+  int maxLink;
 
   CF_ENTRY_FUNC
 
@@ -28,12 +29,15 @@ void cf_HashMapTest_testGet(void) {
   cf_HashMapSS_set(&map, "yjd", "26", NULL, NULL);
   cf_HashMapSS_set(&map, "qq", "49", NULL, NULL);
 
-  printf("removed:%s\n", removedValue);
+  //printf("removed:%s\n", removedValue);
+  cf_verify(strcmp(removedValue, "abcd") == 0);
 
   cf_HashMapSS_get(&map, key, NULL, &value );
-  printf("%s:%s\n", key, value);
+  //printf("%s:%s\n", key, value);
+  cf_verify(strcmp(value, "26") == 0);
 
-  cf_HashMapSS_dump(&map);
+  maxLink = cf_HashMapSS_count(&map);
+  cf_verify(maxLink == 3);
 
   cf_HashMapSS_dispose(&map);
   CF_EXIT_FUNC
@@ -74,6 +78,7 @@ void cf_HashMapTest_testIter(void) {
   const char *key2;
   char *value2;
   cf_Error err;
+  int count = 0;
 
   CF_ENTRY_FUNC
 
@@ -89,8 +94,9 @@ void cf_HashMapTest_testIter(void) {
   while (!(err=cf_HashMapSSIterator_next(&iter))) {
     cf_HashMapSSIterator_get(&iter, &key2, &value2);
     printf("%s:%s\n", key2, value2);
+    ++count;
   }
-
+  cf_verify(count == 4);
   cf_HashMapSS_dispose(&map);
   CF_EXIT_FUNC
 }
@@ -98,4 +104,5 @@ void cf_HashMapTest_testIter(void) {
 void cf_HashMapTest_register(void) {
   cf_Test_add(cf_HashMapTest_testGet);
   cf_Test_add(cf_HashMapTest_testIter);
+  cf_Test_add(cf_HashMapTest_testRemove);
 }

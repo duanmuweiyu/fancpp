@@ -101,7 +101,7 @@ void HashMap##_dispose(HashMap *self);\
 /**\
  * print debug message\
  */\
-void HashMap##_dump(HashMap *self);\
+size_t HashMap##_count(HashMap *self);\
 \
 \
 cf_Error HashMap##Iterator_next(HashMap##Iterator *self);\
@@ -278,7 +278,7 @@ void HashMap##_dispose(HashMap *self) {\
   CF_EXIT_FUNC\
 }\
 \
-void HashMap##_dump(HashMap *self) {\
+size_t HashMap##_count(HashMap *self) {\
   size_t i;\
   HashMap##Elem *elem;\
   size_t maxCount = 0;\
@@ -305,9 +305,7 @@ void HashMap##_dump(HashMap *self) {\
     }\
   }\
   cf_assert(self->size == allCount);\
-  printf("HashMapCount: tableSize:%d, size:%d=%d, maxList:%d, empty:%d\n"\
-         , (int)self->tableSize, (int)self->size, (int)allCount \
-         , (int)maxCount, (int)emptyCount);\
+  return maxCount;\
 }\
 \
 \
