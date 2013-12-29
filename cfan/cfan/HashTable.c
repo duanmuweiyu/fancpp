@@ -8,6 +8,10 @@
 #include <string.h>
 #include <stdio.h>
 
+/*========================================================================
+ * Util
+ */
+
 static inline void copyKey(cf_HashTable *self, void * dest, const void * src) {
   cf_memcpy(dest, src, self->keySize);
 }
@@ -41,6 +45,25 @@ size_t cf_HashTable_hashFunc(const void *key, int len) {
   }
   return h;
 }
+
+int cf_HashTable_strCmp(const void *k1, const void *k2, int n) {
+  CF_UNUSED(n);
+  return strcmp(k1, k2);
+}
+
+size_t cf_HashTable_strHash(const void *s, int len) {
+  size_t hashValue;
+  const char *str = (const char *)s;
+  CF_UNUSED(len);
+  for (hashValue = 0; *str != '\0'; str++) {
+    hashValue = *(str) + 31 * hashValue;
+  }
+  return hashValue;
+}
+
+/*========================================================================
+ * methords
+ */
 
 cf_Error cf_HashTable_make(cf_HashTable *self, size_t size, int keySize, int valueSize) {
   int elemSize;

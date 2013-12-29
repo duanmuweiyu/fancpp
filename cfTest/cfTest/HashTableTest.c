@@ -29,6 +29,7 @@ void cf_HashTable_testGet(void) {
 
   cf_HashTable_make(&map, 2, 256, 256);
   map.compFunc = mystrcmp;
+  map.hashFunc = cf_HashTable_strHash;
 
   cf_HashTable_set(&map, "123", "1234", NULL, NULL);
   cf_HashTable_set(&map, "abc", "abcd", NULL, NULL);

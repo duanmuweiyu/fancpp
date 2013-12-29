@@ -11,13 +11,19 @@
 
 概述
 ------------
-cfan提供了Array动态数组和HashMap哈希表，因为这两个容器是最高效，最常用的。
-暂时没有提供链表和树状数据结构。
-这两个容器为了获得更好的性能采用模版技术实现，所以使用前先需要根据模版宏定义自己的类型。
+cfan提供了Array/ArrayList动态数组,HashMap/HashTable哈希表，LinkedList/Queue等容器。
+为了获得更好的性能，有些容器是采用模版技术实现，所以使用前先需要根据模版宏定义自己的类型。
+
+ArrayList和HashTable
+------------
+
+ArrayList和HashTable是Array和HashMap对应的非模版实现，采用void*的方式，指针所指位置的值将会被拷贝。
+所以如果要在ArrayList和HashTable中存储指针，需要指针的指针传入。
+非模版容器的好处是方便使用，调试容易，但没有模版实现高效。
 
 模版编程
 ------------
-使用void*会迫使内存在堆上分配，模版编程能在不损失性能的情况下复用代码。
+模版编程能在不损失性能的情况下复用代码。
 例如一个Point对象，需要有doble类型和int类型两方。使用模版实现如下：
   #deinf Point_template(Name, T) struct Point##Name { T x; T y; }
   Point_template(D, double)

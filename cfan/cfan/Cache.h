@@ -65,7 +65,7 @@ static inline void cf_CacheList_dispose(cf_CacheList *self) {
 typedef void (*cf_CacheOnRemove)(const void *, void *);
 
 /**
- * Cache
+ * Least Recently Used Cache
  */
 typedef struct cf_Cache_ {
   unsigned long capacity;

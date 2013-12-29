@@ -21,8 +21,6 @@ typedef struct cf_HashTableElem_ {
   //value position
 } cf_HashTableElem;
 
-struct cf_HashTable_;
-
 /**
  * Map
  *
@@ -30,8 +28,13 @@ struct cf_HashTable_;
 typedef size_t (*cf_HashTableHashFunc)(const void *, int);
 typedef int (*cf_HashTableCompFunc)(const void *, const void *, int);
 
+/**
+ * build in hash and compare function
+ */
 size_t cf_HashTable_hashFunc(const void *key, int len);
 int cf_HashTable_compFunc(const void *k1, const void *k2, int n);
+int cf_HashTable_strCmp(const void *k1, const void *k2, int n);
+size_t cf_HashTable_strHash(const void *str, int len);
 
 typedef struct cf_HashTable_ {
   size_t    tableSize;
