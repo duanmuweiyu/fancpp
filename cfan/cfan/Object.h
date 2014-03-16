@@ -28,7 +28,11 @@ typedef struct cf_VTable_ {
  */
 typedef struct cf_Object_ {
   cf_VTable *vtable;
+  int refCount;
 } cf_Object;
+
+#define cf_Object_addRef(self) (((cf_Object*)(self))->refCount++)
+cf_Object *cf_Object_release(cf_Object *self);
 
 /**
  * get vtable

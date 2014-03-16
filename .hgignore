@@ -3,3 +3,6 @@ glob:fanllvm
 syntax: glob
 *.user
 *.o
+cfan/libcfan.a
+cfan/Makefile
+cfan/Makefile.cfan

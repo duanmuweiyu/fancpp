@@ -3,9 +3,37 @@
 #ifndef CF_WIN
 
 #include <sys/types.h>
-#include <sys/timeb.h>
 #include <time.h>
 #include <unistd.h>
+
+
+#ifdef __IOS__
+  #include <mach/mach.h>
+  #include <mach/mach_time.h>
+  #include <sys/_types/_timespec.h>
+  #include <mach/mach.h>
+  #include <mach/clock.h>
+
+  uint64_t cf_System_nanoTicks(void) {
+      clock_serv_t cclock;
+      mach_timespec_t mts;
+
+      host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
+      clock_get_time(cclock, &mts);
+      mach_port_deallocate(mach_task_self(), cclock);
+
+      return (mts.tv_sec * 10E9) + mts.tv_nsec;
+  }
+#else
+  #include <sys/timeb.h>
+
+  uint64_t cf_System_nanoTicks(void) {
+  //  return clock() / (CLOCKS_PER_SECOND * 1000);
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (ts.tv_sec * 10E9) + ts.tv_nsec;
+  }
+#endif
 
 uint64_t cf_System_currentTimeMillis() {
   struct timeb val;
@@ -14,13 +42,6 @@ uint64_t cf_System_currentTimeMillis() {
 //  struct timeval tv={0};
 //  struct timezone tz={0};
 //  gettimeofday(&tv,&tz);
-}
-
-uint64_t cf_System_nanoTicks() {
-//  return clock() / (CLOCKS_PER_SECOND * 1000);
-  struct timespec ts;
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-  return ts.tv_sec * 10E9 + ts.tv_nsec;
 }
 
 void cf_System_sleep(long millitm) {

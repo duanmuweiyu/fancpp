@@ -72,7 +72,8 @@ SOURCES += \
     cfan/ArrayList.c \
     cfan/System.c \
     cfan/Str.c \
-    cfan/HashTable.c
+    cfan/HashTable.c \
+    cfan/Object.c
 
 
 

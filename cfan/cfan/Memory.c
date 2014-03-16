@@ -36,7 +36,7 @@ typedef struct cf_MemChunk_ {
   struct cf_MemChunk_ *next; //next chunk
   struct cf_MemChunk_ *prev; //previous chunk
   size_t size;
-  size_t refCount;
+  //size_t refCount;
   int checkCode;
 } cf_MemChunk;
 
@@ -90,7 +90,7 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
   chunk->func = func;
   chunk->line = line;
   chunk->checkCode = cf_Memory_headCheckCode;
-  chunk->refCount = 0;
+  //chunk->refCount = 0;
   chunk->next = NULL;
   chunk->size = size;
   chunk->trace = cf_Trace_getTraceString();
