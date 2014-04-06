@@ -42,7 +42,7 @@ void cf_LinkedListTest_testAdd(void) {
   int size;
   CF_ENTRY_FUNC
 
-  cf_LinkedList_make(&list, 10);
+  cf_LinkedList_make(&list);
   elem0.value = &a;
   elem1.value = &b;
   elem2.value = &c;
@@ -74,7 +74,7 @@ void cf_LinkedListTest_testAdd(void) {
   cf_verify(size == 3);
   verifyLink(&list);
 
-  cf_LinkedList_dispose(&list);
+  //cf_LinkedList_dispose(&list);
 
   CF_EXIT_FUNC
 }

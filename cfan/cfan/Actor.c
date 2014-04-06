@@ -15,13 +15,13 @@ void *cf_Actor_run(void *arg) {
   cf_Actor *self = (cf_Actor *)arg;
   do {
     mtx_lock(&self->mutex);
-    cf_ActorMessage *msg = self->queue.head;
+    cf_ActorMessage *msg = (cf_ActorMessage*)self->queue.super.head;
     if (msg == NULL) break;
-    cf_ActorMessageQueue_remove(&self->queue, msg);
+    cf_LinkedList_remove(&self->queue.super, &msg->super);
     mtx_unlock(&self->mutex);
     self->receive(self, msg);
     mtx_lock(&self->allocMutex);
-    cf_MemoryPool_free(&self->msgFacory, msg);
+    cf_MemoryPool_free(&self->queue.allocator, msg);
     mtx_unlock(&self->allocMutex);
   } while (true);
   self->isRuning = false;
@@ -35,11 +35,11 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
   //copy
   mtx_lock(&self->mutex);
   mtx_lock(&self->allocMutex);
-  msgCopy = (cf_ActorMessage*)cf_MemoryPool_alloc(&self->msgFacory);
+  msgCopy = (cf_ActorMessage*)cf_MemoryPool_alloc(&self->queue.allocator);
   mtx_unlock(&self->allocMutex);
   cf_memcpy(msgCopy, amsg, sizeof(cf_ActorMessage));
 
-  cf_ActorMessageQueue_add(&self->queue, msgCopy);
+  cf_LinkedList_add(&self->queue.super, &msgCopy->super);
 
   if (!self->isRuning) {
     cf_Executor_addTask(self->executor, cf_Actor_run, self);
@@ -51,6 +51,6 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
 void cf_Actor_dispose(cf_Actor *self) {
   cf_Executor_dispose(self->executor);
   mtx_destroy(&self->mutex);
-  cf_ActorMessageQueue_freeElem(&self->queue, &self->msgFacory);
-  cf_MemoryPool_dispose(&self->msgFacory);
+  cf_LinkedList_freeLinkedElem(&self->queue.super, &self->queue.allocator);
+  cf_MemoryPool_dispose(&self->queue.allocator);
 }

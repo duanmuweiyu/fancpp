@@ -12,187 +12,88 @@
 #define _CF_LINKEDLIST_H_
 
 #include "cfan/Error.h"
-#include "cfan/MemoryPool.h"
+#include "cfan/Object.h"
 
 CF_BEGIN
 
+struct cf_MemoryPool_;
 
 /**
- * LinkedList template
+ * LinkedList
  *
  */
-
-#define cf_LinkedListTemplate(LinkedList, LinkedListElem) \
-\
-static inline void LinkedList##_add(LinkedList *self, LinkedListElem *elem) {\
-  if (self->head == NULL || self->tail == NULL) {\
-    self->head = elem;\
-    self->tail = elem;\
-    elem->next = NULL;\
-    elem->previous = NULL;\
-    return;\
-  }\
-\
-  self->tail->next = elem;\
-  elem->previous = self->tail;\
-  elem->next = NULL;\
-  self->tail = elem;\
-}\
-\
-/** \
- * insert at first \
- */ \
-static inline void LinkedList##_insert(LinkedList *self, LinkedListElem *elem) {\
-  if (self->head == NULL || self->tail == NULL) {\
-    self->head = elem;\
-    self->tail = elem;\
-    elem->next = NULL;\
-    elem->previous = NULL;\
-    return;\
-  }\
-\
-  self->head->previous = elem;\
-  elem->next = self->head;\
-  elem->previous = NULL;\
-  self->head = elem;\
-}\
-\
-static inline void LinkedList##_insertBefore(LinkedList *self\
-                                              , LinkedListElem *me, LinkedListElem *elem) {\
-  cf_assert(self);\
-  cf_assert(me);\
-  cf_assert(elem);\
-\
-  if (self->head == me) {\
-    self->head = elem;\
-  } else {\
-    cf_assert(me->previous);\
-    me->previous->next = elem;\
-  }\
-\
-  elem->next = me;\
-  elem->previous = me->previous;\
-  me->previous = elem;\
-}\
-\
-static inline void LinkedList##_remove(LinkedList *self, LinkedListElem *elem) {\
-  if (elem == NULL) return;\
-  if (elem->previous) {\
-    elem->previous->next = elem->next;\
-  } else {\
-    cf_assert(self->head == elem);\
-    self->head = elem->next;\
-  }\
-\
-  if (elem->next) {\
-    elem->next->previous = elem->previous;\
-  } else {\
-    cf_assert(self->tail == elem);\
-    self->tail = elem->previous;\
-  }\
-}\
-\
-static inline LinkedListElem *LinkedList##_get(LinkedList *self, int index) {\
-  LinkedListElem *elem;\
-  int i = 0;\
-  elem = self->head;\
-  while (elem && i<index) {\
-    elem = elem->next;\
-    ++i;\
-  }\
-  return elem;\
-}\
-\
-static inline int LinkedList##_getSize(LinkedList *self) {\
-  LinkedListElem *elem;\
-  int i = 0;\
-  elem = self->head;\
-  while (elem) {\
-    elem = elem->next;\
-    ++i;\
-  }\
-  return i;\
-}\
-\
-static inline void LinkedList##_freeElem(LinkedList *self, cf_MemoryPool *pool) {\
-  LinkedListElem *elem;\
-  LinkedListElem *prev;\
-  elem = self->head;\
-  while (elem) {\
-    prev = elem;\
-    elem = elem->next;\
-    if (pool != NULL) {\
-      cf_MemoryPool_free(pool, prev);\
-    } else {\
-      cf_free(prev);\
-    }\
-  }\
-  self->head = NULL;\
-  self->tail = NULL;\
-}
-
-/*========================================================================
- * predefine LinkedListe
- */
-
 /**
  * LinkedList element
  */
 typedef struct cf_LinkedListElem_ {
-  void *value;
+  cf_Object super;
   struct cf_LinkedListElem_ *previous;
   struct cf_LinkedListElem_ *next;
+  void *value;
+  //...more user data
 } cf_LinkedListElem;
 
 /**
  * LinkedList parent
  */
 typedef struct cf_LinkedList_ {
+  cf_Object super;
   cf_LinkedListElem *head;
   cf_LinkedListElem *tail;
-  cf_MemoryPool allocator;
 } cf_LinkedList;
 
 /**
  * default ctor
  */
-static inline void cf_LinkedList_make(cf_LinkedList *self, size_t objCount) {
+static inline void cf_LinkedList_make(cf_LinkedList *self) {
+  self->super.vtable = NULL;
+  self->super.refCount = 0;
   self->head = NULL;
   self->tail = NULL;
-  cf_MemoryPool_make(&self->allocator, sizeof(cf_LinkedListElem), objCount);
 }
 
 /**
- * define methods
+ * push back
  */
-cf_LinkedListTemplate(cf_LinkedList, cf_LinkedListElem)
-
-static inline void cf_LinkedList_dispose(cf_LinkedList *self) {
-  //cf_LinkedList_dispose_(self, &self->allocator);
-  cf_MemoryPool_dispose(&self->allocator);
-}
+void cf_LinkedList_add(cf_LinkedList *self, cf_LinkedListElem *elem);
 
 /**
- * add to last
+ * insert at first
  */
-static inline void cf_LinkedList_pushBack(cf_LinkedList *self, void *val) {
-  cf_LinkedListElem *elem = (cf_LinkedListElem*)cf_MemoryPool_alloc(&self->allocator);
-  elem->value = val;
-  cf_LinkedList_add(self, elem);
-}
+void cf_LinkedList_insert(cf_LinkedList *self, cf_LinkedListElem *elem);
 
 /**
- * remove and return first obj
+ * insert before element
  */
-static inline void *cf_LinkedList_removeFirst(cf_LinkedList *self) {
-  cf_LinkedListElem *elem = self->head;
-  if (elem == NULL) return NULL;
+void cf_LinkedList_insertBefore(cf_LinkedList *self
+                                              , cf_LinkedListElem *me, cf_LinkedListElem *elem);
 
-  cf_LinkedList_remove(self, elem);
-  void *val = elem->value;
-  cf_MemoryPool_free(&self->allocator, elem);
-  return val;
-}
+/**
+ * remove element from self.
+ * you must free elem memory by cf_LinkedList_freeElem
+ */
+void cf_LinkedList_remove(cf_LinkedList *self, cf_LinkedListElem *elem);
+
+/**
+ * return the element at index positon
+ */
+cf_LinkedListElem *cf_LinkedList_get(cf_LinkedList *self, int index);
+
+/**
+ * return elements count
+ */
+int cf_LinkedList_getSize(cf_LinkedList *self);
+
+/**
+ * free all elem ref in list.
+ * memory pool is optional if NULL
+ */
+void cf_LinkedList_freeLinkedElem(cf_LinkedList *self, struct cf_MemoryPool_ *pool);
+
+/**
+ * remove and return first element
+ */
+cf_LinkedListElem *cf_LinkedList_removeFirst(cf_LinkedList *self);
 
 CF_END
 

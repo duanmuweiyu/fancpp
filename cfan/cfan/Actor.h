@@ -22,19 +22,15 @@ CF_BEGIN
  * Message Queue
  */
 typedef struct cf_ActorMessage_ {
+  cf_LinkedListElem super;
   const char *name;
   void *arg;
-  struct cf_ActorMessage_ *previous;
-  struct cf_ActorMessage_ *next;
 } cf_ActorMessage;
 
 typedef struct cf_ActorMessageQueue_ {
-  cf_ActorMessage *head;
-  cf_ActorMessage *tail;
+  cf_LinkedList super;
+  cf_MemoryPool allocator;
 } cf_ActorMessageQueue;
-
-cf_LinkedListTemplate(cf_ActorMessageQueue, cf_ActorMessage)
-
 
 struct cf_Actor_;
 typedef void (*cf_ActorReceive)(struct cf_Actor_ *, cf_ActorMessage *);
@@ -49,18 +45,16 @@ typedef struct cf_Actor_ {
   cf_Executor *executor;
   mtx_t mutex;
   mtx_t allocMutex;
-  cf_MemoryPool msgFacory;
 } cf_Actor;
 
 
 static inline cf_Error cf_Actor_make(cf_Actor *self, cf_Executor *executor, cf_ActorReceive receive) {
-  self->queue.head = NULL;
-  self->queue.tail = NULL;
   self->receive = receive;
   self->isRuning = false;
   self->executor = executor;
 
-  cf_MemoryPool_make(&self->msgFacory, sizeof(cf_ActorMessage), 100);
+  cf_LinkedList_make(&self->queue.super);
+  cf_MemoryPool_make(&self->queue.allocator, sizeof(cf_ActorMessage), 100);
 
   if (mtx_init(&self->mutex, mtx_recursive) != thrd_success) {
     return cf_Error_thread;

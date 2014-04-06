@@ -12,7 +12,7 @@
 #include "cfan/cfan.h"
 
 void cf_FileTest_test(void) {
-  const char *path = "/home/jed";
+  const char *path = "/home";
   cf_DirIterator iter;
   const char *name;
   cf_Error err;

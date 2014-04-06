@@ -28,10 +28,10 @@ cf_Error cf_Cache_make(cf_Cache *self, unsigned long capacity, cf_CacheOnRemove 
 
 void cf_Cache_dispose(cf_Cache *self) {
   cf_CacheElem *elem;
-  elem = self->list.head;
+  elem = (cf_CacheElem *)self->list.super.head;
   while (elem) {
     self->onRemove(elem->key, elem->value);
-    elem = elem->next;
+    elem = (cf_CacheElem *)elem->super.next;
   }
 
   cf_HashMapPP_dispose(&self->map);
@@ -41,10 +41,10 @@ void cf_Cache_dispose(cf_Cache *self) {
 void cf_Cache_keepClear_(cf_Cache *self) {
   cf_CacheElem *elem;
   while (self->size > self->capacity) {
-    elem = self->list.head;
+    elem = (cf_CacheElem *)self->list.super.head;
     if (elem == NULL) return;
 
-    cf_CacheList_remove(&self->list, elem);
+    cf_LinkedList_remove(&self->list.super, &elem->super);
     cf_HashMapPP_remove(&self->map, elem->key, NULL, NULL);
     self->size--;
 
@@ -62,8 +62,8 @@ cf_Error cf_Cache_get(cf_Cache *self, const void *key, const void **oldKey, void
 
   cf_assert(elem);
   //elem->key = key;
-  cf_CacheList_remove(&self->list, elem);
-  cf_CacheList_add(&self->list, elem);
+  cf_LinkedList_remove(&self->list.super, &elem->super);
+  cf_LinkedList_add(&self->list.super, &elem->super);
 
   *val = elem->value;
 
@@ -77,7 +77,7 @@ cf_Error cf_Cache_set(cf_Cache *self, const void *key, void *val) {
   elem = (cf_CacheElem*)cf_MemoryPool_alloc(&self->list.allocator);
   elem->key = key;
   elem->value = val;
-  cf_CacheList_add(&self->list, elem);
+  cf_LinkedList_add(&self->list.super, &elem->super);
 
   err = cf_HashMapPP_set(&self->map, key, elem, NULL, NULL);
   self->size++;

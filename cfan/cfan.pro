@@ -73,7 +73,8 @@ SOURCES += \
     cfan/System.c \
     cfan/Str.c \
     cfan/HashTable.c \
-    cfan/Object.c
+    cfan/Object.c \
+    cfan/LinkedList.c
 
 
 

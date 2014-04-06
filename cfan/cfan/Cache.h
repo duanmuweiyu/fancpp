@@ -13,6 +13,7 @@
 
 #include "cfan/LinkedList.h"
 #include "cfan/HashMap.h"
+#include "cfan/MemoryPool.h"
 
 CF_BEGIN
 
@@ -24,18 +25,16 @@ CF_BEGIN
  * LinkedList element
  */
 typedef struct cf_CacheElem_ {
+  cf_LinkedListElem super;
   const void *key;
   void *value;
-  struct cf_CacheElem_ *previous;
-  struct cf_CacheElem_ *next;
 } cf_CacheElem;
 
 /**
  * LinkedList parent
  */
 typedef struct cf_CacheList_ {
-  cf_CacheElem *head;
-  cf_CacheElem *tail;
+  cf_LinkedList super;
   cf_MemoryPool allocator;
 } cf_CacheList;
 
@@ -43,18 +42,12 @@ typedef struct cf_CacheList_ {
  * default ctor
  */
 static inline void cf_CacheList_make(cf_CacheList *self, size_t objCount) {
-  self->head = NULL;
-  self->tail = NULL;
+  cf_LinkedList_make(&self->super);
   cf_MemoryPool_make(&self->allocator, sizeof(cf_CacheElem), objCount);
 }
 
-/**
- * define methods
- */
-cf_LinkedListTemplate(cf_CacheList, cf_CacheElem)
-
 static inline void cf_CacheList_dispose(cf_CacheList *self) {
-  cf_CacheList_freeElem(self, &self->allocator);
+  cf_LinkedList_freeLinkedElem(&self->super, &self->allocator);
   cf_MemoryPool_dispose(&self->allocator);
 }
 
