@@ -19,8 +19,11 @@ CF_BEGIN
  * Virtual table is a function pointer list for Object.
  * We using this implements polymorphism.
  */
+typedef void (*cf_VTableDestructor)(void *);
 typedef struct cf_VTable_ {
   int offset;
+  const char *typeName;
+  cf_VTableDestructor destructor;
 } cf_VTable;
 
 /**
@@ -28,10 +31,14 @@ typedef struct cf_VTable_ {
  */
 typedef struct cf_Object_ {
   cf_VTable *vtable;
-  int refCount;
+  int refCount; //defaul is 0
 } cf_Object;
 
 #define cf_Object_addRef(self) (((cf_Object*)(self))->refCount++)
+static inline bool cf_Object_canRelease(cf_Object *self) {
+  return self->refCount == 0;
+}
+
 cf_Object *cf_Object_release(cf_Object *self);
 
 /**

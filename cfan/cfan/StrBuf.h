@@ -14,37 +14,61 @@
 #include "cfan/macro.h"
 #include "cfan/Error.h"
 #include "cfan/Memory.h"
+#include "cfan/Object.h"
 
 #include <string.h>
 #include <stdio.h>
 
 CF_BEGIN
 
+#define cf_Str_defaultBufferCapacity 32
+
+typedef enum cf_StrBufType_ {
+  cf_StrBufType_constRef, //pointer to string const
+  cf_StrBufType_dynamicRef, //pointer to heap string
+  cf_StrBufType_ownMem //pointer to self buffer
+} cf_StrBufType;
+
 /**
  * String Buffer
  *
  */
 typedef struct cf_StrBuf_ {
+  cf_Object super;
+  cf_StrBufType type;
   size_t    size;
   size_t    capacity;
-  char array[256];
-  char *buffer;
+  char *pointer;
+  char array[cf_Str_defaultBufferCapacity];
+  //...more buffer at here
 } cf_StrBuf;
+
+/*========================================================================
+ * constructor
+ */
+/**
+ * make a default own memory Str in stack
+ */
+void cf_StrBuf_makeDefault(cf_StrBuf *self);
+
+/**
+ * make own memory Str with capcity is strCapacity+1
+ */
+cf_StrBuf *cf_StrBuf_makeSize(size_t strCapacity);
+
+/**
+ * convenience for cf_StrBuf_makeSize and init by s
+ */
+cf_StrBuf *cf_StrBuf_makeCopy(const char *s);
+
+/**
+ * make static Str ref to s
+ */
+void cf_StrBuf_makeConstRef(cf_StrBuf *self, const char *s);
 
 /*========================================================================
  * Base method
  */
-
-/**
- * constructor
- */
-static inline void cf_StrBuf_make(cf_StrBuf *self) {
-  cf_assert(self);
-  self->capacity = 256;
-  self->buffer = self->array;
-  self->size = 0;
-}
-
 /**
  * return string size
  *
@@ -66,27 +90,23 @@ cf_Error cf_StrBuf_add(cf_StrBuf *self, const char *str, long size);
  */
 static inline char *cf_StrBuf_str(cf_StrBuf *self) {
   cf_assert(self);
-  return self->buffer;
+  return self->pointer;
 }
 
-static inline char *cf_StrBuf_detach(cf_StrBuf *self) {
-  char * str;
-  cf_assert(self);
-  if (self->buffer != self->array) return self->buffer;
-  str = (char*)cf_malloc(self->size+1);
-  if (str == NULL) return NULL;
-  strcpy(str, self->array);
-  return str;
-}
+/**
+ * return a copyed free str
+ */
+char *cf_StrBuf_detach(cf_StrBuf *self);
 
 /**
  * free resource
  */
 static inline void cf_StrBuf_dispose(cf_StrBuf *self) {
   cf_assert(self);
-  if (self->buffer == self->array) return;
-  cf_free(self->buffer);
+  if (self->type != cf_StrBufType_dynamicRef) return;
+  cf_free(self->pointer);
 }
+
 
 /*========================================================================
  * Modify method
@@ -99,7 +119,7 @@ static inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
   cf_assert(self);
   if (self->size == 0) return cf_Error_eof;
   self->size--;
-  *(self->buffer + self->size) = '\0';
+  *(self->pointer + self->size) = '\0';
   return cf_Error_ok;
 }
 
@@ -109,7 +129,7 @@ static inline cf_Error cf_StrBuf_removeLast(cf_StrBuf *self) {
 static inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
   cf_assert(self);
   cf_assert(index < self->size);
-  memmove(self->buffer+index, self->buffer+index+1, 1);
+  memmove(self->pointer+index, self->pointer+index+1, 1);
 }
 
 /**
@@ -118,7 +138,7 @@ static inline void cf_StrBuf_remove(cf_StrBuf *self, size_t index) {
 static inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
   cf_assert(self);
   cf_assert(index < self->size);
-  self->buffer[index] = c;
+  self->pointer[index] = c;
 }
 
 /**
@@ -127,7 +147,7 @@ static inline void cf_StrBuf_set(cf_StrBuf *self, size_t index, char c) {
 static inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
   cf_assert(self);
   cf_assert(index < self->size);
-  *c = self->buffer[index];
+  *c = self->pointer[index];
 }
 
 /**
@@ -136,7 +156,7 @@ static inline void cf_StrBuf_get(cf_StrBuf *self, size_t index, char *c) {
 static inline void cf_StrBuf_sub(cf_StrBuf *self, size_t offset, int size, char *out) {
   cf_assert(self);
   cf_assert(offset+size <= self->size);
-  memcpy(self->buffer + offset, out, size);
+  memcpy(self->pointer + offset, out, size);
 }
 
 /**
@@ -150,7 +170,7 @@ static inline void cf_StrBuf_clear(cf_StrBuf *self) {
 /**
  * print format
  */
-cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t size, const char *format, ...);
+cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t hintBuffersize, const char *format, ...);
 
 CF_END
 
