@@ -75,6 +75,20 @@ void cf_StrTest_testCopy(void) {
   cf_free(str2);
 }
 
+void cf_StrTest_testUri(void) {
+  char path[] = "/C:/cfan/test.xml";
+  char out[256];
+
+  cf_StrUri_getBaseName(path, out, 256);
+  cf_verify(cf_Str_equals(out, "test"));
+
+  cf_StrUri_getParentPath(path, out, 256);
+  cf_verify(cf_Str_equals(out, "/C:/cfan/"));
+
+  cf_StrUri_getExtName(path, out, 256);
+  cf_verify(cf_Str_equals(out, "xml"));
+}
+
 void cf_StrTest_register(void) {
   cf_Test_add(cf_StrTest_testToken);
   cf_Test_add(cf_StrTest_testTrim);
@@ -82,5 +96,6 @@ void cf_StrTest_register(void) {
   cf_Test_add(cf_StrTest_testFindIndex);
   cf_Test_add(cf_StrTest_testReplace);
   cf_Test_add(cf_StrTest_testCopy);
+  cf_Test_add(cf_StrTest_testUri);
 }
 

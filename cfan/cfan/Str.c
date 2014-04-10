@@ -94,3 +94,40 @@ char *cf_StrToken_next(cf_StrToken *self) {
   *last = '\0';
   return current;
 }
+
+cf_Error cf_StrUri_getBaseName(const char *self, char *out, int bufferSize) {
+  char *i = strrchr(self, cf_StrUri_separatorChar);
+  char *j = strrchr(self, '.');
+  int n = j-i-1;
+  if (i == NULL || j==NULL || i>j || n+1>bufferSize) {
+    return cf_Error_arg;
+  }
+  memcpy(out, i+1, n);
+  out[n] = 0;
+  return cf_Error_ok;
+}
+
+cf_Error cf_StrUri_getParentPath(const char *self, char *out, int bufferSize) {
+  char *i = strrchr(self, cf_StrUri_separatorChar);
+  int n = i-self+1;
+  if (i == NULL || n+1>bufferSize) {
+    return cf_Error_arg;
+  }
+  memcpy(out, self, n);
+  out[n] = 0;
+  return cf_Error_ok;
+}
+
+cf_Error cf_StrUri_getExtName(const char *self, char *out, int bufferSize) {
+  char *i = strrchr(self, '.');
+  int n;
+  if (i == NULL) return cf_Error_arg;
+
+  n = strlen(i);
+  if (n+1>bufferSize) {
+    return cf_Error_arg;
+  }
+  memcpy(out, i+1, n);
+  out[n] = 0;
+  return cf_Error_ok;
+}

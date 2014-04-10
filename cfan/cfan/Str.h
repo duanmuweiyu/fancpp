@@ -97,6 +97,23 @@ static inline void cf_StrToken_make(cf_StrToken *self, char *src, const char *de
 
 char *cf_StrToken_next(cf_StrToken *self);
 
+
+/*========================================================================
+ * Uri
+ */
+
+#ifdef CF_WIN
+  #define cf_StrUri_separatorChar '\\'
+#else
+  #define cf_StrUri_separatorChar '/'
+#endif
+
+cf_Error cf_StrUri_getBaseName(const char *self, char *out, int bufferSize);
+
+cf_Error cf_StrUri_getParentPath(const char *self, char *out, int bufferSize);
+
+cf_Error cf_StrUri_getExtName(const char *self, char *out, int bufferSize);
+
 CF_END
 
 #endif
