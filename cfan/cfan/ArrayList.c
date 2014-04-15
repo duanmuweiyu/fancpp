@@ -19,12 +19,11 @@ cf_Error cf_ArrayList_reserver_(cf_ArrayList *self) {
 
   cf_check(self->data);
   tmp = cf_realloc(self->data, newCapacity * self->elemSize);
-  cf_check(self->data);
   if (!tmp) {
     CF_EXIT_FUNC
     return cf_Error_alloc;
   }
-
+  cf_check(tmp);
   self->data = (char*)tmp;
   self->capacity = newCapacity;
 
