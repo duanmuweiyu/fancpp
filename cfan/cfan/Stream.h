@@ -12,14 +12,14 @@
 #define _CF_INPUTSTREAM_H_
 
 #include "cfan/Object.h"
+#include "cfan/Endian.h"
 #include <stdio.h>
 
-CF_BEGIN
+#ifdef CF_ENDIAN_LITTLE
+  #define CF_ENDIAN_SWAP
+#endif
 
-enum cf_Endian {
-  cf_Endian_big,
-  cf_Endian_little
-};
+CF_BEGIN
 
 /*========================================================================
  * OutputStream
@@ -42,12 +42,22 @@ static inline cf_Error cf_OutputStream_writeInt8(cf_OutputStream *self, int8_t o
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 1);
 }
 static inline cf_Error cf_OutputStream_writeInt16(cf_OutputStream *self, int16_t out) {
-  return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 2);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap16p(out);
+#endif
+  cf_Error err = CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 2);
+  return err;
 }
 static inline cf_Error cf_OutputStream_writeInt32(cf_OutputStream *self, int32_t out) {
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap32p(out);
+#endif
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 4);
 }
 static inline cf_Error cf_OutputStream_writeInt64(cf_OutputStream *self, int64_t out) {
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap64p(out);
+#endif
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 8);
 }
 
@@ -55,20 +65,39 @@ static inline cf_Error cf_OutputStream_writeUInt8(cf_OutputStream *self, uint8_t
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 1);
 }
 static inline cf_Error cf_OutputStream_writeUInt16(cf_OutputStream *self, uint16_t out) {
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap16p(out);
+#endif
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 2);
 }
 static inline cf_Error cf_OutputStream_writeUInt32(cf_OutputStream *self, uint32_t out) {
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap32p(out);
+#endif
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 4);
 }
 static inline cf_Error cf_OutputStream_writeUInt64(cf_OutputStream *self, uint64_t out) {
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap64p(out);
+#endif
   return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 8);
 }
 
 static inline cf_Error cf_OutputStream_writeFloat(cf_OutputStream *self, float out) {
-  return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 4);
+  char *p = (char*)(&out);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap32p(p);
+#endif
+  cf_assert(sizeof(float) == 4);
+  return CF_ICALL(cf_OutputStream, self, write, p, 4);
 }
 static inline cf_Error cf_OutputStream_writeDouble(cf_OutputStream *self, double out) {
-  return CF_ICALL(cf_OutputStream, self, write, (char*)(&out), 8);
+  char *p = (char*)(&out);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap64p(p);
+#endif
+  cf_assert(sizeof(double) == 8);
+  return CF_ICALL(cf_OutputStream, self, write, p, 8);
 }
 
 /*========================================================================
@@ -92,33 +121,67 @@ static inline cf_Error cf_InputStream_readInt8(cf_OutputStream *self, int8_t *ou
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 1);
 }
 static inline cf_Error cf_InputStream_readInt16(cf_OutputStream *self, int16_t *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 2);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 2);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap16p(out);
+#endif
+  return err;
 }
 static inline cf_Error cf_InputStream_readInt32(cf_OutputStream *self, int32_t *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap32p(out);
+#endif
+  return err;
 }
 static inline cf_Error cf_InputStream_readInt64(cf_OutputStream *self, int64_t *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap64p(out);
+#endif
+  return err;
 }
 
 static inline cf_Error cf_InputStream_readUInt8(cf_OutputStream *self, uint8_t *out) {
   return CF_ICALL(cf_InputStream, self, read, (char *)out, 1);
 }
 static inline cf_Error cf_InputStream_readUInt16(cf_OutputStream *self, uint16_t *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 2);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 2);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap16p(out);
+#endif
+  return err;
 }
 static inline cf_Error cf_InputStream_readUInt32(cf_OutputStream *self, uint32_t *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap32p(out);
+#endif
+  return err;
 }
 static inline cf_Error cf_InputStream_readUInt64(cf_OutputStream *self, uint64_t *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap64p(out);
+#endif
+  return err;
 }
 
 static inline cf_Error cf_InputStream_readFloat(cf_OutputStream *self, float *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 4);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap32p(out);
+#endif
+  cf_assert(sizeof(float) == 4);
+  return err;
 }
 static inline cf_Error cf_InputStream_readDouble(cf_OutputStream *self, double *out) {
-  return CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
+  cf_Error err = CF_ICALL(cf_InputStream, self, read, (char *)out, 8);
+#ifdef CF_ENDIAN_SWAP
+  cf_Endian_swap64p(out);
+#endif
+  cf_assert(sizeof(double) == 8);
+  return err;
 }
 
 CF_END

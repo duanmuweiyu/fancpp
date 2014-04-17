@@ -45,7 +45,8 @@ HEADERS += \
     cfan/System.h \
     cfan/Math.h \
     cfan/Util.h \
-    cfan/HashTable.h
+    cfan/HashTable.h \
+    cfan/Endian.h
 
 SOURCES += \
     cfan/StrBuf.c \
