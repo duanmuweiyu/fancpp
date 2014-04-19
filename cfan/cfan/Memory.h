@@ -50,7 +50,7 @@ void cf_Memory_dumpMem();
 /**
  * check memory overflow.
  */
-void cf_Memory_checkMem();
+void cf_Memory_checkAll();
 
 /**
  * actually do memory check.
@@ -131,7 +131,7 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
 
   #define cf_check(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
   #define cf_dumpMem() cf_Memory_dumpMem()
-  #define cf_checkMem() cf_Memory_checkMem()
+  #define cf_checkAll() cf_Memory_checkAll()
 
   #define cf_checkedMalloc(size) cf_Memory_checkedMalloc(__FILE__, __func__, __LINE__, size)
   #define cf_checkedCalloc(nobj, size) cf_Memory_checkedCalloc(__FILE__, __func__, __LINE__, nobj, size)
@@ -146,7 +146,7 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
 
   #define cf_check(p)
   #define cf_dumpMem()
-  #define cf_checkMem()
+  #define cf_checkAll()
 
   #define cf_checkedMalloc(size) cf_Memory_stdCheckedMalloc(size)
   #define cf_checkedCalloc(nobj, size) cf_Memory_stdCheckedCalloc(nobj, size)

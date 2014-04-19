@@ -208,7 +208,7 @@ void cf_Memory_free(const char *file, const char *func, const unsigned int line,
 #endif
 }
 
-void cf_Memory_checkMem() {
+void cf_Memory_checkAll() {
   cf_MemChunk *chunk;
 #ifndef CF_NO_THREAD_SAFE
   mtx_lock(&cf_Memory_mutex);

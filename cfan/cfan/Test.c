@@ -52,8 +52,8 @@ void cf_Test_run(const char *nameFilter, const int attrFilter) {
   cf_Log_log("test", cf_LogLevel_info
              , "test end: fail %d, total %d, runed %d", errCount, n, count);
   if (errCount > 0) {
-    cf_Log_log("test", cf_LogLevel_info, "test fail");
+    cf_Log_log("test", cf_LogLevel_info, "========test FAIL========");
   } else {
-    cf_Log_log("test", cf_LogLevel_info, "test success");
+    cf_Log_log("test", cf_LogLevel_info, "========test SUCCESS========");
   }
 }
