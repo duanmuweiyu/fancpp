@@ -26,9 +26,9 @@
 #undef cf_realloc
 #undef cf_free
 
-#undef cf_check
-#undef cf_dumpMem
 #undef cf_checkMem
+#undef cf_dumpMem
+#undef cf_checkAllMem
 
 #undef cf_checkedMalloc
 #undef cf_checkedCalloc
@@ -42,9 +42,9 @@
 #define cf_realloc(nobj, size) realloc(nobj, size)
 #define cf_free(p) free(p)
 
-#define cf_check(p)
+#define cf_checkMem(p)
 #define cf_dumpMem()
-#define cf_checkMem()
+#define cf_checkAllMem()
 
 #define cf_checkedMalloc(size) cf_Memory_stdCheckedMalloc(size)
 #define cf_checkedCalloc(nobj, size) cf_Memory_stdCheckedCalloc(nobj, size)

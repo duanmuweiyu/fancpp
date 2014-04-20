@@ -90,7 +90,7 @@ static inline cf_Error cf_ArrayList_add(cf_ArrayList *self, void *elem) {
     err = cf_ArrayList_reserver_(self);
     if (err) { CF_EXIT_FUNC return err; }
   }
-  cf_check(self->data);
+  cf_checkMem(self->data);
 
   cf_memcpy((char*)self->data + (self->size * self->elemSize), elem, self->elemSize);
   self->size++;

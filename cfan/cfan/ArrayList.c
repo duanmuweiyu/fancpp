@@ -17,13 +17,13 @@ cf_Error cf_ArrayList_reserver_(cf_ArrayList *self) {
   CF_ENTRY_FUNC
   cf_assert(self);
 
-  cf_check(self->data);
+  cf_checkMem(self->data);
   tmp = cf_realloc(self->data, newCapacity * self->elemSize);
   if (!tmp) {
     CF_EXIT_FUNC
     return cf_Error_alloc;
   }
-  cf_check(tmp);
+  cf_checkMem(tmp);
   self->data = (char*)tmp;
   self->capacity = newCapacity;
 

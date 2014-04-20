@@ -77,7 +77,7 @@ void cf_StrBufTest_testAddOverflow(void) {
     cf_StrBuf_add(strBuf, str2, -1);
   }
 
-  cf_check(strBuf);
+  cf_checkMem(strBuf);
 
   cf_verify(strBuf->size == 600);
 

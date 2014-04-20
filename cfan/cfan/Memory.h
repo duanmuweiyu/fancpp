@@ -129,9 +129,9 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
   #define cf_realloc(p, size) cf_Memory_realloc(p, size)
   #define cf_free(p) cf_Memory_free(__FILE__, __func__, __LINE__, p)
 
-  #define cf_check(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
+  #define cf_checkMem(p) cf_Memory_check(__FILE__, __func__, __LINE__, p)
   #define cf_dumpMem() cf_Memory_dumpMem()
-  #define cf_checkAll() cf_Memory_checkAll()
+  #define cf_checkAllMem() cf_Memory_checkAll()
 
   #define cf_checkedMalloc(size) cf_Memory_checkedMalloc(__FILE__, __func__, __LINE__, size)
   #define cf_checkedCalloc(nobj, size) cf_Memory_checkedCalloc(__FILE__, __func__, __LINE__, nobj, size)
@@ -144,9 +144,9 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
   #define cf_realloc(nobj, size) realloc(nobj, size)
   #define cf_free(p) free(p)
 
-  #define cf_check(p)
+  #define cf_checkMem(p)
   #define cf_dumpMem()
-  #define cf_checkAll()
+  #define cf_checkAllMem()
 
   #define cf_checkedMalloc(size) cf_Memory_stdCheckedMalloc(size)
   #define cf_checkedCalloc(nobj, size) cf_Memory_stdCheckedCalloc(nobj, size)

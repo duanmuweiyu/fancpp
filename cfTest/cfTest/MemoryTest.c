@@ -55,7 +55,7 @@ void cf_MemoryTest_testAll(void) {
   puts("**********");
   cf_dumpMem();
 
-  cf_checkAll();
+  cf_checkAllMem();
 
   CF_EXIT_FUNC
 }

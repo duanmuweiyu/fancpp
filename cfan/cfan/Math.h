@@ -19,6 +19,9 @@
 
 #define cf_Math_round(f) ((int)(f+0.5))
 
+#define cf_Math_toRadians(f) ((f)/180.0*cf_Math_pi)
+
+#define cf_Math_toDegrees(f) ((f)/cf_Math_pi*180.0)
 
 static inline bool cf_Math_isPowerOf2(uint32_t x) {
   return !(x & (x-1));
