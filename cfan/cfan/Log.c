@@ -14,6 +14,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __ANDROID__
+  #include <android/log.h>
+#endif
+
 #ifndef CF_NOLOG
   cf_LogLevel cf_Log_level = cf_LogLevel_debug;
 #else
@@ -52,11 +56,43 @@ bool cf_Log_isEnableLevel(cf_LogLevel level) {
   return level >= cf_Log_level;
 }
 
+#ifdef __ANDROID__
+static int getAndroidLogLevel(const cf_LogLevel level) {
+  switch (level) {
+    case cf_LogLevel_debug: {
+        return ANDROID_LOG_DEBUG;
+    }
+    case cf_LogLevel_info: {
+        return ANDROID_LOG_INFO;
+    }
+    case cf_LogLevel_warn: {
+        return ANDROID_LOG_WARN;
+    }
+    case cf_LogLevel_err: {
+        return ANDROID_LOG_ERROR;
+    }
+    default: {
+        return ANDROID_LOG_VERBOSE;
+    }
+  }
+}
+#endif
+
 void cf_Log_print(cf_Log_Listener *self, const char *tag, const char *file, const char *func, const unsigned int line
                   , const cf_LogLevel level, const char *msg) {
+#ifdef __ANDROID__
+  int androidLevel;
+#endif
+
   printf("%s:%c(%s,%d) %s\n", tag, cf_LogLevel_str[level][0], func, line, msg);
   CF_UNUSED(self);
   CF_UNUSED(file);
+
+#ifdef __ANDROID__
+  androidLevel = getAndroidLogLevel(level);
+  __android_log_print(androidLevel, tag, "(%s,%d) %s\n", func, line, msg);
+#endif
+  fflush(stdout);
 }
 
 void cf_Log_doLog(const char *tag, const char *file, const char *func, const unsigned int line

@@ -175,7 +175,7 @@ cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t hintBuffersize, const char *fo
 #ifdef CF_WIN
   while (rc == (int)(size-1)) {
     size *= 2;
-    if (size > 10E9) break;
+    if (size > 1E9) break;
     err = cf_StrBuf_reserver_(self, size);
     if (err) { va_end(args); CF_EXIT_FUNC return err; }
     va_end(args);

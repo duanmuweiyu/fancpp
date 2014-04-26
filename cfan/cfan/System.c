@@ -21,7 +21,7 @@
       clock_get_time(cclock, &mts);
       mach_port_deallocate(mach_task_self(), cclock);
 
-      return (mts.tv_sec * 10E9) + mts.tv_nsec;
+      return (mts.tv_sec * 1E9) + mts.tv_nsec;
   }
 #else
   #include <sys/timeb.h>
@@ -30,7 +30,7 @@
   //  return clock() / (CLOCKS_PER_SECOND * 1000);
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (ts.tv_sec * 10E9) + ts.tv_nsec;
+    return (ts.tv_sec * 1E9) + ts.tv_nsec;
   }
 #endif
 
@@ -69,7 +69,7 @@ uint64_t cf_System_nanoTicks() {
   LARGE_INTEGER m_nFreq;
   QueryPerformanceFrequency(&m_nFreq);
   QueryPerformanceCounter(&m_nBeginTime);
-  return (m_nBeginTime.QuadPart*10E9)/m_nFreq.QuadPart;
+  return (m_nBeginTime.QuadPart*1E9)/m_nFreq.QuadPart;
 }
 
 uint64_t cf_System_currentTimeMillis() {

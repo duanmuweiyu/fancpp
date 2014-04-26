@@ -2,6 +2,7 @@
 #define _CF_MATH_H_
 
 #include "cfan/macro.h"
+#include "cfan/miss.h"
 
 /*========================================================================
  * Math
@@ -22,6 +23,12 @@
 #define cf_Math_toRadians(f) ((f)/180.0*cf_Math_pi)
 
 #define cf_Math_toDegrees(f) ((f)/cf_Math_pi*180.0)
+
+/**
+ * approximately equal.
+ * if tolerance is -1, then it is computed using the magnitude.
+ */
+bool cf_Math_approx(double a, double b, double tolerance);
 
 static inline bool cf_Math_isPowerOf2(uint32_t x) {
   return !(x & (x-1));

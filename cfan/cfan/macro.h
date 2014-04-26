@@ -84,4 +84,4 @@
 #define CF_STATIC_CAST(type, dst) ((type)(dst))
 #define CF_REINTERPRET_CAST(type, dst) (*(((type) *)(&(dst))))
 
-#endif
+#endif //_CF_MACRO_H_
