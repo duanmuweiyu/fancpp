@@ -1,6 +1,7 @@
 
 #include "cfan/Str.h"
 
+const char *cf_Str_empty = "";
 
 long cf_Str_lastIndex(const char *self, const char *s) {
   const char *pos;

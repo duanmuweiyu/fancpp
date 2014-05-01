@@ -25,6 +25,8 @@ CF_BEGIN
 extern int strcasecmp (__const char *__s1, __const char *__s2);
 #endif
 
+extern const char *cf_Str_empty;
+
 /**
  * Return if this string contains the specified string.
  */
@@ -77,6 +79,13 @@ static inline char *cf_Str_dup(const char *self) {
   s = (char *)cf_malloc(n+1);
   strcpy(s, self);
   return s;
+}
+
+static inline void cf_Str_free(char *self) {
+  if (self == NULL) return;
+  if (self != cf_Str_empty) {
+    cf_free(self);
+  }
 }
 
 /*========================================================================

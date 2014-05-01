@@ -98,7 +98,7 @@ cf_Error cf_HashTable_get(cf_HashTable *self, const void * key
        ; elem != NULL && elem->used; elem = elem->next) {
     if (self->compFunc(key, getKey(self, elem), self->keySize) == 0) {
       if (oldKey) copyKey(self, oldKey, getKey(self, elem));
-      copyValue(self, oldValue, getValue(self, elem));
+      if (oldValue) copyValue(self, oldValue, getValue(self, elem));
       return cf_Error_ok;
     }
   }

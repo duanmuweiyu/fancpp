@@ -82,6 +82,10 @@ cf_Error HashMap##_make(HashMap *self, size_t size);\
  */\
 cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue);\
 \
+static inline bool HashMap##_contains(HashMap *self, K key) {\
+  return HashMap##_get(self, key, NULL, NULL) == cf_Error_ok;\
+}\
+\
 /**\
  * put\
  *\
@@ -146,7 +150,7 @@ cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue) {\
   for (elem = self->table + (cf_hashFunc(self, key) % self->tableSize); elem != NULL && elem->used; elem = elem->next) {\
     if (cf_compFunc(self, key, elem->key) == 0) {\
       if (oldKey) *oldKey = elem->key;\
-      *oldValue = elem->value;\
+      if (oldValue) *oldValue = elem->value;\
       return cf_Error_ok;\
     }\
   }\

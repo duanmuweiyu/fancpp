@@ -71,6 +71,14 @@ cf_Error cf_HashTable_get(cf_HashTable *self, const void * key
                           , void *oldKey, void *oldValue);
 
 /**
+ * return true if contains key
+ *
+ */
+static inline bool cf_HashTable_contains(cf_HashTable *self, const void * key) {
+  return cf_HashTable_get(self, key, NULL, NULL) == cf_Error_ok;
+}
+
+/**
  * put
  *
  */

@@ -35,7 +35,7 @@ typedef struct cf_Object_ {
 } cf_Object;
 
 #define cf_Object_addRef(self) (((cf_Object*)(self))->refCount++)
-static inline bool cf_Object_canRelease(cf_Object *self) {
+static inline bool cf_Object_canDispose(cf_Object *self) {
   return self->refCount == 0;
 }
 
