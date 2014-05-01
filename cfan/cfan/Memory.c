@@ -175,7 +175,7 @@ void *cf_Memory_realloc(void *p, size_t size) {
 
 void cf_Memory_free(const char *file, const char *func, const unsigned int line, void *p) {
   cf_MemChunk *chunk;
-  cf_assert(p);
+  if (p == NULL) return;
 
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
   cf_Memory_check(file, func, line, p);
