@@ -18,7 +18,7 @@ class Build : BuildGroup
     [
       `cfan/buildTinyCThread.fan`,
       `cfan/build.fan`,
-      `cfTest/build.fan`,
+      `cfan/buildCfTest.fan`,
     ]
   }
 }
