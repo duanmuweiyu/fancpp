@@ -91,7 +91,6 @@ cf_Error cf_HashTable_get(cf_HashTable *self, const void * key
   size_t hashValue;
 
   cf_assert(self);
-  cf_assert(oldValue);
 
   hashValue = self->hashFunc(key, self->keySize) % self->tableSize;
   for (elem = getAt(self, hashValue)

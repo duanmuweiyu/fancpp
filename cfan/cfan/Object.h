@@ -34,6 +34,11 @@ typedef struct cf_Object_ {
   int refCount; //defaul is 0
 } cf_Object;
 
+static inline void cf_Object_make(cf_Object *self, cf_VTable *vtable) {
+  self->vtable = vtable;
+  self->refCount = 0;
+}
+
 #define cf_Object_addRef(self) (((cf_Object*)(self))->refCount++)
 static inline bool cf_Object_canDispose(cf_Object *self) {
   return self->refCount == 0;

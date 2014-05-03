@@ -145,7 +145,6 @@ cf_Error HashMap##_get(HashMap *self, K key, K *oldKey, V *oldValue) {\
   HashMap##Elem *elem;\
 \
   cf_assert(self);\
-  cf_assert(oldValue);\
 \
   for (elem = self->table + (cf_hashFunc(self, key) % self->tableSize); elem != NULL && elem->used; elem = elem->next) {\
     if (cf_compFunc(self, key, elem->key) == 0) {\

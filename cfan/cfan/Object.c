@@ -3,6 +3,8 @@
 #include "cfan/Memory.h"
 
 cf_Object *cf_Object_release(cf_Object *self) {
+  if (self == NULL) return NULL;
+
   cf_assert(self->refCount >= 0);
   if (--self->refCount < 0) {
     if (self->vtable && self->vtable->destructor) {

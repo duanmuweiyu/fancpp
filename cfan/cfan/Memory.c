@@ -231,8 +231,8 @@ void cf_Memory_dumpMem() {
   printf("memory dump:\n");
   for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
-    printf("func:%s(%s), line:%d, size:%ld\n"
-      , chunk->func, chunk->trace, chunk->line, chunk->size);
+    printf("file:%s(%s), line:%d, size:%ld\n"
+      , chunk->file, chunk->trace, chunk->line, chunk->size);
   }
   printf("end memory dump\n");
 #ifndef CF_NO_THREAD_SAFE
