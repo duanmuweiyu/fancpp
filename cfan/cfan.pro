@@ -12,6 +12,8 @@ QMAKE_CC += -Wall -Werror
 DEFINES += CF_EXPORT
 DEFINES += DEBUG
 
+unix: LIBS += -lrt
+
 HEADERS += \
     cfan/Stream.h \
     cfan/StrBuf.h \

@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_LogTest_register(void);
 void cf_ArrayTest_register(void);
 void cf_ArrayListTest_register(void);
@@ -82,3 +84,4 @@ int main(int argc, char **argv) {
   return 0;
 }
 
+CF_END

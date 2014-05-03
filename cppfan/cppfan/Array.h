@@ -12,43 +12,50 @@ class Array : public Object {
   int _size;
 public:
   Array(int capacity) : capacity(capacity), _size(0) {
-    data = cf_malloc(sizeof(T)*capacity);
+    data = (T*)cf_malloc(sizeof(T)*capacity);
   }
 
   ~Array() {
-    delete[] data;
+    for (int i=0; i<_size; ++i) {
+      (data+i)->~T();
+    }
+    cf_free(data);
   }
 
   int size() const { return _size; }
 
-  T &get(int i) const { return data[i]; }
+  T &get(int i) const { cf_assert(i<_size); return data[i]; }
 
   T &operator[] (const int i) const { return get(i); }
 
-  Array &Array::add(T &t) {
-    if (_size = capacity) {
+  Array &add(T &t) {
+    if (_size == capacity) {
       addCapacity(1);
     }
-    data[_size++] = t;
+    cf_assert(_size < capacity);
+    //memcpy(data+_size, &t, sizeof(T));
+    new (data+_size) T();
+    data[_size] = t;
+    _size++;
     return *this;
   }
 
   bool reserver(int capacity) {
     if (this->capacity >= capacity) return true;
-    char *tmp = cf_realloc(data, capacity);
+    void *tmp = cf_realloc(data, capacity);
     if (tmp == NULL) return false;
-    data = tmp;
+    data = (T*)tmp;
     this->capacity = capacity;
     return true;
   }
 
 private:
-  void addCapacity(int add) {
-    int nsize;
+  void addCapacity(int minAdd) {
+    int nsize = 0;
     if (capacity>1E6) {
-      nsize += capacity*3/3+add;
+      nsize += capacity*3/3+minAdd;
     } else {
-      nsize += capacity*2 + add;
+      nsize += capacity*2 + minAdd;
     }
     cf_assert(reserver(nsize));
   }

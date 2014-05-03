@@ -18,12 +18,15 @@ HEADERS += \
     cppfan/HashMap.h \
     cppfan/common.h \
     cppfan/AutoPtr.h \
-    cppfan/Array.h
+    cppfan/Array.h \
+    cppfan/Test.h \
+    cppfan/cppfan.h
 
 SOURCES += \
     cppfan/String.cpp \
     cppfan/Object.cpp \
-    cppfan/MemPool.cpp
+    cppfan/MemPool.cpp \
+    cppfan/Test.cpp
 
 LIBS += -pthread
 
