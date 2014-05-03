@@ -8,4 +8,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     cfan/cfan.pro \
-    cfTest/cfTest.pro
+    cfan/cfTest.pro \
+    cfan/cppfan.pro \

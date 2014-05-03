@@ -88,4 +88,8 @@
   #define cf_compareAndSwap __sync_bool_compare_and_swap
 #endif
 
+#ifndef offsetof
+  #define offsetof(s, m)   (size_t)&(((s *)0)->m)
+#endif
+
 #endif //_CF_MISS_H_
