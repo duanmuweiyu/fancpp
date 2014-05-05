@@ -4,7 +4,6 @@ CF_USING_NAMESPACE
 
 class MemoryTestSuperObj : public Object {
 public:
-  CF_OVERRIDE_NEW
   int val;
   MemoryTestSuperObj() { puts("superObj ctor"); }
   ~MemoryTestSuperObj() { puts("superObj dector"); }
@@ -12,8 +11,7 @@ public:
 
 class MemoryTestObj : public MemoryTestSuperObj {
 public:
-  CF_OVERRIDE_NEW
-  int val;
+  int val2;
   MemoryTestObj() { puts("Obj ctor"); }
   ~MemoryTestObj() { puts("Obj dector"); }
 };
