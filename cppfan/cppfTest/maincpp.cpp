@@ -28,7 +28,9 @@ int main(int argc, char **argv) {
   cf_Trace_init();
 
   //run test
-  Test::getInstance().run(name);
+  cf_Test_init();
+  cf_Test_run(name, 0);
+  cf_Test_dispose();
 
   cf_Trace_printTrace();
   cf_Trace_printPerformance();

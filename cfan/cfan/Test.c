@@ -15,13 +15,18 @@ cf_ArrayTemplate_impl(cf_ArrayTest, cf_Test)
 
 cf_ArrayTest testList;
 long cf_Test_errorCount = 0;
+bool cf_Test_inited = false;
 
 void cf_Test_init(void) {
+  if (cf_Test_inited) return;
   cf_ArrayTest_make(&testList, 0, 100);
+  cf_Test_inited = true;
 }
 
 void cf_Test_dispose() {
+  if (!cf_Test_inited) return;
   cf_ArrayTest_dispose(&testList);
+  cf_Test_inited = false;
 }
 
 void cf_Test_run(const char *nameFilter, const int attrFilter) {

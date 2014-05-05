@@ -166,7 +166,8 @@ CF_END
   #ifdef CF_DEBUG
     #include <new>
     #define CF_OVERRIDE_NEW \
-      void* operator new(size_t sz, void *buf) throw (std::bad_alloc) {\
+      void* operator new(size_t sz, void *buf = NULL) throw (std::bad_alloc) {\
+        if (buf) return buf;\
         void* mem = cf_Memory_malloc(__FILE__, __func__, __LINE__, sz);\
         if (mem) return mem;\
         else throw std::bad_alloc();\
@@ -176,7 +177,8 @@ CF_END
         cf_Memory_free(__FILE__, __func__, __LINE__, ptr);\
       }\
       \
-      void* operator new[](size_t sz, void *buf) throw (std::bad_alloc) {\
+      void* operator new[](size_t sz, void *buf = NULL) throw (std::bad_alloc) {\
+        if (buf) return buf;\
         void* mem = cf_Memory_malloc(__FILE__, __func__, __LINE__, sz);\
         if (mem) return mem;\
         else throw std::bad_alloc();\
@@ -185,8 +187,19 @@ CF_END
       void operator delete[](void* ptr) throw() {\
         cf_Memory_free(__FILE__, __func__, __LINE__, ptr);\
       }\
+  \
+      void* operator new(size_t sz, const char *file, const char *func, const unsigned int line) throw (std::bad_alloc) {\
+        void* mem = cf_Memory_malloc(file, func, line, sz);\
+        if (mem) return mem;\
+        else throw std::bad_alloc();\
+      }\
+      void* operator new[](size_t sz, const char *file, const char *func, const unsigned int line) throw (std::bad_alloc) {\
+        void* mem = cf_Memory_malloc(file, func, line, sz);\
+        if (mem) return mem;\
+        else throw std::bad_alloc();\
+      }
 
-  #define CF_NEW new(NULL)
+  #define CF_NEW new(__FILE__, __func__, __LINE__)
   #else
     #define CF_OVERRIDE_NEW
     #define CF_NEW new

@@ -8,6 +8,7 @@ CF_BEGIN_NAMESPACE
 class Object {
   int refCount;
 public:
+  CF_OVERRIDE_NEW
   Object() : refCount(0) {}
   virtual ~Object() {}
 

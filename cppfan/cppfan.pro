@@ -25,8 +25,7 @@ HEADERS += \
 SOURCES += \
     cppfan/String.cpp \
     cppfan/Object.cpp \
-    cppfan/MemPool.cpp \
-    cppfan/Test.cpp
+    cppfan/MemPool.cpp
 
 LIBS += -pthread
 

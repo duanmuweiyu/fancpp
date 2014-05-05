@@ -5,7 +5,7 @@
 
 CF_BEGIN_NAMESPACE
 
-template<class T>
+template<typename T>
 class LinkedList : public Object {
   T *head;
   T *tail;
