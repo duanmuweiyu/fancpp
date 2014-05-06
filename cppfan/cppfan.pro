@@ -13,7 +13,6 @@ DEFINES += DEBUG
 HEADERS += \
     cppfan/String.h \
     cppfan/Object.h \
-    cppfan/MemPool.h \
     cppfan/LinkedList.h \
     cppfan/HashMap.h \
     cppfan/common.h \
@@ -24,8 +23,7 @@ HEADERS += \
 
 SOURCES += \
     cppfan/String.cpp \
-    cppfan/Object.cpp \
-    cppfan/MemPool.cpp
+    cppfan/Object.cpp
 
 LIBS += -pthread
 

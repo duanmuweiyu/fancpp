@@ -5,5 +5,6 @@
 #include "cppfan/Test.h"
 #include "cppfan/Array.h"
 #include "cppfan/LinkedList.h"
+#include "cppfan/HashMap.h"
 
 #endif // _CPPF_CPPFAN_H_

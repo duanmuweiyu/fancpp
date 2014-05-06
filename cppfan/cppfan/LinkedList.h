@@ -51,6 +51,32 @@ public:
     ++length;
   }
 
+  T *getAt(int index) {
+    int i=0;
+    T *t = head;
+    while (t) {
+      if (i == index) {
+        return t;
+      }
+      t = t->next;
+      ++i;
+    }
+    return NULL;
+  }
+
+  void insertBefore(T *val, T *pos) {
+    cf_assert(head);
+    if (pos == head) {
+      insertFirst(val);
+      return;
+    }
+    pos->previous->next = val;
+    val->previous = pos->previous;
+    val->next = pos;
+    pos->previous = val;
+    ++length;
+  }
+
   bool remove(T *val) {
     if (val == head) {
       head = val->next;

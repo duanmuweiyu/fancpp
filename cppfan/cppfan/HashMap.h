@@ -2,18 +2,17 @@
 #define _CPPF_HASHMAP_H_
 
 #include "cppfan/Object.h"
-#include "cppfan/MemPool.h"
 #include "cppfan/LinkedList.h"
 
 CF_BEGIN_NAMESPACE
 
 template<class K>
-class HashFunc {
-public:
+struct HashFunc {
   unsigned int operator()(K &key) {
     int s = sizeof(K);
-    unsigned char *str = (char*)(&key);
+    unsigned char *str = (unsigned char*)(&key);
     unsigned int hashValue;
+    int i;
     for (hashValue = 0, i=0; i<s; ++i) {
       hashValue = *(str) + 31 * hashValue;
     }
@@ -21,25 +20,44 @@ public:
   }
 };
 
-template<class K, class V, class hashFunc=HashFunc<K> >
+template<>
+struct HashFunc<int> {
+  unsigned int operator()(int &key) {
+    return key;
+  }
+};
+
+template<typename K, typename V, typename hashFunc=HashFunc<K> >
 class HashMap : public Object {
-  class HashMapElem {
+  struct HashMapElem {
     K key;
     V val;
     HashMapElem *next;
     HashMapElem *previous;
   };
   LinkedList<HashMapElem> *table;
-  MemPool memPool;
+  cf_MemoryPool memPool;
   int _size;
   int tableSize;
 public:
-  HashMap(int tableSize) : tableSize(tableSize), _size(0), memPool(sizeof(HashMapElem), tableSize) {
+  HashMap(int tableSize) : tableSize(tableSize), _size(0) {
     table = new LinkedList<HashMapElem>[tableSize];
+    cf_MemoryPool_make(&memPool, sizeof(HashMapElem), tableSize);
   }
 
   ~HashMap() {
+    for (int i=0; i<tableSize; ++i) {
+      LinkedList<HashMapElem> *list = table+i;
+      HashMapElem *elem = list->first();
+      HashMapElem *next;
+      while (elem) {
+        next = elem->next;
+        free(elem);
+        elem = next;
+      }
+    }
     delete[] table;
+    cf_MemoryPool_dispose(&memPool);
   }
 
   int size() { return _size; }
@@ -54,15 +72,23 @@ public:
     }
     return NULL;
   }
-  V *operator[](K &key) { return get(key); }
 
-  void set(K &key, V &val) {
+  V &operator[](K &key) {
+    V *v = get(key);
+    if (v == NULL) {
+      V nv;
+      return set(key, nv);
+    }
+    return *v;
+  }
+
+  V &set(K &key, V &val) {
     LinkedList<HashMapElem> &link = table[hash(key)];
     HashMapElem *elem = link.first();
     while (elem) {
       if (elem->key == key) {
         elem->val = val;
-        return;
+        return elem->val;
       }
       elem = elem->next;
     }
@@ -71,8 +97,8 @@ public:
     elem->val = val;
     ++_size;
     link.add(elem);
+    return elem->val;
   }
-  void operator[](K &key, V &val) { set(key, val); }
 
   bool contains(K &key) {
     HashMapElem *elem = first(key);
@@ -100,7 +126,8 @@ public:
 
 private:
   unsigned int hash(K &key) {
-    return hashFunc(key) % _size;
+    hashFunc func;
+    return func(key) % tableSize;
   }
 
   HashMapElem *first(K &key) {
@@ -108,11 +135,13 @@ private:
   }
 
   HashMapElem *alloc() {
-    return new (memPool.alloc()) HashMapElem;
+    void *p = cf_MemoryPool_alloc(&memPool);
+    return new (p) HashMapElem;
   }
 
   void free(HashMapElem *elem) {
     elem->~HashMapElem();
+    cf_MemoryPool_free(&memPool, elem);
   }
 };
 
