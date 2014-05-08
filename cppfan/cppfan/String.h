@@ -13,8 +13,11 @@ class String {
   int length;
 public:
   String(const char *cstr) {
-    data = (char*)(cstr);
     length = strlen(cstr);
+    char *s = (char*)cf_malloc(length+1);
+    strcpy(s, cstr);
+    data.setRawPtr(s);
+    data.isDelete = false;
   }
 
   int size() const { return length; }
@@ -27,17 +30,10 @@ public:
   double toDouble() const { return atof(str()); }
 };
 
-bool operator== (const String& l, const String& r) {
+static inline bool operator== (const String& l, const String& r) {
   return strcmp(l.str(), r.str()) == 0;
 }
 
-String operator+ (const String& l, const String& r) {
-  int len = l.size() + r.size();
-  char *d = (char*)malloc(len+1);
-  strcpy(d, l.str());
-  strcat(d, r.str());
-  return d;
-}
 
 CF_END_NAMESPACE
 #endif // STRING_H

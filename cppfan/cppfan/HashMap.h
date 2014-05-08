@@ -40,7 +40,7 @@ class HashMap : public Object {
   int _size;
   int tableSize;
 public:
-  HashMap(int tableSize) : tableSize(tableSize), _size(0) {
+  HashMap(int tableSize) : _size(0), tableSize(tableSize) {
     table = new LinkedList<HashMapElem>[tableSize];
     cf_MemoryPool_make(&memPool, sizeof(HashMapElem), tableSize);
   }
@@ -112,9 +112,11 @@ public:
   }
 
   bool remove(K &key) {
-    HashMapElem *elem = first(key);
+    LinkedList<HashMapElem> &link = table[hash(key)];
+    HashMapElem *elem = link.first();
     while (elem) {
       if (elem->key == key) {
+        link.remove(elem);
         free(elem);
         --_size;
         return true;

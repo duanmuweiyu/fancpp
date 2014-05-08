@@ -33,3 +33,13 @@ CF_DEF_TEST(HashMapTest_testInt) {
 
   cf_verify(t == 10);
 }
+
+CF_DEF_TEST(HashMapTest_testRemove) {
+  HashMap<int, int> map(4);
+  int key = 1;
+  map[key] = 10;
+
+  cf_verify(map.contains(key));
+  map.remove(key);
+  cf_verify(!map.contains(key));
+}

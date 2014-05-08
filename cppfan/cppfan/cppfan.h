@@ -6,5 +6,7 @@
 #include "cppfan/Array.h"
 #include "cppfan/LinkedList.h"
 #include "cppfan/HashMap.h"
+#include "cppfan/AutoPtr.h"
+#include "cppfan/String.h"
 
 #endif // _CPPF_CPPFAN_H_

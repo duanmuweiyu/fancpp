@@ -16,7 +16,9 @@ SOURCES += \
     cppfTest/HashMapTest.cpp \
     cppfTest/LinkedListTest.cpp \
     cppfTest/maincpp.cpp \
-    cppfTest/MemoryTest.cpp
+    cppfTest/MemoryTest.cpp \
+    cppfTest/AutoPtrTest.cpp \
+    cppfTest/StringTest.cpp
 
 LIBS += -pthread
 
