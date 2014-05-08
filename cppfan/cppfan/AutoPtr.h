@@ -59,6 +59,7 @@ public:
 
 private:
   void free(T *d) {
+    if (d == NULL) return;
     if (isDelete) {
       delete d;
     } else {

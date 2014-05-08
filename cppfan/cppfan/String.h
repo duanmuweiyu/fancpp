@@ -12,6 +12,9 @@ class String {
   AutoPtr<char> data;
   int length;
 public:
+  String() : length(0) {
+  }
+
   String(const char *cstr) {
     length = strlen(cstr);
     char *s = (char*)cf_malloc(length+1);
@@ -21,6 +24,7 @@ public:
   }
 
   int size() const { return length; }
+  bool isEmpty() const { return length == 0; }
 
   const char *str() const { return ((String*)this)->data.getRawPtr(); }
   char *str() { return data.getRawPtr(); }
