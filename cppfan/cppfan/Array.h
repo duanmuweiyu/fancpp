@@ -28,6 +28,11 @@ public:
   }
 
   int size() const { return _size; }
+  void _setSize(int n) {
+    if (n <= capacity) {
+      _size = n;
+    }
+  }
 
   T &get(int i) const { cf_assert(i<_size); return data[i]; }
 

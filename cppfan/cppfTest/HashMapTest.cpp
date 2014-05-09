@@ -27,19 +27,17 @@ CF_DEF_TEST(HashMapTest_testObj) {
 
 CF_DEF_TEST(HashMapTest_testInt) {
   HashMap<int, int> map(4);
-  int key = 1;
-  map[key] = 10;
-  int t = map[key];
+  map[1] = 10;
+  int t = map[1];
 
   cf_verify(t == 10);
 }
 
 CF_DEF_TEST(HashMapTest_testRemove) {
   HashMap<int, int> map(4);
-  int key = 1;
-  map[key] = 10;
+  map[1] = 10;
 
-  cf_verify(map.contains(key));
-  map.remove(key);
-  cf_verify(!map.contains(key));
+  cf_verify(map.contains(1));
+  map.remove(1);
+  cf_verify(!map.contains(1));
 }

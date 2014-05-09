@@ -8,7 +8,7 @@ CF_BEGIN_NAMESPACE
 
 template<class K>
 struct HashFunc {
-  unsigned int operator()(K &key) {
+  unsigned int operator()(const K &key) {
     int s = sizeof(K);
     unsigned char *str = (unsigned char*)(&key);
     unsigned int hashValue;
@@ -22,7 +22,7 @@ struct HashFunc {
 
 template<>
 struct HashFunc<int> {
-  unsigned int operator()(int &key) {
+  unsigned int operator()(const int &key) {
     return key;
   }
 };
@@ -62,10 +62,10 @@ public:
 
   int size() { return _size; }
 
-  V *get(K &key) {
+  V *get(const K &key) {
     HashMapElem *elem = first(key);
     while (elem) {
-      if (elem->key == key) {
+      if (elem->key == (K &)key) {
         return &elem->val;
       }
       elem = elem->next;
@@ -73,7 +73,7 @@ public:
     return NULL;
   }
 
-  V &operator[](K &key) {
+  V &operator[](const K &key) {
     V *v = get(key);
     if (v == NULL) {
       V nv;
@@ -82,11 +82,11 @@ public:
     return *v;
   }
 
-  V &set(K &key, V &val) {
+  V &set(const K &key, V &val) {
     LinkedList<HashMapElem> &link = table[hash(key)];
     HashMapElem *elem = link.first();
     while (elem) {
-      if (elem->key == key) {
+      if (elem->key == (K &)key) {
         elem->val = val;
         return elem->val;
       }
@@ -100,7 +100,7 @@ public:
     return elem->val;
   }
 
-  bool contains(K &key) {
+  bool contains(const K &key) {
     HashMapElem *elem = first(key);
     while (elem) {
       if (elem->key == key) {
@@ -111,7 +111,7 @@ public:
     return false;
   }
 
-  bool remove(K &key) {
+  bool remove(const K &key) {
     LinkedList<HashMapElem> &link = table[hash(key)];
     HashMapElem *elem = link.first();
     while (elem) {
@@ -127,12 +127,12 @@ public:
   }
 
 private:
-  unsigned int hash(K &key) {
+  unsigned int hash(const K &key) {
     hashFunc func;
     return func(key) % tableSize;
   }
 
-  HashMapElem *first(K &key) {
+  HashMapElem *first(const K &key) {
     return table[hash(key)].first();
   }
 
