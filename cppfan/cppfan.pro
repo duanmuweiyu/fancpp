@@ -19,7 +19,8 @@ HEADERS += \
     cppfan/AutoPtr.h \
     cppfan/Array.h \
     cppfan/Test.h \
-    cppfan/cppfan.h
+    cppfan/cppfan.h \
+    cppfan/ObjectRef.h
 
 SOURCES += \
     cppfan/String.cpp \

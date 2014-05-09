@@ -11,6 +11,9 @@ class Array : public Object {
   int capacity;
   int _size;
 public:
+  Array() : data(NULL), capacity(0), _size(0) {
+  }
+
   Array(int capacity) : capacity(capacity), _size(0) {
     data = (T*)cf_malloc(sizeof(T)*capacity);
   }
@@ -34,6 +37,8 @@ public:
     }
   }
 
+  T *getPointer() { return data; }
+
   T &get(int i) const { cf_assert(i<_size); return data[i]; }
 
   T &operator[] (const int i) const { return get(i); }
@@ -50,7 +55,12 @@ public:
 
   bool reserver(int capacity) {
     if (this->capacity >= capacity) return true;
-    void *tmp = cf_realloc(data, sizeof(T)*capacity);
+    void *tmp;
+    if (data) {
+      tmp = cf_realloc(data, sizeof(T)*capacity);
+    } else {
+      tmp = cf_malloc(sizeof(T)*capacity);
+    }
     cf_checkMem(tmp);
     if (tmp == NULL) return false;
     data = (T*)tmp;
@@ -70,7 +80,7 @@ public:
     return true;
   }
 
-private:
+protected:
   void addCapacity(int minAdd) {
     int nsize;
     if (capacity>1E6) {

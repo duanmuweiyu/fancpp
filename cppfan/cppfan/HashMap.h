@@ -3,8 +3,13 @@
 
 #include "cppfan/Object.h"
 #include "cppfan/LinkedList.h"
+#include "cppfan/ObjectRef.h"
 
 CF_BEGIN_NAMESPACE
+
+/*========================================================================
+ * Hash Function
+ */
 
 template<class K>
 struct HashFunc {
@@ -26,6 +31,17 @@ struct HashFunc<int> {
     return key;
   }
 };
+
+template<>
+struct HashFunc<Object> {
+  unsigned int operator()(const Object &key) {
+    return key.hashCode();
+  }
+};
+
+/*========================================================================
+ * Hash Map
+ */
 
 template<typename K, typename V, typename hashFunc=HashFunc<K> >
 class HashMap : public Object {

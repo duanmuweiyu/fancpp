@@ -5,22 +5,21 @@
 
 CF_BEGIN_NAMESPACE
 
-template<class T>
-class AutoPtr
-{
+template<typename T>
+class AutoPtr {
   T *pointer;
   int *refCount;
 public:
   bool isDelete;
 public:
   AutoPtr() : pointer(NULL) {
-    refCount = new int();
+    refCount = cf_new(int);
     *refCount = 0;
     isDelete = true;
   }
 
   AutoPtr(T *pointer) : pointer(pointer) {
-    refCount = new int();
+    refCount = cf_new(int);
     *refCount = 0;
     isDelete = true;
   }
@@ -32,7 +31,7 @@ public:
 
   ~AutoPtr() {
     if (--(*refCount) < 0) {
-      delete refCount;
+      cf_free(refCount);
       free(pointer);
     }
   }
@@ -40,7 +39,7 @@ public:
   AutoPtr &operator=(const AutoPtr& other) {
     ++(*other.refCount);
     if (--(*refCount) < 0) {
-      delete refCount;
+      cf_free(refCount);
       free(pointer);
     }
     refCount = other.refCount;

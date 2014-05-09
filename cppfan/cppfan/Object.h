@@ -6,6 +6,7 @@
 CF_BEGIN_NAMESPACE
 
 class Object {
+protected:
   int refCount;
 public:
   CF_OVERRIDE_NEW
@@ -13,7 +14,12 @@ public:
   virtual ~Object() {}
 
   void addRef() { ++refCount; }
-  Object *release();
+  virtual Object *release();
+
+  virtual long hashCode() const { return (long)this; }
+  virtual int compare(const Object &other) const { return (int)((long)this - (long)&other); }
+  virtual bool equals(const Object &other) const { return this == &other; }
+
 };
 
 
