@@ -36,3 +36,14 @@ CF_DEF_TEST(ArrayTest_testRemove){
   cf_verify(list[0] == 123);
   cf_verify(list.get(1) == 125);
 }
+
+CF_DEF_TEST(ArrayTest_testResize){
+  Array<ArrayTestObj> list(10, 2);
+  cf_verify(list.size() == 2);
+
+  list.resize(1);
+  cf_verify(list.size() == 1);
+  list.resize(10);
+  cf_verify(list.size() == 10);
+}
+

@@ -14,8 +14,15 @@ public:
   Array() : data(NULL), capacity(0), _size(0) {
   }
 
-  Array(int capacity) : capacity(capacity), _size(0) {
+  Array(int capacity, int size = 0) : capacity(capacity), _size(size) {
     data = (T*)cf_malloc(sizeof(T)*capacity);
+
+    //init
+    if (size > 0) {
+      for (int i=0; i<size; ++i) {
+        new (data+i) T();
+      }
+    }
   }
 
   ~Array() {
@@ -32,9 +39,24 @@ public:
 
   int size() const { return _size; }
   void _setSize(int n) {
-    if (n <= capacity) {
-      _size = n;
+    cf_assert(n <= capacity);
+    _size = n;
+  }
+
+  void resize(int n) {
+    if (n > capacity) {
+      reserver(n);
     }
+    if (size() < n) {
+      for (int i=size(); i<n; ++i) {
+        new (data+i) T();
+      }
+    } else if (size() > n) {
+      for (int i=n; i<_size; ++i) {
+        (data+i)->~T();
+      }
+    }
+    _setSize(n);
   }
 
   T *getPointer() { return data; }
@@ -72,6 +94,7 @@ public:
     if (i < 0 || i>= _size) {
       return false;
     }
+    (data+i)->~T();
     char *p1 = (char *)(data+i);
     char *p2 = (char *)(data+i+1);
     int len = _size - i -1;
@@ -88,7 +111,9 @@ protected:
     } else {
       nsize = capacity*2 + minAdd;
     }
-    cf_assert(reserver(nsize));
+    bool rc = reserver(nsize);
+    CF_UNUSED(rc);
+    cf_assert(rc);
   }
 
 };

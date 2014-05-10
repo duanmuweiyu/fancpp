@@ -6,3 +6,5 @@ syntax: glob
 cfan/libcfan.a
 cfan/Makefile
 cfan/Makefile.cfan
+cppfan/libcppfan.a
+cppfan/Makefile

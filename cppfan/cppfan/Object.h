@@ -11,10 +11,14 @@ protected:
 public:
   CF_OVERRIDE_NEW
   Object() : refCount(0) {}
+
   virtual ~Object() {}
+
+  virtual void dispose() {}
 
   void addRef() { ++refCount; }
   virtual Object *release();
+  int getRefCount() { return refCount; }
 
   virtual long hashCode() const { return (long)this; }
   virtual int compare(const Object &other) const { return (int)((long)this - (long)&other); }
