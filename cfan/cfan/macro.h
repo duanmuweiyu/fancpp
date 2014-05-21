@@ -75,7 +75,7 @@
  * align
  */
 #define CF_ALIGN_SIZE 4
-#define CF_ALIGNN(size,n) ((size) + ((~((size)&((n)-1))+1)&((n)-1)))
+#define CF_ALIGNN(size, align) (((size)+((align)-1))&~((align)-1))
 #define CF_ALIGN(size) CF_ALIGNN(size, CF_ALIGN_SIZE)
 
 /*========================================================================

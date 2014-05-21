@@ -66,6 +66,11 @@ cf_MemManager cf_Memory_memManager = { NULL, NULL };
 void *cf_Memory_malloc(const char *file, const char *func, const unsigned int line, size_t size) {
   cf_MemChunk *chunk;
 
+  if (size > 10*1024*1024) {
+    cf_Log_warn(cf_Log_tag, "alloc size: %d", size);
+  }
+  size = CF_ALIGN(size);
+
   // chunk + userData + tail checkCode
   chunk = (cf_MemChunk *)malloc(size + sizeof(cf_MemChunk) + sizeof(int));
   if (!chunk) return NULL;
@@ -142,6 +147,12 @@ void cf_Memory_check(const char *file, const char *func, const unsigned int line
 void *cf_Memory_realloc(void *p, size_t size) {
   cf_MemChunk *chunk;
   cf_assert(p);
+
+  if (size > 10*1024*1024) {
+    cf_Log_warn(cf_Log_tag, "alloc size: %d", size);
+  }
+  size = CF_ALIGN(size);
+
   chunk = (cf_MemChunk *)((char*)p - sizeof(cf_MemChunk));
   cf_Memory_doCheck_(chunk);
 
