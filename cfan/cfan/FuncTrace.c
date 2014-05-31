@@ -21,6 +21,16 @@
  * undefine memory func( the Memory depends FuncTrace )
  */
 
+#ifdef  CF_ALLOC_WRAP
+  void *__real_malloc(size_t);
+  void __real_free(void *p);
+  void *__real_realloc(void *p, size_t);
+
+  #define malloc(s) __real_malloc(s)
+  #define free(p) __real_free(p)
+  #define realloc(p, s) __real_realloc((p),(s))
+#endif
+
 #undef cf_malloc
 #undef cf_calloc
 #undef cf_realloc

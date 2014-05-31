@@ -8,6 +8,7 @@
  *   2012-12-23  Jed Young  Creation
  */
 
+#include "cfan/macro.h"
 #include "cfan/Memory.h"
 #include "cfan/Error.h"
 #include "cfan/Trace.h"
@@ -16,9 +17,38 @@
 
 #include <string.h>
 
+CF_BEGIN
+
 #ifndef CF_NO_THREAD_SAFE
   mtx_t cf_Memory_mutex;
   bool cf_Memory_inited = false;
+#endif
+
+#ifdef CF_ALLOC_WRAP
+
+  void *__real_malloc(size_t);
+  void __real_free(void *p);
+  void *__real_realloc(void *p, size_t);
+
+  #define malloc(s) __real_malloc(s)
+  #define free(p) __real_free(p)
+  #define realloc(p, s) __real_realloc((p),(s))
+
+  void *__wrap_malloc(size_t c) {
+    //printf("malloc %d\n", (int)c);
+    return cf_malloc(c);
+  }
+
+  void __wrap_free(void *p) {
+    //printf("free %p\n", p);
+    cf_free(p);
+  }
+
+  void *__wrap_realloc(void *p, size_t c) {
+    //printf("realloc %d,%p\n", (int)c, p);
+    return cf_realloc(p, c);
+  }
+
 #endif
 
 /*========================================================================
@@ -254,3 +284,5 @@ void cf_Memory_dumpMem() {
   mtx_unlock(&cf_Memory_mutex);
 #endif
 }
+
+CF_END
