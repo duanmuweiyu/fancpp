@@ -92,7 +92,7 @@ public:
   V &operator[](const K &key) {
     V *v = get(key);
     if (v == NULL) {
-      V nv;
+      V nv = V();
       return set(key, nv);
     }
     return *v;

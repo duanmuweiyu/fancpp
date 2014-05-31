@@ -8,6 +8,12 @@ public:
 
   HashMapTestObj() {
     val = 10;
+    printf("HashMapTestObj ctor\n");
+  }
+
+  HashMapTestObj(const HashMapTestObj &other) {
+    *this = other;
+    printf("copy HashMapTestObj ctor\n\n");
   }
 
   bool operator== (HashMapTestObj &other) {
@@ -40,4 +46,10 @@ CF_DEF_TEST(HashMapTest_testRemove) {
   cf_verify(map.contains(1));
   map.remove(1);
   cf_verify(!map.contains(1));
+}
+
+CF_DEF_TEST(HashMapTest_testInit) {
+  HashMap<int, int> map(4);
+  int i = map[1];
+  cf_verify(i == 0);
 }
