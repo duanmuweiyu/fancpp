@@ -16,9 +16,9 @@
 
 #include <string.h>
 
-
 #ifndef CF_NO_THREAD_SAFE
   mtx_t cf_Memory_mutex;
+  bool cf_Memory_inited = false;
 #endif
 
 /*========================================================================
@@ -76,6 +76,10 @@ void *cf_Memory_malloc(const char *file, const char *func, const unsigned int li
   if (!chunk) return NULL;
 
 #ifndef CF_NO_THREAD_SAFE
+  if (!cf_Memory_inited) {
+    mtx_init(&cf_Memory_mutex, mtx_recursive);
+    cf_Memory_inited = true;
+  }
   mtx_lock(&cf_Memory_mutex);
 #endif
   if (NULL == cf_Memory_memManager.last) {
