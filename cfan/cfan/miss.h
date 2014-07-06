@@ -74,19 +74,6 @@
 //  #error NULL is not 0
 //#endif
 
-/*========================================================================
- * compare and swap
- */
-
-#ifdef CF_WIN
-  #if defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
-    #define cf_compareAndSwap InterlockedCompareExchange64
-  #else
-    #define cf_compareAndSwap InterlockedCompareExchange
-  #endif
-#else
-  #define cf_compareAndSwap __sync_bool_compare_and_swap
-#endif
 
 #ifndef offsetof
   #define offsetof(s, m)   (size_t)&(((s *)0)->m)

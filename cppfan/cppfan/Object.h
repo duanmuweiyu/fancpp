@@ -16,7 +16,7 @@ public:
 
   virtual void dispose() {}
 
-  void addRef() { ++refCount; }
+  void addRef() { pf_increase(&refCount); }
   virtual Object *release();
   int getRefCount() { return refCount; }
 

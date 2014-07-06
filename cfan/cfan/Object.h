@@ -39,7 +39,7 @@ static inline void cf_Object_make(cf_Object *self, cf_VTable *vtable) {
   self->refCount = 0;
 }
 
-#define cf_Object_addRef(self) (((cf_Object*)(self))->refCount++)
+#define cf_Object_addRef(self) (pf_increase(&((cf_Object*)(self))->refCount))
 static inline bool cf_Object_canDispose(cf_Object *self) {
   return self->refCount == 0;
 }
