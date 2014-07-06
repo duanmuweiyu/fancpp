@@ -20,11 +20,15 @@ HEADERS += \
     cppfan/Array.h \
     cppfan/Test.h \
     cppfan/cppfan.h \
-    cppfan/ObjectRef.h
+    cppfan/ObjectRef.h \
+    cppfan/Stream.h \
+    cppfan/FileStream.h \
+    cppfan/MemStream.h
 
 SOURCES += \
     cppfan/String.cpp \
-    cppfan/Object.cpp
+    cppfan/Object.cpp \
+    cppfan/MemStream.cpp
 
 LIBS += -pthread
 

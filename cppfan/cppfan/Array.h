@@ -37,6 +37,8 @@ public:
     _size = 0;
   }
 
+  int _getCapacity() { return capacity; }
+
   int size() const { return _size; }
   void _setSize(int n) {
     cf_assert(n <= capacity);
@@ -107,7 +109,7 @@ protected:
   void addCapacity(int minAdd) {
     int nsize;
     if (capacity>1E6) {
-      nsize = capacity*3/3+minAdd;
+      nsize = capacity*2/3+minAdd;
     } else {
       nsize = capacity*2 + minAdd;
     }
