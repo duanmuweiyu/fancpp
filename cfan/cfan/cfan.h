@@ -40,5 +40,6 @@
 #include "cfan/Actor.h"
 #include "cfan/Cache.h"
 #include "cfan/FileLogListener.h"
+#include "cfan/LinkedQueue.h"
 
 #endif

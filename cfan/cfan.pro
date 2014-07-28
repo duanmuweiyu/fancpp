@@ -49,7 +49,8 @@ HEADERS += \
     cfan/Math.h \
     cfan/Util.h \
     cfan/HashTable.h \
-    cfan/Endian.h
+    cfan/Endian.h \
+    cfan/LinkedQueue.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -79,7 +80,8 @@ SOURCES += \
     cfan/HashTable.c \
     cfan/Object.c \
     cfan/LinkedList.c \
-    cfan/Math.c
+    cfan/Math.c \
+    cfan/LinkedQueue.c
 
 
 
