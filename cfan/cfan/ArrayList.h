@@ -78,26 +78,7 @@ cf_Error cf_ArrayList_reserver_(cf_ArrayList *self);
  * add to back
  *
  */
-static inline cf_Error cf_ArrayList_add(cf_ArrayList *self, void *elem) {
-  cf_Error err;
-
-  CF_ENTRY_FUNC
-
-  cf_assert(self);
-  cf_assert(elem);
-
-  if (self->size == self->capacity) {
-    err = cf_ArrayList_reserver_(self);
-    if (err) { CF_EXIT_FUNC return err; }
-  }
-  cf_checkMem(self->data);
-
-  cf_memcpy((char*)self->data + (self->size * self->elemSize), elem, self->elemSize);
-  self->size++;
-
-  CF_EXIT_FUNC
-  return cf_Error_ok;
-}
+cf_Error cf_ArrayList_add(cf_ArrayList *self, void *elem);
 
 /**
  * Remove element at index.

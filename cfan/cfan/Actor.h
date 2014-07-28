@@ -48,22 +48,7 @@ typedef struct cf_Actor_ {
 } cf_Actor;
 
 
-static inline cf_Error cf_Actor_make(cf_Actor *self, cf_Executor *executor, cf_ActorReceive receive) {
-  self->receive = receive;
-  self->isRuning = false;
-  self->executor = executor;
-
-  cf_LinkedList_make(&self->queue.super);
-  cf_MemoryPool_make(&self->queue.allocator, sizeof(cf_ActorMessage), 100);
-
-  if (mtx_init(&self->mutex, mtx_recursive) != thrd_success) {
-    return cf_Error_thread;
-  }
-  if (mtx_init(&self->allocMutex, mtx_recursive) != thrd_success) {
-    return cf_Error_thread;
-  }
-  return cf_Error_ok;
-}
+cf_Error cf_Actor_make(cf_Actor *self, cf_Executor *executor, cf_ActorReceive receive);
 
 void cf_Actor_send(cf_Actor *self, cf_ActorMessage *msg);
 void cf_Actor_dispose(cf_Actor*self);

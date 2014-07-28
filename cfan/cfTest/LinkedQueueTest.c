@@ -16,8 +16,6 @@ void cf_LinkedQueueTest_test(void) {
   int a = 1;
   int b = 2;
   int c = 3;
-  size_t size;
-  cf_Error err;
   int *value;
   CF_ENTRY_FUNC
 
@@ -26,21 +24,21 @@ void cf_LinkedQueueTest_test(void) {
   cf_LinkedQueue_enqueue(&queue, &b);
   cf_LinkedQueue_enqueue(&queue, &c);
 
-  cf_LinkedQueue_dequeue(&queue, &value);
+  cf_LinkedQueue_dequeue(&queue, (void**)&value);
   cf_verify(*value == 1);
 
   cf_LinkedQueue_enqueue(&queue, &c);
 
-  cf_LinkedQueue_dequeue(&queue, &value);
+  cf_LinkedQueue_dequeue(&queue, (void**)&value);
   cf_verify(*value == 2);
 
-  cf_LinkedQueue_dequeue(&queue, &value);
+  cf_LinkedQueue_dequeue(&queue, (void**)&value);
   cf_verify(*value == 3);
 
-  cf_LinkedQueue_dequeue(&queue, &value);
+  cf_LinkedQueue_dequeue(&queue, (void**)&value);
   cf_verify(*value == 3);
 
-  cf_verify(cf_LinkedQueue_dequeue(&queue, &value) != cf_Error_ok);
+  cf_verify(cf_LinkedQueue_dequeue(&queue, (void**)&value) != cf_Error_ok);
 
   cf_LinkedQueue_dispose(&queue);
 

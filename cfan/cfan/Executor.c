@@ -10,6 +10,31 @@
 
 #include "cfan/Executor.h"
 
+cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t threadSize) {
+  cf_Error err;
+  int terr;
+  size_t i;
+  CF_ENTRY_FUNC
+
+  err = cf_BlockingQueue_make(&self->taskQueue, taskSize, sizeof(cf_ExecutorTask));
+  if (err == cf_Error_ok) {
+    self->threadList = (thrd_t *)cf_malloc(threadSize * sizeof(thrd_t));
+    //self->canceled = false;
+    self->threadSize = threadSize;
+    for (i = 0; i < threadSize; ++i)
+    {
+      terr = thrd_create(self->threadList+i, (thrd_start_t)cf_Executor_thread_, self);
+      if (terr != thrd_success) {
+        cf_BlockingQueue_dispose(&self->taskQueue);
+        //self->canceled = true;
+        CF_EXIT_FUNC
+        return cf_Error_thread;
+      }
+    }
+  }
+  CF_EXIT_FUNC
+  return err;
+}
 
 int *cf_Executor_thread_(void *arg) {
   cf_Executor *self;
@@ -33,4 +58,20 @@ int *cf_Executor_thread_(void *arg) {
   return 0;
 }
 
+void cf_Executor_dispose(cf_Executor *self) {
+  size_t i;
+  int rc;
 
+  cf_BlockingQueue_cancel(&self->taskQueue);
+
+  for (i = 0; i < self->threadSize; ++i)
+  {
+    rc = thrd_join(self->threadList[i], NULL);
+    if (rc != thrd_success) {
+      printf("thread join error\n");
+    }
+  }
+
+  cf_BlockingQueue_dispose(&self->taskQueue);
+  cf_free(self->threadList);
+}

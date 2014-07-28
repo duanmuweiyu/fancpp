@@ -81,7 +81,8 @@ SOURCES += \
     cfan/Object.c \
     cfan/LinkedList.c \
     cfan/Math.c \
-    cfan/LinkedQueue.c
+    cfan/LinkedQueue.c \
+    cfan/BlockingQueue.c
 
 
 

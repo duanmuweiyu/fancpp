@@ -68,7 +68,7 @@ static inline void *cf_memcpy(void *dest, const void *src, size_t n) {
   #define cf_compareAndSwap(ptr, old, new) __sync_bool_compare_and_swap(ptr, old, new)
 #endif
 
-static inline void pf_increase(int *i) {
+static inline void pf_increase(volatile int *i) {
     int n, n2;
     do {
         n = *i;
@@ -76,7 +76,7 @@ static inline void pf_increase(int *i) {
     } while (!cf_compareAndSwap(i, n, n2));
 }
 
-static inline void pf_decrease(int *i) {
+static inline void pf_decrease(volatile int *i) {
     int n, n2;
     do {
         n = *i;
