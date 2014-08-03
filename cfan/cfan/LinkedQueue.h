@@ -26,7 +26,7 @@ typedef struct cf_LinkedQueue_Node_ {
 
 /**
  * LinkedQueue is a FIFO sequence
- * one thread dequeue or one thread enquque is safe.
+ * one thread dequeue or one thread enquque is thread safe.
  */
 typedef struct cf_LinkedQueue_ {
   cf_LinkedQueue_Node *head;
@@ -36,8 +36,15 @@ typedef struct cf_LinkedQueue_ {
 
 cf_Error cf_LinkedQueue_make(cf_LinkedQueue *self);
 
+/**
+ * get and remove front of queue.
+ * @return cf_Error_null if queue is empty.
+ */
 cf_Error cf_LinkedQueue_dequeue(cf_LinkedQueue *self, void **out);
 
+/**
+ * add to the last of queue
+ */
 void cf_LinkedQueue_enqueue(cf_LinkedQueue *self, void *ptr);
 
 /**

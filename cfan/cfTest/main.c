@@ -32,6 +32,7 @@ void cf_ActorTest_register(void);
 void cf_CacheTest_register(void);
 void cf_FileLogListenerTest_register(void);
 void cf_LinkedQueueTest_register(void);
+void cf_TimerTest_register(void);
 
 /**
  * register all test case.
@@ -57,6 +58,7 @@ void registerAll(void) {
   cf_CacheTest_register();
   cf_FileLogListenerTest_register();
   cf_LinkedQueueTest_register();
+  cf_TimerTest_register();
 }
 
 /**

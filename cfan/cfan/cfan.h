@@ -41,5 +41,6 @@
 #include "cfan/Cache.h"
 #include "cfan/FileLogListener.h"
 #include "cfan/LinkedQueue.h"
+#include "cfan/Timer.h"
 
 #endif

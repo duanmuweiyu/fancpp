@@ -17,6 +17,9 @@
 
 CF_BEGIN
 
+/**
+ * print the log to file
+ */
 typedef struct cf_FileLogListener_ {
   cf_Log_Listener super;
   cf_HashMapSP map;

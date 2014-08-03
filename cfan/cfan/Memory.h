@@ -154,8 +154,19 @@ static inline void *cf_Memory_stdCheckedRealloc(void *p, size_t size) {
 
 #endif
 
+/**
+ * free and set to null
+ */
 #define cf_safeFree(p) { cf_free(p); p = NULL; }
+
+/**
+ * malloc by the struct type.
+ */
 #define cf_new(T) ((T*)cf_checkedCalloc(1, sizeof(T)))
+
+/**
+ * malloc T array
+ */
 #define cf_newArray(T, n) ((T*)cf_checkedCalloc(n, sizeof(T)))
 
 CF_END

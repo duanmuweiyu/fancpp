@@ -33,7 +33,7 @@ void cf_ActorTest_test(void) {
   CF_ENTRY_FUNC
 
   err = cf_Executor_make(&executor, 4, 300);
-  err = cf_Actor_make(&actor, &executor, receive);
+  err = cf_Actor_make(&actor, &executor, receive, NULL);
   cf_assert(err == cf_Error_ok);
 
   for (i=0; i<times; ++i) {

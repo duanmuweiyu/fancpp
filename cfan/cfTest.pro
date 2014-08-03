@@ -31,7 +31,8 @@ SOURCES += \
     cfTest/FileLogListenerTest.c \
     cfTest/ArrayListTest.c \
     cfTest/HashTableTest.c \
-    cfTest/LinkedQueueTest.c
+    cfTest/LinkedQueueTest.c \
+    cfTest/TimerTest.c
 
 LIBS += -pthread
 

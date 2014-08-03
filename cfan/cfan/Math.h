@@ -30,9 +30,14 @@
  */
 bool cf_Math_approx(double a, double b, double tolerance);
 
+/**
+ * power of 2 meaning 2^n.
+ * e.g. 2,4,8,16,...
+ */
 static inline bool cf_Math_isPowerOf2(uint32_t x) {
   return !(x & (x-1));
 }
+
 
 static inline uint32_t cf_Math_nextPowerOf2(uint32_t x) {
   if ( cf_Math_isPowerOf2(x) ) return x;
