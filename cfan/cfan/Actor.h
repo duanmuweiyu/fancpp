@@ -53,6 +53,7 @@ typedef struct cf_Actor_ {
   cf_Timer *timer;
   mtx_t mutex;
   mtx_t allocMutex;
+  void *userData;
 } cf_Actor;
 
 /**

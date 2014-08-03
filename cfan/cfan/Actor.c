@@ -66,13 +66,17 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
 }
 
 void cf_Actor_dispose(cf_Actor *self) {
-  if (self->timer) {
-    cf_Timer_dispose(self->timer);
-  }
-  cf_Executor_dispose(self->executor);
-  mtx_destroy(&self->mutex);
+//  if (self->timer) {
+//    cf_Timer_dispose(self->timer);
+//  }
+  //cf_Executor_dispose(self->executor);
+  mtx_lock(&self->mutex);
   cf_LinkedList_freeLinkedElem(&self->queue.super, &self->queue.allocator);
   cf_MemoryPool_dispose(&self->queue.allocator);
+  mtx_unlock(&self->allocMutex);
+
+  self->executor = NULL;
+  mtx_destroy(&self->mutex);
 }
 
 

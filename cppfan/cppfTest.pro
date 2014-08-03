@@ -18,7 +18,8 @@ SOURCES += \
     cppfTest/maincpp.cpp \
     cppfTest/MemoryTest.cpp \
     cppfTest/AutoPtrTest.cpp \
-    cppfTest/StringTest.cpp
+    cppfTest/StringTest.cpp \
+    cppfTest/ActorTest.cpp
 
 LIBS += -pthread
 

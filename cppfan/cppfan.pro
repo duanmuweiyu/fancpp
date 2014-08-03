@@ -23,12 +23,14 @@ HEADERS += \
     cppfan/ObjectRef.h \
     cppfan/Stream.h \
     cppfan/FileStream.h \
-    cppfan/MemStream.h
+    cppfan/MemStream.h \
+    cppfan/Actor.h
 
 SOURCES += \
     cppfan/String.cpp \
     cppfan/Object.cpp \
-    cppfan/MemStream.cpp
+    cppfan/MemStream.cpp \
+    cppfan/Actor.cpp
 
 LIBS += -pthread
 
