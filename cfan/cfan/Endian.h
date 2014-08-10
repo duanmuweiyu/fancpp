@@ -20,7 +20,7 @@ enum cf_Endian {
   cf_Endian_little
 };
 
-static inline int cf_Endian_isBig(){
+static inline bool cf_Endian_isBig(){
   static const int __one = 1;
   return (*(char *)(&__one)==0);
 }

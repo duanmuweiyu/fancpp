@@ -51,7 +51,8 @@ HEADERS += \
     cfan/HashTable.h \
     cfan/Endian.h \
     cfan/LinkedQueue.h \
-    cfan/Timer.h
+    cfan/Timer.h \
+    cfan/TextCodec.h
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -84,7 +85,8 @@ SOURCES += \
     cfan/Math.c \
     cfan/LinkedQueue.c \
     cfan/BlockingQueue.c \
-    cfan/Timer.c
+    cfan/Timer.c \
+    cfan/TextCodec.c
 
 
 
