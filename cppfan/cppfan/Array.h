@@ -5,21 +5,23 @@
 
 CF_BEGIN_NAMESPACE
 
+/**
+ */
 template<typename T>
 class Array : public Object {
   T *data;
-  int capacity;
-  int _size;
+  unsigned int capacity;
+  unsigned int _size;
 public:
   Array() : data(NULL), capacity(0), _size(0) {
   }
 
-  Array(int capacity, int size = 0) : capacity(capacity), _size(size) {
+  Array(unsigned int capacity, unsigned int size = 0) : capacity(capacity), _size(size) {
     data = (T*)cf_malloc(sizeof(T)*capacity);
 
     //init
     if (size > 0) {
-      for (int i=0; i<size; ++i) {
+      for (unsigned int i=0; i<size; ++i) {
         new (data+i) T();
       }
     }
@@ -30,43 +32,77 @@ public:
     cf_free(data);
   }
 
+  void _initByRawData(T *data, unsigned int capacity, unsigned int size) {
+    this->data = data;
+    this->capacity = capacity;
+    this->_size = size;
+  }
+
+  /**
+   * remove all element from array, the memory is not change.
+   */
   void clear() {
-    for (int i=0; i<_size; ++i) {
+    for (unsigned int i=0; i<_size; ++i) {
       (data+i)->~T();
     }
     _size = 0;
   }
 
-  int _getCapacity() { return capacity; }
+  /**
+   * get the capacity of raw memory
+   */
+  unsigned int _getCapacity() { return capacity; }
 
-  int size() const { return _size; }
-  void _setSize(int n) {
+  /**
+   * get the elem count of array
+   */
+  unsigned int size() const { return _size; }
+
+  /**
+   * resize but not init new add element.
+   */
+  void _setSize(unsigned int n) {
     cf_assert(n <= capacity);
     _size = n;
   }
 
-  void resize(int n) {
+  /**
+   * ensure n elem in array
+   */
+  void resize(unsigned int n) {
     if (n > capacity) {
       reserver(n);
     }
     if (size() < n) {
-      for (int i=size(); i<n; ++i) {
+      for (unsigned int i=size(); i<n; ++i) {
         new (data+i) T();
       }
     } else if (size() > n) {
-      for (int i=n; i<_size; ++i) {
+      for (unsigned int i=n; i<_size; ++i) {
         (data+i)->~T();
       }
     }
     _setSize(n);
   }
 
+  /**
+   * get the start raw data of array
+   */
   T *getPointer() { return data; }
 
-  T &get(int i) const { cf_assert(i<_size); return data[i]; }
+  /**
+   * get element at i
+   */
+  T &get(unsigned int i) const { cf_assert(i<_size); return data[i]; }
 
-  T &operator[] (const int i) const { return get(i); }
+  /**
+   * same ot get(i)
+   */
+  T &operator[] (const unsigned int i) const { return get(i); }
 
+  /**
+   * push back of array
+   */
   Array &add(const T &t) {
     if (_size == capacity) {
       addCapacity(1);
@@ -77,7 +113,10 @@ public:
     return *this;
   }
 
-  bool reserver(int capacity) {
+  /**
+   * ensure capacity is exactly is @param capacity
+   */
+  bool reserver(unsigned int capacity) {
     if (this->capacity >= capacity) return true;
     void *tmp;
     if (data) {
@@ -92,7 +131,11 @@ public:
     return true;
   }
 
-  bool remove(int i) {
+  /**
+   * remove element at i
+   * @return return true if success, return false if i out of range
+   */
+  bool remove(unsigned int i) {
     if (i < 0 || i>= _size) {
       return false;
     }
@@ -106,7 +149,10 @@ public:
   }
 
 protected:
-  void addCapacity(int minAdd) {
+  /**
+   * increase the capacity at lest @param minAdd
+   */
+  void addCapacity(unsigned int minAdd) {
     int nsize;
     if (capacity>1E6) {
       nsize = capacity*2/3+minAdd;

@@ -6,7 +6,7 @@
 CF_BEGIN_NAMESPACE
 
 /**
- * It similar to AutoPtr, the T must extends from Object
+ * It similar to AutoPtr, the T must be extend from Object
  */
 template<class T>
 class ObjectRef : public Object {
