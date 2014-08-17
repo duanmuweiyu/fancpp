@@ -24,6 +24,29 @@ void cf_MemoryTest_testBase(void) {
   CF_EXIT_FUNC
 }
 
+void cf_MemoryTest_testRealloc(void) {
+  char *pointer1;
+  char *pointer2;
+  char *pointer3;
+  CF_ENTRY_FUNC
+
+  pointer1 = (char *)cf_malloc(100);
+  pointer2 = (char *)cf_malloc(100);
+  pointer3 = (char *)cf_malloc(100);
+
+  cf_checkAllMem();
+  pointer2 = (char *)cf_realloc(pointer2, 5000);
+  cf_checkAllMem();
+
+  cf_free(pointer1);
+  cf_checkAllMem();
+  cf_free(pointer3);
+  cf_checkAllMem();
+  cf_free(pointer2);
+  cf_checkAllMem();
+
+  CF_EXIT_FUNC
+}
 
 void cf_MemoryTest_testAll(void) {
   char *pointer1;
@@ -63,5 +86,6 @@ void cf_MemoryTest_testAll(void) {
 void cf_MemoryTest_register(void) {
   cf_Test_add(cf_MemoryTest_testBase);
   cf_Test_add(cf_MemoryTest_testAll);
+  cf_Test_add(cf_MemoryTest_testRealloc);
 }
 

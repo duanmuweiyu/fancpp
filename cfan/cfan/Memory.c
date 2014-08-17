@@ -211,6 +211,8 @@ void *cf_Memory_realloc(void *p, size_t size) {
   }
   if (chunk->next == NULL) {
     cf_Memory_memManager.last = chunk;
+  } else {
+    chunk->next->prev = chunk;
   }
 #ifndef CF_NO_THREAD_SAFE
   mtx_unlock(&cf_Memory_mutex);
