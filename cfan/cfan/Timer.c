@@ -18,9 +18,9 @@ uint64_t cf_Timer_doEvent(cf_Timer *self) {
   cf_TimerEvent *event, *temp;
   uint64_t nextTime, delta;
   bool moved;
-  event = (cf_TimerEvent*)self->list.head;
+  event = (cf_TimerEvent*)cf_LinkedList_first(&self->list);
   nextTime = INT64_MAX;
-  while (event) {
+  while (event != (cf_TimerEvent*)cf_LinkedList_end(&self->list)) {
       moved = false;
       if (event->time_ < now) {
         (*event->func)(event->arg);

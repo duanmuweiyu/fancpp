@@ -13,36 +13,24 @@
 
 
 void cf_LinkedList_add(cf_LinkedList*self, cf_LinkedListElem *elem) {
-  if (self->head == NULL || self->tail == NULL) {
-    self->head = elem;
-    self->tail = elem;
-    elem->next = NULL;
-    elem->previous = NULL;
-    return;
-  }
-
-  self->tail->next = elem;
-  elem->previous = self->tail;
-  elem->next = NULL;
-  self->tail = elem;
+  cf_LinkedListElem *left = self->tail.previous;
+  cf_LinkedListElem *right = left->next;
+  elem->next = right;
+  right->previous = elem;
+  elem->previous = left;
+  left->next = elem;
 }
 
 /**
  * insert at first
  */
 void cf_LinkedList_insert(cf_LinkedList*self, cf_LinkedListElem *elem) {
-  if (self->head == NULL || self->tail == NULL) {
-    self->head = elem;
-    self->tail = elem;
-    elem->next = NULL;
-    elem->previous = NULL;
-    return;
-  }
-
-  self->head->previous = elem;
-  elem->next = self->head;
-  elem->previous = NULL;
-  self->head = elem;
+  cf_LinkedListElem *left = &self->head;
+  cf_LinkedListElem *right = left->next;
+  elem->next = right;
+  right->previous = elem;
+  elem->previous = left;
+  left->next = elem;
 }
 
 void cf_LinkedList_insertBefore(cf_LinkedList*self
@@ -51,78 +39,69 @@ void cf_LinkedList_insertBefore(cf_LinkedList*self
   cf_assert(me);
   cf_assert(elem);
 
-  if (self->head == me) {
-    self->head = elem;
-  } else {
-    cf_assert(me->previous);
-    me->previous->next = elem;
-  }
-
-  elem->next = me;
-  elem->previous = me->previous;
-  me->previous = elem;
+  cf_LinkedListElem *left = me->previous;
+  cf_LinkedListElem *right = me;
+  elem->next = right;
+  right->previous = elem;
+  elem->previous = left;
+  left->next = elem;
 }
 
 void cf_LinkedList_remove(cf_LinkedList*self, cf_LinkedListElem *elem) {
   if (elem == NULL) return;
-  if (elem->previous) {
-    elem->previous->next = elem->next;
-  } else {
-    cf_assert(self->head == elem);
-    self->head = elem->next;
-  }
-
-  if (elem->next) {
-    elem->next->previous = elem->previous;
-  } else {
-    cf_assert(self->tail == elem);
-    self->tail = elem->previous;
-  }
+  CF_UNUSED(self);
+  elem->previous->next = elem->next;
+  elem->next->previous = elem->previous;
 }
 
 cf_LinkedListElem *cf_LinkedList_get(cf_LinkedList*self, int index) {
   cf_LinkedListElem *elem;
   int i = 0;
-  elem = self->head;
-  while (elem && i<index) {
+  elem = self->head.next;
+  while (elem != &self->tail) {
+    if (i == index) {
+      return elem;
+    }
     elem = elem->next;
     ++i;
   }
-  return elem;
+  return NULL;
 }
 
 int cf_LinkedList_getSize(cf_LinkedList*self) {
   cf_LinkedListElem *elem;
   int i = 0;
-  elem = self->head;
-  while (elem) {
-    elem = elem->next;
+  elem = self->head.next;
+  while (elem != &self->tail) {
     ++i;
+    elem = elem->next;
   }
   return i;
 }
 
+bool cf_LinkedList_isEmpty(cf_LinkedList *self) {
+  return self->head.next == &self->tail;
+}
+
 void cf_LinkedList_freeLinkedElem(cf_LinkedList*self, struct cf_MemoryPool_ *pool) {
   cf_LinkedListElem *elem;
-  cf_LinkedListElem *prev;
-  elem = self->head;
-  while (elem) {
-    prev = elem;
-    elem = elem->next;
+  while (self->head.next != &self->tail) {
+    elem = self->head.next;
+    self->head.next = elem->next;
     if (pool != NULL) {
-      cf_MemoryPool_free(pool, prev);
+      cf_MemoryPool_free(pool, elem);
     } else {
-      cf_free(prev);
+      cf_free(elem);
     }
   }
-  self->head = NULL;
-  self->tail = NULL;
 }
 
 cf_LinkedListElem *cf_LinkedList_removeFirst(cf_LinkedList *self) {
-  cf_LinkedListElem *elem = self->head;
-  if (elem == NULL) return NULL;
-
-  cf_LinkedList_remove(self, elem);
-  return elem;
+  if (self->head.next == &self->tail) {
+    return NULL;
+  }
+  cf_LinkedListElem *first = self->head.next;
+  self->head.next = first->next;
+  self->head.next->previous = &self->head;
+  return first;
 }

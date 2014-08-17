@@ -16,11 +16,11 @@ static void verifyLink(cf_LinkedList *list) {
 
   CF_ENTRY_FUNC
 
-  cf_assert(list->head->previous == NULL);
-  cf_assert(list->tail->next == NULL);
+  cf_assert(list->head.previous == NULL);
+  cf_assert(list->tail.next == NULL);
 
-  elem = list->head->next;
-  while (elem) {
+  elem = cf_LinkedList_first(list);
+  while (elem != cf_LinkedList_end(list)) {
     cf_assert(elem->previous->next == elem);
     elem = elem->next;
   }

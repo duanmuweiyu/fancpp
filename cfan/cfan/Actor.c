@@ -32,17 +32,17 @@ void *cf_Actor_run(void *arg) {
   cf_Actor *self = (cf_Actor *)arg;
   do {
     mtx_lock(&self->mutex);
-    cf_ActorMessage *msg = (cf_ActorMessage*)self->queue.super.head;
-    if (msg == NULL) break;
-    cf_LinkedList_remove(&self->queue.super, &msg->super);
+    cf_ActorMessage *msg = (cf_ActorMessage*)cf_LinkedList_removeFirst(&self->queue.super);
     mtx_unlock(&self->mutex);
+
+    if (msg == NULL) break;
     self->receive(self, msg);
+
     mtx_lock(&self->allocMutex);
     cf_MemoryPool_free(&self->queue.allocator, msg);
     mtx_unlock(&self->allocMutex);
   } while (true);
   self->isRuning = false;
-  mtx_unlock(&self->mutex);
   return NULL;
 }
 

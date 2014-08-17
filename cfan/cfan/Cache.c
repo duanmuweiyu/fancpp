@@ -28,8 +28,8 @@ cf_Error cf_Cache_make(cf_Cache *self, unsigned long capacity, cf_CacheOnRemove 
 
 void cf_Cache_dispose(cf_Cache *self) {
   cf_CacheElem *elem;
-  elem = (cf_CacheElem *)self->list.super.head;
-  while (elem) {
+  elem = (cf_CacheElem *)cf_LinkedList_first(&self->list.super);
+  while (elem != (cf_CacheElem *)cf_LinkedList_end(&self->list.super)) {
     self->onRemove(elem->key, elem->value);
     elem = (cf_CacheElem *)elem->super.next;
   }
@@ -41,8 +41,8 @@ void cf_Cache_dispose(cf_Cache *self) {
 void cf_Cache_keepClear_(cf_Cache *self) {
   cf_CacheElem *elem;
   while (self->size > self->capacity) {
-    elem = (cf_CacheElem *)self->list.super.head;
-    if (elem == NULL) return;
+    elem = (cf_CacheElem *)cf_LinkedList_first(&self->list.super);
+    if (elem == (cf_CacheElem *)cf_LinkedList_end(&self->list.super)) return;
 
     cf_LinkedList_remove(&self->list.super, &elem->super);
     cf_HashMapPP_remove(&self->map, elem->key, NULL, NULL);

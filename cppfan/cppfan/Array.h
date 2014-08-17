@@ -136,7 +136,7 @@ public:
    * @return return true if success, return false if i out of range
    */
   bool remove(unsigned int i) {
-    if (i < 0 || i>= _size) {
+    if (i>= _size) {
       return false;
     }
     (data+i)->~T();
