@@ -7,7 +7,7 @@ static void staticReceive(struct cf_Actor_ *self, cf_ActorMessage *msg) {
   acotr->recevie(msg);
 }
 
-void Actor::make(cf_Executor *executor, cf_Timer *timer) {
+void Actor::init(cf_Executor *executor, cf_Timer *timer) {
   cf_Actor_make(&actor, executor, staticReceive, timer);
   cf_HashMapSP_make(&map, 4);
   actor.userData = this;

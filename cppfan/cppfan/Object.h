@@ -28,6 +28,11 @@ public:
   void addRef() { pf_increase(&refCount); }
 
   /**
+   * will call by release to cleanup.
+   */
+  virtual void dispose() {}
+
+  /**
    * decrease reference count.
    * if no any reference will call delete self.
    */

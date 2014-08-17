@@ -16,7 +16,7 @@ CF_DEF_TEST(ActorTest_test){
   cf_Executor executor;
   MyActor actor;
   cf_Executor_make(&executor, 4, 300);
-  actor.make(&executor, NULL);
+  actor.init(&executor, NULL);
 
   actor.foo((void*)"hi");
 

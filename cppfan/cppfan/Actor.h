@@ -11,7 +11,7 @@ protected:
   cf_HashMapSP map;
   Actor(){}
 public:
-  void make(cf_Executor *executor, cf_Timer *timer);
+  void init(cf_Executor *executor, cf_Timer *timer);
 
   virtual cf_Error recevie(cf_ActorMessage *msg);
 
