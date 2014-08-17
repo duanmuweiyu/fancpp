@@ -215,6 +215,10 @@ CF_END
     #define CF_OVERRIDE_NEW
     #define CF_NEW new
   #endif  //CF_DEBUG
+
+  //shortcut
+  #define _new CF_NEW
+
 #endif //__cplusplus
 
 #endif //_CF_MEMORY_H_
