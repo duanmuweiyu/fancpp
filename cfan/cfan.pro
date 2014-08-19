@@ -52,7 +52,9 @@ HEADERS += \
     cfan/Endian.h \
     cfan/LinkedQueue.h \
     cfan/Timer.h \
-    cfan/TextCodec.h
+    cfan/TextCodec.h \
+    cfan/File_win.inc \
+    cfan/File_unix.inc
 
 SOURCES += \
     cfan/StrBuf.c \
@@ -63,8 +65,6 @@ SOURCES += \
     cfan/File.c \
     cfan/Config.c \
     cfan/Array.c \
-    cfan/File_unix.c \
-    cfan/File_win.c \
     cfan/Test.c \
     tinyCThread/tinycthread.c \
     cfan/Executor.c \

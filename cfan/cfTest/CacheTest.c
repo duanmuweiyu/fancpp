@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 static void onRemove(const void *key, void *val){
   int32_t *i = (int32_t *)val;
   printf("free %d\n", *i);
@@ -75,3 +77,5 @@ void cf_CacheTest_test(void) {
 void cf_CacheTest_register(void) {
   cf_Test_add(cf_CacheTest_test);
 }
+
+CF_END

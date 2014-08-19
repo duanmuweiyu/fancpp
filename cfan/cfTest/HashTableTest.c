@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 static int mystrcmp(const void *k1, const void *k2, int n) {
   CF_UNUSED(n);
   return strcmp(k1, k2);
@@ -126,3 +128,5 @@ void cf_HashTable_register(void) {
   cf_Test_add(cf_HashTable_testIter);
   cf_Test_add(cf_HashTable_testRemove);
 }
+
+CF_END

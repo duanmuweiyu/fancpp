@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 static volatile int flag = 0;
 
 static void receive(cf_Actor *self, cf_ActorMessage *msg) {
@@ -55,3 +57,5 @@ void cf_ActorTest_test(void) {
 void cf_ActorTest_register(void) {
   cf_Test_add(cf_ActorTest_test);
 }
+
+CF_END

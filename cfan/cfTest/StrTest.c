@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_StrTest_testToken(void) {
   cf_StrToken tokener;
   char buf[] = "hello world";
@@ -99,3 +101,4 @@ void cf_StrTest_register(void) {
   cf_Test_add(cf_StrTest_testUri);
 }
 
+CF_END

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
 
 int data[1024];
 
@@ -91,3 +92,4 @@ void cf_BlockingQueueTest_register(void) {
   cf_Test_add(cf_BlockingQueueTest_test);
 }
 
+CF_END

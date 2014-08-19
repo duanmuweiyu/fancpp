@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 static void *print(void *args) {
   printf("**%d**\n", *((int *)args));
   fflush(stdout);
@@ -46,3 +48,4 @@ void cf_ExecutorTest_register(void) {
   cf_Test_add(cf_ExecutorTest_test);
 }
 
+CF_END

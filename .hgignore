@@ -8,3 +8,4 @@ cfan/Makefile
 cfan/Makefile.cfan
 cppfan/libcppfan.a
 cppfan/Makefile
+.DS_Store

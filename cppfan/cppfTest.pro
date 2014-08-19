@@ -31,6 +31,7 @@ INCLUDEPATH += $$PWD/../cfan
 DEPENDPATH += $$PWD/../cfan
 
 unix: LIBS += -lrt
+macx: LIBS -= -lrt
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../cppfan/release/ -lcppfan
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../cppfan/debug/ -lcppfan

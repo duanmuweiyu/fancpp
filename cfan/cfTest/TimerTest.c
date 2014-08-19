@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void printTime() {
   time_t tt;
   char tmpbuf[80];
@@ -55,3 +57,4 @@ void cf_TimerTest_register(void) {
   cf_Test_add(cf_TimerTest_test);
 }
 
+CF_END

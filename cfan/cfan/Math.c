@@ -1,5 +1,6 @@
 #include "cfan/Math.h"
 #include <math.h>
+#include <stdlib.h>
 
 bool cf_Math_approx(double a, double b, double tolerance) {
   double af;

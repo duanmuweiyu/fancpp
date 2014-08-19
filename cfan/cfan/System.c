@@ -6,12 +6,13 @@
 #include <time.h>
 #include <unistd.h>
 
-#ifdef __IOS__
+#ifdef __MACH__
   #include <mach/mach.h>
   #include <mach/mach_time.h>
-  #include <sys/_types/_timespec.h>
+  //#include <sys/_types/_timespec.h>
   #include <mach/mach.h>
   #include <mach/clock.h>
+  #include <sys/timeb.h>
 
   uint64_t cf_System_nanoTicks(void) {
       clock_serv_t cclock;

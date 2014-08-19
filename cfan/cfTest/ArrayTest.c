@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_ArrayTest_testAdd(void) {
   cf_ArrayI array;
   int a = 1;
@@ -81,3 +83,4 @@ void cf_ArrayTest_register(void) {
   cf_Test_add(cf_ArrayTest_testSort);
 }
 
+CF_END

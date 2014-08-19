@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_MemoryPoolTest_test(void) {
   char *pointer1;
   char *pointer2;
@@ -41,3 +43,4 @@ void cf_MemoryPoolTest_register(void) {
   cf_Test_add(cf_MemoryPoolTest_test);
 }
 
+CF_END

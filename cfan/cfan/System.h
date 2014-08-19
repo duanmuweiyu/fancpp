@@ -32,8 +32,8 @@ static inline unsigned long cf_System_currentThreadId() {
   unsigned long GetCurrentThreadId(void);
   return GetCurrentThreadId();
 #else
-  unsigned long pthread_self(void);
-  return pthread_self();
+  //unsigned long pthread_self(void);
+  return (unsigned long)pthread_self();
 #endif
 }
 

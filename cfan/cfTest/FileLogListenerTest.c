@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_FileLogListenerTest_test(void) {
   //int tmp = 0;
   cf_FileLogListener *listener;
@@ -32,3 +34,5 @@ void cf_FileLogListenerTest_test(void) {
 void cf_FileLogListenerTest_register(void) {
   cf_Test_add(cf_FileLogListenerTest_test);
 }
+
+CF_END

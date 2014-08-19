@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_LogTest_test(void) {
   //int tmp = 0;
   CF_ENTRY_FUNC
@@ -25,3 +27,5 @@ void cf_LogTest_test(void) {
 void cf_LogTest_register(void) {
   cf_Test_add(cf_LogTest_test);
 }
+
+CF_END

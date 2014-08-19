@@ -15,8 +15,7 @@
 /************************************************************************/
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
-#include <memory.h>
+#include <stdlib.h>
 
 #ifdef WIN32
 #define uint8_t  unsigned __int8

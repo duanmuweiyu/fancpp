@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_FileTest_test(void) {
   const char *path = "/home";
   cf_DirIterator iter;
@@ -37,3 +39,5 @@ void cf_FileTest_test(void) {
 void cf_FileTest_register(void) {
   cf_Test_add(cf_FileTest_test);
 }
+
+CF_END

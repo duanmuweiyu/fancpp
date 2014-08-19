@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_MemoryTest_testBase(void) {
   char *pointer;
   CF_ENTRY_FUNC
@@ -89,3 +91,4 @@ void cf_MemoryTest_register(void) {
   cf_Test_add(cf_MemoryTest_testRealloc);
 }
 
+CF_END

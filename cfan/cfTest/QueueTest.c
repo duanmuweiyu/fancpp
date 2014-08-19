@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_QueueTest_test(void) {
   cf_Queue queue;
   int a = 1;
@@ -61,3 +63,4 @@ void cf_QueueTest_register(void) {
   cf_Test_add(cf_QueueTest_test);
 }
 
+CF_END

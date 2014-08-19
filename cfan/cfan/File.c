@@ -36,3 +36,6 @@ cf_Error cf_File_outputStream(cf_File *self, cf_FileOutputStream *out, bool appe
   CF_EXIT_FUNC
   return cf_Error_ok;
 }
+
+#include "cfan/File_unix.inc"
+#include "cfan/File_win.inc"

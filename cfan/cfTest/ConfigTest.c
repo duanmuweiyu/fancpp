@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
 
 void cf_ConfigTest_test(void) {
   cf_Config map;
@@ -38,3 +39,5 @@ void cf_ConfigTest_test(void) {
 void cf_ConfigTest_register(void) {
   cf_Test_add(cf_ConfigTest_test);
 }
+
+CF_END

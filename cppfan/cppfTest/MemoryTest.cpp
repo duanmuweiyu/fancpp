@@ -36,10 +36,10 @@ CF_DEF_TEST(MemoryTest_testPlacementNew){
   MemoryTestObj *obj5 = new (buffer2) MemoryTestObj[2];
   cf_dumpMem();
   puts("-------");
-  obj2->~Object();
+  obj2->~MemoryTestObj();
   puts("-------");
   obj5->~MemoryTestObj();
   puts("-------");
-  (obj5+1)->~MemoryTestSuperObj();
+  (obj5+1)->~MemoryTestObj();
   puts("-------");
 }

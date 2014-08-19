@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 static void verifyLink(cf_LinkedList *list) {
   cf_LinkedListElem *elem;
 
@@ -82,3 +84,5 @@ void cf_LinkedListTest_testAdd(void) {
 void cf_LinkedListTest_register(void) {
   cf_Test_add(cf_LinkedListTest_testAdd);
 }
+
+CF_END

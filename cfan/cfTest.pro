@@ -5,7 +5,7 @@ CONFIG += console
 CONFIG -= qt
 
 
-QMAKE_CC += -std=c99
+QMAKE_CC += -std=c99 -v
 #QMAKE_CC += -O3
 
 
@@ -42,6 +42,7 @@ else:symbian: LIBS += -lcfan
 else:unix: LIBS += -L$$OUT_PWD/../cfan/ -lcfan
 
 unix: LIBS += -lrt
+macx: LIBS -= -lrt
 
 INCLUDEPATH += $$PWD/../cfan
 DEPENDPATH += $$PWD/../cfan

@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_HashMapTest_testGet(void) {
   cf_HashMapSS map;
 
@@ -106,3 +108,5 @@ void cf_HashMapTest_register(void) {
   cf_Test_add(cf_HashMapTest_testIter);
   cf_Test_add(cf_HashMapTest_testRemove);
 }
+
+CF_END

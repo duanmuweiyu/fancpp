@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_LinkedQueueTest_test(void) {
   cf_LinkedQueue queue;
   int a = 1;
@@ -48,3 +50,5 @@ void cf_LinkedQueueTest_test(void) {
 void cf_LinkedQueueTest_register(void) {
   cf_Test_add(cf_LinkedQueueTest_test);
 }
+
+CF_END

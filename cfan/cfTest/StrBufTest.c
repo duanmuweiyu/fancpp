@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "cfan/cfan.h"
 
+CF_BEGIN
+
 void cf_StrBufTest_testPrintf(void) {
   cf_StrBuf strBuf;
   CF_ENTRY_FUNC
@@ -95,3 +97,4 @@ void cf_StrBufTest_register(void) {
   cf_Test_add(cf_StrBufTest_testAddOverflow);
 }
 
+CF_END
