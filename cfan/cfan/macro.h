@@ -11,6 +11,7 @@
 #ifndef _CF_MACRO_H_
 #define _CF_MACRO_H_
 
+#include "cfan/miss.h"
 
 /*========================================================================
  * extern "C"

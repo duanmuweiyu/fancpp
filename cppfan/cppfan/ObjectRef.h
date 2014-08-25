@@ -22,7 +22,7 @@ public:
     other.pointer->addRef();
   }
 
-  ~ObjectRef() {
+  virtual ~ObjectRef() {
     pointer->release();
   }
 
