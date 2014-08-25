@@ -246,6 +246,10 @@ void cf_Memory_free(const char *file, const char *func, const unsigned int line,
     cf_Memory_memManager.last = NULL;
   }
 
+  //free trace str
+  free((void*)chunk->trace);
+  chunk->trace = NULL;
+
   chunk->checkCode = 0;
   cf_Memory_setTailCheckCode(chunk, 0);
   memset(chunk, cf_Memory_clearCode, chunk->size + sizeof(cf_MemChunk) + sizeof(int));
@@ -278,8 +282,8 @@ void cf_Memory_dumpMem() {
   printf("memory dump:\n");
   for (; chunk != NULL; chunk = chunk->next) {
     cf_Memory_doCheck_(chunk);
-    printf("file:%s(%s), line:%d, size:%ld\n"
-      , chunk->file, chunk->trace, chunk->line, chunk->size);
+    printf("file:%s, line:%d, size:%ld, (%s)\n"
+      , chunk->file, chunk->line, chunk->size, chunk->trace);
   }
   printf("end memory dump\n");
 #ifndef CF_NO_THREAD_SAFE

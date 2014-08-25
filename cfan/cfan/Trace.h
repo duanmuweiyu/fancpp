@@ -14,9 +14,6 @@
 #include "cfan/FuncTrace.h"
 #include "cfan/StackTrace.h"
 
-#ifdef CF_DEBUG
-  #define CF_FUNCTRACE
-#endif
 
 #if !defined(CF_WIN) && !defined(__ANDROID__)
   #define CF_STACKTRACE
