@@ -28,7 +28,7 @@ void cf_FileTest_test(void) {
   cf_File_make(&file, path);
   err = cf_File_loadInfo(&file);
 
-  cf_verify(err);
+  cf_verify(err == cf_Error_ok);
   cf_verify(cf_File_isDir(&file));
 
   CF_EXIT_FUNC
