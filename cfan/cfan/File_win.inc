@@ -84,8 +84,13 @@ cf_Error CF_File_delete(cf_File *self) {
 cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
   WIN32_FIND_DATAA *findFileData;
   HANDLE hFind;
+  char *regex = cf_malloc(strlen(path)+3);
+  strcpy(regex, path);
+  strcat(regex, "\\*");
+
   findFileData = (WIN32_FIND_DATAA *)cf_malloc(sizeof(WIN32_FIND_DATAA)*2);
-  hFind = FindFirstFileA(path, findFileData);
+  hFind = FindFirstFileA(regex, findFileData);
+  cf_free(regex);
   if (hFind == INVALID_HANDLE_VALUE)
   {
     cf_free(findFileData);

@@ -96,6 +96,18 @@ char *cf_StrToken_next(cf_StrToken *self) {
   return current;
 }
 
+/*========================================================================
+ * Uri
+ */
+
+void cf_StrUri_fromNative(char *self) {
+    cf_Str_replaceChar(self, '\\', '/');
+}
+
+void cf_StrUri_toNative(char *self) {
+    cf_Str_replaceChar(self, '/', '\\');
+}
+
 cf_Error cf_StrUri_getBaseName(const char *self, char *out, int bufferSize) {
   char *i = strrchr(self, cf_StrUri_separatorChar);
   char *j = strrchr(self, '.');

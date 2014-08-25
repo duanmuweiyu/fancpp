@@ -36,7 +36,7 @@ typedef struct cf_File_ {
  * constructor
  *
  */
-static inline void cf_File_make(cf_File *self, char *path) {
+static inline void cf_File_make(cf_File *self, const char *path) {
   strncpy(self->path, path, CF_PATH_MAX);
   self->exists = false;
   self->path[CF_PATH_MAX-1] = 0;

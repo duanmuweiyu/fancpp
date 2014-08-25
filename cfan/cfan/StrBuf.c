@@ -173,7 +173,7 @@ cf_Error cf_StrBuf_printf(cf_StrBuf *self, size_t hintBuffersize, const char *fo
 
 //windows return -1, unix return expected size
 #ifdef CF_WIN
-  while (rc == (int)(size-1)) {
+  while (rc < 0) {
     size *= 2;
     if (size > 1E9) break;
     err = cf_StrBuf_reserver_(self, size);

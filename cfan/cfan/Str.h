@@ -111,11 +111,14 @@ char *cf_StrToken_next(cf_StrToken *self);
  * Uri
  */
 
-#ifdef CF_WIN
-  #define cf_StrUri_separatorChar '\\'
-#else
+//#ifdef CF_WIN
+//  #define cf_StrUri_separatorChar '\\'
+//#else
   #define cf_StrUri_separatorChar '/'
-#endif
+//#endif
+
+void cf_StrUri_fromNative(char *self);
+void cf_StrUri_toNative(char *self);
 
 cf_Error cf_StrUri_getBaseName(const char *self, char *out, int bufferSize);
 
