@@ -60,7 +60,7 @@ static inline void *cf_memcpy(void *dest, const void *src, size_t n) {
  */
 
 #if defined(CF_WIN)
-  #define cf_compareAndSwap(ptr, old, new) InterlockedCompareExchange(ptr, new, old)
+  #define cf_compareAndSwap(ptr, old, new) InterlockedCompareExchange((LPLONG)ptr, new, old)
 #elif defined(__IOS__)
   #include <libkern/OSAtomic.h>
   #define cf_compareAndSwap(ptr, old, new) __sync_bool_compare_and_swap(ptr, old, new)

@@ -584,6 +584,7 @@ int tss_set(tss_t key, void *val)
 #if defined(_TTHREAD_EMULATE_CLOCK_GETTIME_)
 int _tthread_clock_gettime(clockid_t clk_id, struct timespec *ts)
 {
+    (void)clk_id;
 #if defined(_TTHREAD_WIN32_)
   struct _timeb tb;
   _ftime(&tb);

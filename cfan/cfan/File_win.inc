@@ -21,9 +21,9 @@ cf_Error cf_File_loadInfo(cf_File *self) {
   DWORD lpFileSizeHigh;
   DWORD lpFileSizeLow;
   DWORD rc;
-  __int64 ll;
+  unsigned __int64 ll;
 
-  rc = GetFileAttributes(self->path);
+  rc = GetFileAttributesA(self->path);
   if (rc == INVALID_FILE_ATTRIBUTES) {
     goto error;
   }
@@ -35,7 +35,7 @@ cf_Error cf_File_loadInfo(cf_File *self) {
   }
 
 
-  hFile = CreateFile(self->path, GENERIC_READ, FILE_SHARE_READ, NULL,
+  hFile = CreateFileA(self->path, GENERIC_READ, FILE_SHARE_READ, NULL,
           OPEN_EXISTING, 0, NULL);
 
   if(hFile == INVALID_HANDLE_VALUE) {
@@ -55,8 +55,8 @@ cf_Error cf_File_loadInfo(cf_File *self) {
   self->size = (size_t)lpFileSizeLow;
 
   //FILETIME to time_t
-  ll = ftWrite.dwHighDateTime << 32 + ftWrite.dwLowDateTime;
-  self->mtime = (time_t)((__int64)(ll - 116444736000000000) / 10000000);
+  ll = (((unsigned __int64)ftWrite.dwHighDateTime) << 32) + ftWrite.dwLowDateTime;
+  self->mtime = (time_t)((unsigned __int64)(ll - 116444736000000000) / 10000000);
   self->exists = true;
 
   CloseHandle(hFile);
@@ -68,29 +68,29 @@ error:
 }
 
 cf_Error cf_File_createDir(cf_File *self) {
-  if (CreateDirectory(self->path, NULL) != NULL) {
+  if (CreateDirectoryA(self->path, NULL) != 0) {
     return cf_Error_ok;
   }
   return cf_Error_file;
 }
 
 cf_Error CF_File_delete(cf_File *self) {
-  if (DeleteFile(self->path)) {
+  if (DeleteFileA(self->path)) {
     return cf_Error_ok;
   }
   return cf_Error_file;
 }
 
 cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
-  WIN32_FIND_DATA *findFileData;
+  WIN32_FIND_DATAA *findFileData;
   HANDLE hFind;
-  findFileData = (WIN32_FIND_DATA *)cf_malloc(sizeof(WIN32_FIND_DATA)*2);
-  hFind = FindFirstFile(path, findFileData);
+  findFileData = (WIN32_FIND_DATAA *)cf_malloc(sizeof(WIN32_FIND_DATAA)*2);
+  hFind = FindFirstFileA(path, findFileData);
   if (hFind == INVALID_HANDLE_VALUE)
   {
     cf_free(findFileData);
     self->second = NULL;
-    printf ("FindFirstFile failed (%d)\n", GetLastError());
+    printf ("FindFirstFile failed (%d)\n", (int)GetLastError());
     return cf_Error_file;
   }
   self->first = (void*)hFind;
@@ -99,16 +99,16 @@ cf_Error cf_DirIterator_make(cf_DirIterator *self, const char *path) {
 }
 
 const char* cf_DirIterator_next(cf_DirIterator *self) {
-  WIN32_FIND_DATA *findFileData;
+  WIN32_FIND_DATAA *findFileData;
   HANDLE hFind;
 
   hFind = (HANDLE)self->first;
-  findFileData = (WIN32_FIND_DATA *)self->second;
+  findFileData = (WIN32_FIND_DATAA *)self->second;
 
   if (hFind == 0) return NULL;
   findFileData[1] = findFileData[0];
 
-  if (!FindNextFile(hFind, findFileData))
+  if (!FindNextFileA(hFind, findFileData))
   {
     FindClose(hFind);
     self->first = 0;
@@ -117,11 +117,11 @@ const char* cf_DirIterator_next(cf_DirIterator *self) {
 }
 
 void cf_DirIterator_dispose(cf_DirIterator *self) {
-  WIN32_FIND_DATA *findFileData;
+  WIN32_FIND_DATAA *findFileData;
   HANDLE hFind;
 
   hFind = (HANDLE)self->first;
-  findFileData = (WIN32_FIND_DATA *)self->second;
+  findFileData = (WIN32_FIND_DATAA *)self->second;
 
   if (hFind) FindClose(hFind);
   if (findFileData) cf_free(findFileData);

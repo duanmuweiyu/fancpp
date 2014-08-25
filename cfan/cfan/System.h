@@ -29,7 +29,7 @@ cf_Error cf_System_getSelfPath(char *selfname);
 
 static inline unsigned long cf_System_currentThreadId() {
 #ifdef CF_WIN
-  unsigned long GetCurrentThreadId(void);
+  //unsigned long GetCurrentThreadId(void);
   return GetCurrentThreadId();
 #else
   //unsigned long pthread_self(void);

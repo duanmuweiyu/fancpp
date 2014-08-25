@@ -7,7 +7,7 @@ CONFIG -= qt
 
 QMAKE_CC += -std=c99 -v
 #QMAKE_CC += -O3
-QMAKE_CC += -rdynamic
+unix: QMAKE_CC += -rdynamic
 
 DEFINES += DEBUG
 

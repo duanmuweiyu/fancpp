@@ -100,8 +100,9 @@ void cf_System_sleep(long millitm) {
 }
 
 cf_Error cf_System_getSelfPath(char *selfname) {
-  TCHAR szFileName[MAX_PATH];
-  GetModuleFileName(NULL,szFileName,MAX_PATH);
+  //TCHAR szFileName[MAX_PATH];
+  GetModuleFileNameA(NULL,selfname,MAX_PATH);
+  return cf_Error_ok;
 }
 
 #endif

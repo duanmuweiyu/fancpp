@@ -8,10 +8,11 @@
  *   2012-12-23  Jed Young  Creation
  */
 
-#if !defined(CF_WIN) && !defined(__ANDROID__)
-
 #include "cfan/StackTrace.h"
 #include "cfan/Error.h"
+
+#if !defined(CF_WIN) && !defined(__ANDROID__)
+
 
 #include <execinfo.h>
 #include <stdio.h>

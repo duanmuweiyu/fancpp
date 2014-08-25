@@ -7,7 +7,7 @@ VERSION = 1.0.0
 
 QMAKE_CC += -std=c99
 #QMAKE_CC += -O3
-QMAKE_CC += -rdynamic
+unix: QMAKE_CC += -rdynamic
 QMAKE_CC += -Wall -Werror
 
 DEFINES += CF_EXPORT
