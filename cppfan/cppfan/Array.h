@@ -2,6 +2,7 @@
 #define _CPPF_ARRAY_H_
 
 #include "cppfan/Object.h"
+#include <new>
 
 CF_BEGIN_NAMESPACE
 
