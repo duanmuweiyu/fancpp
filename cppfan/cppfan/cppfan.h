@@ -9,5 +9,7 @@
 #include "cppfan/AutoPtr.h"
 #include "cppfan/String.h"
 #include "cppfan/Actor.h"
+#include "cppfan/MemStream.h"
+#include "cppfan/FileStream.h"
 
 #endif // _CPPF_CPPFAN_H_

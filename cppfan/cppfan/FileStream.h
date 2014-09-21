@@ -13,9 +13,9 @@ public:
     cf_assert(file);
   }
 
-  virtual cf_Error read(char *out, int n) {
-    int c = fread(out, n, 1, file);
-    return c == 1 ? cf_Error_ok : cf_Error_error;
+  virtual int read(char *out, int n) {
+    int c = fread(out, 1, n, file);
+    return c;
   }
 
   virtual cf_Error write(char *m, int n) {
@@ -33,14 +33,15 @@ public:
   }
 
   bool seek(int64_t pos) {
-    const fpos_t p = pos;
-    int c = fsetpos(file, &p);
+    //const fpos_t p = pos;
+    int c = fseek(file, (long)pos, SEEK_SET);
     return c == 0;
   }
 
   int64_t position() {
-    fpos_t p;
-    fgetpos(file, &p);
+    //fpos_t p;
+    //fgetpos(file, &p);
+    long p = ftell(file);
     return p;
   }
 
@@ -60,7 +61,7 @@ public:
   }
 
   bool getError() {
-    if (ferror(((cf_FileOutputStream*)self)->file)) {
+    if (ferror(file)) {
       return false;
     }
     return true;

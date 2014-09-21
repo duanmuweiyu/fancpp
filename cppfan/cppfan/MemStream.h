@@ -11,9 +11,9 @@ class MemStream : public Stream {
 public:
   MemStream(int size) : data(size) {}
 
-  virtual cf_Error read(char *out, int n);
+  virtual int read(char *out, size_t n);
 
-  virtual cf_Error write(char *m, int n);
+  virtual cf_Error write(char *m, size_t n);
 
   virtual void flush() {
     //do nothing
