@@ -30,6 +30,10 @@ cf_Error cf_File_loadInfo(cf_File *self) {
 
   if (rc == FILE_ATTRIBUTE_DIRECTORY) {
     self->isDir = true;
+    self->exists = true;
+    self->size = 0;
+    self->mtime = (time_t)0;
+    return cf_Error_ok;
   } else {
     self->isDir = false;
   }
