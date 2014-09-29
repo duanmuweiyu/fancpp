@@ -4,7 +4,7 @@ CF_USING_NAMESPACE
 
 int MemStream::read(char *out, size_t n) {
   int size = data.size();
-  int remains = data._getCapacity() - size;
+  unsigned int remains = data._getCapacity() - size;
   if (remains <= 0) return -1;
   if (n > remains) n = remains;
 

@@ -24,7 +24,8 @@ HEADERS += \
     cppfan/Stream.h \
     cppfan/FileStream.h \
     cppfan/MemStream.h \
-    cppfan/Actor.h
+    cppfan/Actor.h \
+    cppfan/Cache.h
 
 SOURCES += \
     cppfan/String.cpp \

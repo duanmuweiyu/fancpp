@@ -11,5 +11,6 @@
 #include "cppfan/Actor.h"
 #include "cppfan/MemStream.h"
 #include "cppfan/FileStream.h"
+#include "cppfan/Cache.h"
 
 #endif // _CPPF_CPPFAN_H_

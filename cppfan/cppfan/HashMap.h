@@ -4,6 +4,7 @@
 #include "cppfan/Object.h"
 #include "cppfan/LinkedList.h"
 #include "cppfan/ObjectRef.h"
+#include "cppfan/String.h"
 
 CF_BEGIN_NAMESPACE
 
@@ -35,6 +36,13 @@ struct HashFunc<int> {
 template<>
 struct HashFunc<Object> {
   unsigned int operator()(const Object &key) {
+    return key.hashCode();
+  }
+};
+
+template<>
+struct HashFunc<StringRef> {
+  unsigned int operator()(const StringRef &key) {
     return key.hashCode();
   }
 };
@@ -76,7 +84,7 @@ public:
     cf_MemoryPool_dispose(&memPool);
   }
 
-  int size() { return _size; }
+  int size() const { return _size; }
 
   V *get(const K &key) {
     HashMapElem *elem = first(key);
@@ -116,8 +124,8 @@ public:
     return elem->val;
   }
 
-  bool contains(const K &key) {
-    HashMapElem *elem = first(key);
+  bool contains(const K &key) const {
+    HashMapElem *elem = ((HashMap*)this)->first(key);
     while (elem) {
       if (elem->key == key) {
         return true;

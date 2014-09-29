@@ -2,6 +2,7 @@
 #define OBJECTREF_H
 
 #include "cppfan/common.h"
+#include "cppfan/Object.h"
 
 CF_BEGIN_NAMESPACE
 
@@ -23,12 +24,16 @@ public:
   }
 
   virtual ~ObjectRef() {
-    pointer->release();
+    if (pointer) {
+      pointer->release();
+    }
   }
 
   ObjectRef &operator=(const ObjectRef& other) {
     other.pointer->addRef();
-    pointer->release();
+    if (pointer) {
+      pointer->release();
+    }
     pointer = other.pointer;
     return *this;
   }
@@ -41,9 +46,9 @@ public:
 
   void setRawPtr(T *p) { pointer = p; }
 
-  virtual long hashCode() const { return this->hashCode(); }
-  virtual bool equals(const Object &other) const { return this->equals(other); }
-  virtual int compare(const Object &other) const { return this->compare(other); }
+  virtual long hashCode() const { return pointer->hashCode(); }
+  virtual bool equals(const Object &other) const { return pointer->equals(other); }
+  virtual int compare(const Object &other) const { return pointer->compare(other); }
 };
 
 CF_END_NAMESPACE

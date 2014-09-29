@@ -5,11 +5,15 @@
 
 CF_BEGIN_NAMESPACE
 
+#define CF_OBJECT(Type) public: virtual const char *type(){ return #Type; }\
+        static const char *staticType(){ return #Type; } private:
+
 /**
  * Base class for all class.
  * support reference count to manager memory.
  */
 class Object {
+  CF_OBJECT(Object)
 protected:
   /**
    * current reference count, base 0
@@ -49,6 +53,15 @@ public:
 
 };
 
+template<class T>
+void cf_deleteIt(T& o) {
+  CF_UNUSED(o);
+}
+
+template<class T>
+void cf_deleteIt(T* o) {
+  delete o->release();
+}
 
 CF_END_NAMESPACE
 #endif // OBJECT_H

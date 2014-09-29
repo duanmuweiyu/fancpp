@@ -10,12 +10,13 @@
 CF_BEGIN_NAMESPACE
 
 class String : public Array<char> {
+  mutable long _hashCode;
 public:
-  String() : Array<char>(16) {
+  String() : Array<char>(16), _hashCode(0) {
     str()[0] = 0;
   }
 
-  String(const char *cstr) {
+  String(const char *cstr) : _hashCode(0) {
     int len = strlen(cstr);
     reserver(len+1);
     strcpy(str(), cstr);
@@ -32,14 +33,11 @@ public:
 
   double toDouble() const { return atof(str()); }
 
-  bool equals(const String& r) const { return strcmp(str(), r.str()) == 0; }
+  bool equals(const Object& r) const;
 
-  String &addStr(const char *s) {
-    int len = strlen(s);
-    addCapacity(len);
-    strcpy(str()+size(), s);
-    return *this;
-  }
+  virtual long hashCode() const;
+
+  String &addStr(const char *s);
 };
 
 class StringRef : public ObjectRef<String> {
@@ -52,11 +50,12 @@ public:
     getRawPtr()->addStr(s);
     return *this;
   }
+
+  inline bool operator== (const StringRef& r) const {
+    return this->equals(*((StringRef&)r).getRawPtr());
+  }
 };
 
-static inline bool operator== (StringRef& l, StringRef& r) {
-  return l->equals(*r.getRawPtr());
-}
 
 CF_END_NAMESPACE
 #endif // STRING_H
