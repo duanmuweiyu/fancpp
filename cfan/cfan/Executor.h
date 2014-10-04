@@ -46,20 +46,22 @@ int *cf_Executor_thread_(void *arg);
  */
 cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t threadSize);
 
+
+/**
+ * add a task with bloking startegy option
+ */
+static inline cf_Error cf_Executor_addTaskWithStrate(cf_Executor *self
+                                                , void *(*func)(void*), void *args
+                                                , cf_BlockingStrategy strate) {
+  cf_ExecutorTask task = { func, args };
+  return cf_BlockingQueue_add(&self->taskQueue, &task, strate);
+}
+
 /**
  * add a task
  */
 static inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void*), void *args) {
-  cf_ExecutorTask task = { func, args };
-  return cf_BlockingQueue_add(&self->taskQueue, &task, cf_BlockingStrategy_blocking);
-}
-
-/**
- * add a task, remove the first if queue full.
- */
-static inline cf_Error cf_Executor_addTaskForce(cf_Executor *self, void *(*func)(void*), void *args) {
-  cf_ExecutorTask task = { func, args };
-  return cf_BlockingQueue_add(&self->taskQueue, &task, cf_BlockingStrategy_removeFirst);
+  return cf_Executor_addTaskWithStrate(self, func, args, cf_BlockingStrategy_blocking);
 }
 
 /**
