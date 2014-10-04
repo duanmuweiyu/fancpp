@@ -26,10 +26,11 @@
 
 #define CF_FIELD_REF(Type, name) private: Type _##name;\
   public: Type &name() { return _##name; }\
+  public: void name(Type &name_) { _##name = name_; }\
   private:
 
 #define CF_FIELD_CONST_REF(Type, name) private: Type _##name;\
-  public: Type &name() const { return _##name; } \
+  public: const Type &name() const { return _##name; } \
   public: void name(Type &name_) { _##name = name_; }\
   private:
 

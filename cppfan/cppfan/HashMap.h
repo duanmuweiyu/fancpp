@@ -64,6 +64,70 @@ class HashMap : public Object {
   int _size;
   int tableSize;
 public:
+  class Iterator {
+    HashMap *parent;
+    int position;
+    HashMapElem *elem;
+  public:
+    Iterator(HashMap *parent) :
+      parent(parent), position(0), elem(NULL) {
+    }
+
+  public:
+    K &getK() {
+      return elem->key;
+    }
+
+    V &getV() {
+      return elem->val;
+    }
+
+    void reset() {
+      elem = NULL;
+      position = 0;
+    }
+
+    /**
+     * move to next elem.
+     * return false at end of. return true has more element.
+     */
+    bool next() {
+      //normal
+      if (elem != NULL && elem != parent->table[position].end()) {
+        if (elem->next != parent->table[position].end()) {
+          elem = elem->next;
+          return true;
+        }
+      }
+
+      if (elem == NULL) {
+        //finised
+        if (position > 0) {
+          return false;
+        }
+        //unstart
+        else if (position == 0) {
+          elem = parent->table[0].first();
+          if (elem != parent->table[position].end()) { return true; }
+        }
+      }
+
+      /*increase position*/
+      do {
+        ++(position);
+        if ((position) == (parent->tableSize)){
+          elem = NULL;
+          return false;
+        }
+        //find new linkedlist
+        elem = parent->table[position].first();
+        if (elem != parent->table[position].end()) { return true; }
+      } while (true);
+      return false;
+    }
+  };
+  friend class Iterator;
+public:
   HashMap(int tableSize) : _size(0), tableSize(tableSize) {
     table = new LinkedList<HashMapElem>[tableSize];
     cf_MemoryPool_make(&memPool, sizeof(HashMapElem), tableSize);
@@ -74,7 +138,7 @@ public:
       LinkedList<HashMapElem> *list = table+i;
       HashMapElem *elem = list->first();
       HashMapElem *next;
-      while (elem) {
+      while (elem != list->end()) {
         next = elem->next;
         free(elem);
         elem = next;
@@ -84,11 +148,16 @@ public:
     cf_MemoryPool_dispose(&memPool);
   }
 
+  Iterator getIterator() {
+    return Iterator(this);
+  }
+
   int size() const { return _size; }
 
   V *get(const K &key) {
-    HashMapElem *elem = first(key);
-    while (elem) {
+    LinkedList<HashMapElem> &link = getLink(key);
+    HashMapElem *elem = link.first();
+    while (elem != link.end()) {
       if (elem->key == (K &)key) {
         return &elem->val;
       }
@@ -109,7 +178,7 @@ public:
   V &set(const K &key, V &val) {
     LinkedList<HashMapElem> &link = table[hash(key)];
     HashMapElem *elem = link.first();
-    while (elem) {
+    while (elem != link.end()) {
       if (elem->key == (K &)key) {
         elem->val = val;
         return elem->val;
@@ -125,8 +194,9 @@ public:
   }
 
   bool contains(const K &key) const {
-    HashMapElem *elem = ((HashMap*)this)->first(key);
-    while (elem) {
+    LinkedList<HashMapElem> &link = getLink(key);
+    HashMapElem *elem = link.first();
+    while (elem != link.end()) {
       if (elem->key == key) {
         return true;
       }
@@ -138,7 +208,7 @@ public:
   bool remove(const K &key) {
     LinkedList<HashMapElem> &link = table[hash(key)];
     HashMapElem *elem = link.first();
-    while (elem) {
+    while (elem != link.end()) {
       if (elem->key == key) {
         link.remove(elem);
         free(elem);
@@ -146,18 +216,33 @@ public:
         return true;
       }
       elem = elem->next;
-    } while (elem);
+    };
     return false;
   }
 
+  void clear() {
+    for (int i=0; i<tableSize; ++i) {
+      LinkedList<HashMapElem> &link = table[i];
+      HashMapElem *elem = link.first();
+      while (elem != link.end()) {
+        HashMapElem *temp = elem;
+        elem = elem->next;
+        link.remove(temp);
+        free(temp);
+        --_size;
+      };
+    }
+    cf_assert(_size == 0);
+  }
+
 private:
-  unsigned int hash(const K &key) {
+  unsigned int hash(const K &key) const {
     hashFunc func;
     return func(key) % tableSize;
   }
 
-  HashMapElem *first(const K &key) {
-    return table[hash(key)].first();
+  LinkedList<HashMapElem> &getLink(const K &key) const {
+    return const_cast<HashMap*>(this)->table[hash(key)];
   }
 
   HashMapElem *alloc() {

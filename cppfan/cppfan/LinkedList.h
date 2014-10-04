@@ -7,104 +7,80 @@ CF_BEGIN_NAMESPACE
 
 template<typename T>
 class LinkedList : public Object {
-  T *head;
-  T *tail;
+  T head;
+  T &tail;
   int length;
 public:
-  LinkedList() : head(NULL), tail(NULL), length(0) {
+  LinkedList() : tail(head), length(0) {
+    head.previous = &head;
+    head.next = &head;
   }
 
   int size() { return length; }
 
-  LinkedList &add(T *val) {
-    if (head == NULL) {
-      head = val;
-      head->previous = NULL;
-    }
-    if (tail == NULL) {
-      tail = val;
-      tail->next = NULL;
-    } else {
-      tail->next = val;
-      val->previous = tail;
-      val->next = NULL;
-      tail = val;
-    }
+  LinkedList &add(T *elem) {
+    T *left = tail.previous;
+    T *right = left->next;
+    elem->next = right;
+    right->previous = elem;
+    elem->previous = left;
+    left->next = elem;
     ++length;
     return *this;
   }
 
-  void insertFirst(T *val) {
-    if (tail == NULL) {
-      tail = val;
-      tail->next = NULL;
-    }
-    if (head == NULL) {
-      head = val;
-      head->previous = NULL;
-    } else {
-      val->next = head;
-      val->previous = NULL;
-      head->previous = val;
-      head = val;
-    }
+  void insertFirst(T *elem) {
+    T *left = &this->head;
+    T *right = left->next;
+    elem->next = right;
+    right->previous = elem;
+    elem->previous = left;
+    left->next = elem;
     ++length;
   }
 
   T *getAt(int index) {
-    int i=0;
-    T *t = head;
-    while (t) {
+    T *elem;
+    int i = 0;
+    elem = this->head.next;
+    while (elem != &this->tail) {
       if (i == index) {
-        return t;
+        return elem;
       }
-      t = t->next;
+      elem = elem->next;
       ++i;
     }
     return NULL;
   }
 
-  void insertBefore(T *val, T *pos) {
-    cf_assert(head);
-    if (pos == head) {
-      insertFirst(val);
-      return;
-    }
-    pos->previous->next = val;
-    val->previous = pos->previous;
-    val->next = pos;
-    pos->previous = val;
+  void insertBefore(T *elem, T *pos) {
+    cf_assert(pos);
+    cf_assert(elem);
+
+    T *left = pos->previous;
+    T *right = pos;
+    elem->next = right;
+    right->previous = elem;
+    elem->previous = left;
+    left->next = elem;
     ++length;
   }
 
-  bool remove(T *val) {
-    if (val == head) {
-      head = val->next;
-      if (head) {
-        head->previous = NULL;
-      }
-    }
-    else if (val == tail) {
-      tail = val->previous;
-      if (tail) {
-        tail->next = NULL;
-      }
-    }
-    else if (val->previous && val->next) {
-      val->previous->next = val->next;
-      val->next->previous = val->previous;
-    } else {
-      return false;
-    }
+  bool isEmpty() {
+    return head.next == &tail;
+  }
 
-    val->previous = NULL;
-    val->next = NULL;
+  bool remove(T *elem) {
+    if (elem == NULL) return false;
+    elem->previous->next = elem->next;
+    elem->next->previous = elem->previous;
     --length;
     return true;
   }
 
-  T *first() { return head; }
-  T *last() { return tail; }
+  T *first() { return head.next; }
+  T *last() { return tail.previous; }
+  T *end() { return &tail; }
 };
 
 CF_END_NAMESPACE

@@ -55,6 +55,14 @@ static inline cf_Error cf_Executor_addTask(cf_Executor *self, void *(*func)(void
 }
 
 /**
+ * add a task, remove the first if queue full.
+ */
+static inline cf_Error cf_Executor_addTaskForce(cf_Executor *self, void *(*func)(void*), void *args) {
+  cf_ExecutorTask task = { func, args };
+  return cf_BlockingQueue_add(&self->taskQueue, &task, cf_BlockingStrategy_removeFirst);
+}
+
+/**
  * Destroy executor.
  * wait until all threads return.
  */
