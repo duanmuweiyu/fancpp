@@ -30,11 +30,13 @@ cf_Error cf_BlockingQueue_make(cf_BlockingQueue *self, size_t capacity, unsigned
   }
   self->cancelAdd = false;
   self->cancelDelete = false;
+  self->onRemove = NULL;
   return err;
 }
 
 cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, cf_BlockingStrategy strate) {
   register cf_Error result;
+  void *tempElem;
   mtx_lock(&self->mutex);
   while (!self->cancelAdd) {
     result = cf_Queue_add(&self->queue, elem);
@@ -47,10 +49,16 @@ cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, cf_BlockingStr
         cnd_wait(&self->addCond, &self->mutex);
         break;
       case cf_BlockingStrategy_removeLast:
-        cf_Queue_removeLast(&self->queue);
+        tempElem = cf_Queue_removeLast(&self->queue);
+        if (self->onRemove) {
+          (*self->onRemove)(tempElem);
+        }
         break;
       case cf_BlockingStrategy_removeFirst:
-        cf_Queue_delete(&self->queue);
+        tempElem = cf_Queue_delete(&self->queue);
+        if (self->onRemove) {
+          (*self->onRemove)(tempElem);
+        }
         break;
       default:
         mtx_unlock(&self->mutex);
@@ -64,6 +72,18 @@ cf_Error cf_BlockingQueue_add(cf_BlockingQueue *self, void *elem, cf_BlockingStr
   }
   mtx_unlock(&self->mutex);
   return cf_Error_error;
+}
+
+void *cf_BlockingQueue_getAndClear(cf_BlockingQueue *self) {
+  void *result;
+  result = cf_BlockingQueue_delete(self);
+  while (!cf_BlockingQueue_isEmpty(self)) {
+    if (self->onRemove) {
+      (*self->onRemove)(result);
+    }
+    result = cf_BlockingQueue_delete(self);
+  }
+  return result;
 }
 
 void *cf_BlockingQueue_delete(cf_BlockingQueue *self) {

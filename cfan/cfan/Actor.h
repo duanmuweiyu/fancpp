@@ -54,6 +54,7 @@ typedef struct cf_Actor_ {
   mtx_t mutex;
   mtx_t allocMutex;
   void *userData;
+  bool (*mergeMessage)(struct cf_Actor_ *self, cf_ActorMessage *newMsg, cf_ActorMessage *oldMsg);
 } cf_Actor;
 
 /**

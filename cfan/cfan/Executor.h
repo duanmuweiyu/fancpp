@@ -26,6 +26,7 @@ typedef struct cf_Executor_ {
   cf_BlockingQueue taskQueue;
   thrd_t *threadList;
   size_t threadSize;
+  bool onlyRunLatest;
 } cf_Executor;
 
 /**

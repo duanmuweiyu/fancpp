@@ -9,12 +9,14 @@
  */
 
 #include "cfan/Actor.h"
+#include "cfan/Str.h"
 
 cf_Error cf_Actor_make(cf_Actor *self, cf_Executor *executor, cf_ActorReceive receive, cf_Timer *timer) {
   self->receive = receive;
   self->isRuning = false;
   self->executor = executor;
   self->timer = timer;
+  self->mergeMessage = NULL;
 
   cf_LinkedList_make(&self->queue.super);
   cf_MemoryPool_make(&self->queue.allocator, sizeof(cf_ActorMessage), 100);
@@ -48,6 +50,7 @@ void *cf_Actor_run(void *arg) {
 
 void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
   cf_ActorMessage *msgCopy;
+  cf_ActorMessage *elem;
 
   //copy
   mtx_lock(&self->mutex);
@@ -55,6 +58,20 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
   msgCopy = (cf_ActorMessage*)cf_MemoryPool_alloc(&self->queue.allocator);
   mtx_unlock(&self->allocMutex);
   cf_memcpy(msgCopy, amsg, sizeof(cf_ActorMessage));
+
+  //merage message
+  if (self->mergeMessage) {
+    elem = (cf_ActorMessage*)cf_LinkedList_first(&self->queue.super);
+    while (elem != (cf_ActorMessage*)cf_LinkedList_end(&self->queue.super)) {
+      if (cf_Str_equals(elem->name, amsg->name)) {
+        if ((*self->mergeMessage)(self, msgCopy, elem)) {
+          cf_LinkedList_remove(&self->queue.super, &elem->super);
+          cf_MemoryPool_free(&self->queue.allocator, elem);
+        }
+      }
+      elem = (cf_ActorMessage*)elem->super.next;
+    }
+  }
 
   cf_LinkedList_add(&self->queue.super, &msgCopy->super);
 

@@ -5,15 +5,47 @@
 
 CF_BEGIN_NAMESPACE
 
-class Actor : public Object {
+class SimpleActor : public Object {
 protected:
   cf_Actor actor;
-  cf_HashMapSP map;
-  Actor(){}
+  cf_Executor *executor;
 public:
+  SimpleActor() : executor(0) {}
+
+  void initSimple(int threadSize);
+
   void init(cf_Executor *executor, cf_Timer *timer);
 
-  virtual cf_Error recevie(cf_ActorMessage *msg);
+  void send(cf_ActorMessage *msg) {
+    cf_Actor_send(&actor, msg);
+  }
+
+  /**
+   * return false refused merge message.
+   * if return true please delete oldMsg->arg.
+   * only the same name message can be merged.
+   */
+  virtual bool mergeMessage(cf_ActorMessage *newMsg, cf_ActorMessage *oldMsg) {
+    CF_UNUSED(newMsg);
+    CF_UNUSED(oldMsg);
+    return false;
+  }
+
+  virtual void recevie(cf_ActorMessage *msg) = 0;
+
+  virtual ~SimpleActor();
+};
+
+/**
+ * auto distribute the message by message name
+ */
+class Actor : public SimpleActor {
+protected:
+  cf_HashMapSP map;
+public:
+  Actor();
+
+  virtual void recevie(cf_ActorMessage *msg);
 
   virtual ~Actor();
 };

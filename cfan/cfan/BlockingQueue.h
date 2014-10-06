@@ -31,6 +31,8 @@ typedef struct cf_BlockingQueue_ {
   cnd_t deleteCond;
   bool cancelAdd;
   bool cancelDelete;
+
+  void (*onRemove)(void *);
 } cf_BlockingQueue;
 
 typedef enum cf_BlockingStrategy_ {
@@ -91,6 +93,12 @@ static inline void cf_BlockingQueue_cancel(cf_BlockingQueue *self) {
  * If queue is empty will be blocked.
  */
 void *cf_BlockingQueue_delete(cf_BlockingQueue *self);
+
+/**
+ * clear and return last
+ * If queue is empty will be blocked.
+ */
+void *cf_BlockingQueue_getAndClear(cf_BlockingQueue *self);
 
 /**
  * get first element but pop out.

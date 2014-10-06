@@ -15,6 +15,7 @@ cf_Error cf_Executor_make(cf_Executor *self, size_t taskSize, size_t threadSize)
   int terr;
   size_t i;
   CF_ENTRY_FUNC
+  self->onlyRunLatest = false;
 
   err = cf_BlockingQueue_make(&self->taskQueue, taskSize, sizeof(cf_ExecutorTask));
   if (err == cf_Error_ok) {
@@ -44,7 +45,12 @@ int *cf_Executor_thread_(void *arg) {
   //printf("thread %d run\n", thrd_current());
   //fflush(stdout);
   while (true) {
-    task = (cf_ExecutorTask *)cf_BlockingQueue_delete(&self->taskQueue);
+    if (self->onlyRunLatest) {
+      task = (cf_ExecutorTask *)cf_BlockingQueue_getAndClear(&self->taskQueue);
+    } else {
+      task = (cf_ExecutorTask *)cf_BlockingQueue_delete(&self->taskQueue);
+    }
+
     if (task != NULL) {
       (*task->func)(task->args);
     } else {
