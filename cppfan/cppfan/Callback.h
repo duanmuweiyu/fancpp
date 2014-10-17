@@ -8,6 +8,7 @@ CF_BEGIN_NAMESPACE
 class Callback {
 public:
   virtual void *call(void *arg) = 0;
+  virtual  ~Callback(){}
 };
 
 CF_END_NAMESPACE
