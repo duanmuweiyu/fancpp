@@ -29,6 +29,7 @@ SimpleActor::~SimpleActor() {
   cf_Actor_dispose(&actor);
   if (executor) {
     cf_Executor_dispose(executor);
+    cf_free(executor);
   }
 }
 
