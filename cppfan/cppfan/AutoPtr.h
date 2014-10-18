@@ -32,7 +32,7 @@ public:
   ~AutoPtr() {
     if (--(*refCount) < 0) {
       cf_free(refCount);
-      free(pointer);
+      freeIt(pointer);
     }
   }
 
@@ -40,7 +40,7 @@ public:
     ++(*other.refCount);
     if (--(*refCount) < 0) {
       cf_free(refCount);
-      free(pointer);
+      freeIt(pointer);
     }
     refCount = other.refCount;
     pointer = other.pointer;
@@ -57,7 +57,7 @@ public:
   void setRawPtr(T *p) { pointer = p; }
 
 private:
-  void free(T *d) {
+  void freeIt(T *d) {
     if (d == NULL) return;
     if (isDelete) {
       delete d;

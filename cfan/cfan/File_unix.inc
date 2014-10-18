@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef __IOS__
+#if !defined(__IOS__) && !defined(__ANDROID__)
   #include <sys/dir.h>
 #endif
 #include <dirent.h>
