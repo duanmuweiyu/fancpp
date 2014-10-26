@@ -23,6 +23,7 @@ String &String::addStr(const char *s) {
   int len = strlen(s);
   addCapacity(len);
   strcpy(str()+size(), s);
+  _setSize(size()+len);
   _hashCode = 0;
   return *this;
 }

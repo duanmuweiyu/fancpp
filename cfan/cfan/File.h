@@ -65,11 +65,16 @@ static inline bool cf_File_isDir(cf_File *self) {
   return self->isDir;
 }
 
+static inline bool cf_File_exists(cf_File *self) {
+  return self->exists;
+}
+
 /**
  * create directory
  *
  */
 cf_Error cf_File_createDir(cf_File *self);
+cf_Error cf_File_mkdirs(const char* path);
 
 /**
  * remove file

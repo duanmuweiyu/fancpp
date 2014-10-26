@@ -37,5 +37,35 @@ cf_Error cf_File_outputStream(cf_File *self, cf_FileOutputStream *out, bool appe
   return cf_Error_ok;
 }
 
+
+cf_Error cf_File_mkdirs(const char* path){
+  int len = strlen(path);
+  char temp[CF_PATH_MAX];
+  int lastSep = 0;
+  int i;
+  cf_Error err;
+  cf_File file;
+
+  strcpy(temp, path);
+  for (i = 2; i < len; ++i) {
+    if (path[i] == '/' || path[i] == '\\'){
+      lastSep = i;
+      if(i > 0){
+        temp[i] = 0;
+        cf_File_make(&file, temp);
+        err = cf_File_createDir(&file);
+      }
+      temp[i] = '/';
+    }
+  }
+
+  //last dir
+  if (lastSep + 1 < len) {
+    cf_File_make(&file, temp);
+    err = cf_File_createDir(&file);
+  }
+  return err;
+}
+
 #include "cfan/File_unix.inc"
 #include "cfan/File_win.inc"

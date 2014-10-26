@@ -4,6 +4,8 @@
 #include "cfan/macro.h"
 #include "cfan/miss.h"
 
+CF_BEGIN
+
 /*========================================================================
  * Math
  */
@@ -23,6 +25,16 @@
 #define cf_Math_toRadians(f) ((f)/180.0*cf_Math_pi)
 
 #define cf_Math_toDegrees(f) ((f)/cf_Math_pi*180.0)
+
+/**
+ * log2(e)
+ */
+#define cf_Math_log2e 1.44269504088896340736 //log2(e)
+
+/**
+ * log base 2.
+ */
+double cf_Math_log2(double x);
 
 /**
  * approximately equal.
@@ -48,5 +60,7 @@ static inline uint32_t cf_Math_nextPowerOf2(uint32_t x) {
   x |= x>>16;
   return x+1;
 }
+
+CF_END
 
 #endif // _CF_MATH_H_

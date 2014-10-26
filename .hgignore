@@ -10,3 +10,4 @@ cppfan/libcppfan.a
 cppfan/Makefile
 .DS_Store
 cppfan/Makefile.cppfan
+*.5pre1

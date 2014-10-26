@@ -38,6 +38,7 @@ void cf_LinkedList_insertBefore(cf_LinkedList*self
   cf_assert(self);
   cf_assert(me);
   cf_assert(elem);
+  CF_UNUSED(self);
 
   cf_LinkedListElem *left = me->previous;
   cf_LinkedListElem *right = me;

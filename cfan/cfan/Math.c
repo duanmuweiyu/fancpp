@@ -12,3 +12,7 @@ bool cf_Math_approx(double a, double b, double tolerance) {
   }
   return fabs(a - b) < tolerance;
 }
+
+double cf_Math_log2(double x) {
+    return  log(x) * cf_Math_log2e;
+}
