@@ -43,7 +43,7 @@ cf_Error cf_File_mkdirs(const char* path){
   char temp[CF_PATH_MAX];
   int lastSep = 0;
   int i;
-  cf_Error err;
+  cf_Error err = cf_Error_file;
   cf_File file;
 
   strcpy(temp, path);

@@ -13,7 +13,7 @@
 
 cf_Error cf_Config_make(cf_Config *self, const char *path) {
   FILE *file;
-  char c;//current char
+  signed char c;//current char
   char key[1024];//key buffer
   char value[1024];//value buffer
   char *k;//key dup
