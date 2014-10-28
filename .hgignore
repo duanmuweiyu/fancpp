@@ -11,3 +11,4 @@ cppfan/Makefile
 .DS_Store
 cppfan/Makefile.cppfan
 *.5pre1
+*.obj

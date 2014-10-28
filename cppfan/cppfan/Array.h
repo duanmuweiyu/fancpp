@@ -144,7 +144,7 @@ public:
     char *p1 = (char *)(data+i);
     char *p2 = (char *)(data+i+1);
     int len = _size - i -1;
-    memmove(p1, p2, len);
+    memmove(p1, p2, len*sizeof(T));
     --_size;
     return true;
   }
