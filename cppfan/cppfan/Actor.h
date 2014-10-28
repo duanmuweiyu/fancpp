@@ -58,16 +58,14 @@ typedef void (*ActorFunc)(Actor *acotr, cf_ActorMessage *msg);
       self->_##FuncName(msg->arg);\
     }\
   public: void FuncName(void *arg) {\
-      static bool regist = false;\
-      if (!regist) {\
-        cf_HashMapSP_set(&map, "_" #FuncName, (void*)static_##FuncName, NULL, NULL);\
-        regist = true;\
-      }\
       cf_ActorMessage msg;\
       msg.arg = arg;\
       msg.name = "_" #FuncName;\
       cf_Actor_send(&actor, &msg);\
     }
+
+#define CF_ACTOR_REGISTER(FuncName) \
+  cf_HashMapSP_set(&map, "_" #FuncName, (void*)static_##FuncName, NULL, NULL)
 
 CF_END_NAMESPACE
 

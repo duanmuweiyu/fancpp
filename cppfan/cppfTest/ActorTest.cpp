@@ -5,6 +5,10 @@ CF_USING_NAMESPACE
 
 class MyActor : public Actor {
   CF_ACTOR_SLOT(MyActor, foo)
+
+  MyActor() {
+    CF_ACTOR_REGISTER(foo);
+  }
 };
 
 void MyActor::_foo(void *arg) {
