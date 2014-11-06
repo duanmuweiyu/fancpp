@@ -24,25 +24,26 @@ cf_Error cf_Actor_make(cf_Actor *self, cf_Executor *executor, cf_ActorReceive re
   if (mtx_init(&self->mutex, mtx_recursive) != thrd_success) {
     return cf_Error_thread;
   }
-  if (mtx_init(&self->allocMutex, mtx_recursive) != thrd_success) {
-    return cf_Error_thread;
-  }
+
   return cf_Error_ok;
 }
 
 void *cf_Actor_run(void *arg) {
   cf_Actor *self = (cf_Actor *)arg;
+  cf_ActorMessage message;
   do {
     mtx_lock(&self->mutex);
     cf_ActorMessage *msg = (cf_ActorMessage*)cf_LinkedList_removeFirst(&self->queue.super);
+    if (msg == NULL) {
+      mtx_unlock(&self->mutex);
+      break;
+    }
+    message = *msg;
+    cf_MemoryPool_free(&self->queue.allocator, msg);
     mtx_unlock(&self->mutex);
 
-    if (msg == NULL) break;
-    self->receive(self, msg);
+    self->receive(self, &message);
 
-    mtx_lock(&self->allocMutex);
-    cf_MemoryPool_free(&self->queue.allocator, msg);
-    mtx_unlock(&self->allocMutex);
   } while (true);
   self->isRuning = false;
   return NULL;
@@ -54,9 +55,7 @@ void cf_Actor_send(cf_Actor *self, cf_ActorMessage *amsg) {
 
   //copy
   mtx_lock(&self->mutex);
-  mtx_lock(&self->allocMutex);
   msgCopy = (cf_ActorMessage*)cf_MemoryPool_alloc(&self->queue.allocator);
-  mtx_unlock(&self->allocMutex);
   cf_memcpy(msgCopy, amsg, sizeof(cf_ActorMessage));
 
   //merage message
@@ -90,7 +89,7 @@ void cf_Actor_dispose(cf_Actor *self) {
   mtx_lock(&self->mutex);
   cf_LinkedList_freeLinkedElem(&self->queue.super, &self->queue.allocator);
   cf_MemoryPool_dispose(&self->queue.allocator);
-  mtx_unlock(&self->allocMutex);
+  mtx_unlock(&self->mutex);
 
   self->executor = NULL;
   mtx_destroy(&self->mutex);
