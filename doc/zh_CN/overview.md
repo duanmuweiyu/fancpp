@@ -90,7 +90,7 @@ QMake是Qt-Creator使用的构建系统。
 
 fmake
 -------
-fmake是新型的基于约定大于配置的C++/C构建系统，源码随cfan一起分发/fmake文件夹下。
+fmake是新型的基于约定大于配置的C++/C构建系统https://bitbucket.org/chunquedong/fmake
 fmake采用Fantom语言开发，所以需要先装Java和Fantom才能使用。
 fmake的主要优点是解决了多个项目之间依赖的问题。之需要添加所依赖的库名和版本就能直接使用第三方库。
 使用方法是用fan命名执行build.fan构建脚本即可。配置方法见/fmake/pod.fandoc文档。
