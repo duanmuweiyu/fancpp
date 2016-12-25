@@ -1,0 +1,15 @@
+glob:fan2c
+glob:fanllvm
+syntax: glob
+*.user
+*.o
+cfan/libcfan.a
+cfan/Makefile
+cfan/Makefile.cfan
+cppfan/libcppfan.a
+cppfan/Makefile
+.DS_Store
+cppfan/Makefile.cppfan
+*.5pre1
+*.obj
+fancpp.pro.user.3.2-pre1
