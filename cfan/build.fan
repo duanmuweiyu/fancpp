@@ -19,6 +19,7 @@ class Build : BuildCpp
     outType = TargetType.lib
     version = Version("1.0.0")
     srcDirs = [`cfan/`]
-    //define = ["_DEBUG"]
+
+    extConfigs["cflag"] = "-std=c99"
   }
 }

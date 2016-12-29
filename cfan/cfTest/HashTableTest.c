@@ -16,7 +16,7 @@ CF_BEGIN
 
 static int mystrcmp(const void *k1, const void *k2, int n) {
   CF_UNUSED(n);
-  return strcmp(k1, k2);
+  return strcmp((const char*)k1, (const char*)k2);
 }
 
 void cf_HashTable_testGet(void) {

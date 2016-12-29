@@ -48,7 +48,7 @@ size_t cf_HashTable_hashFunc(const void *key, int len) {
 
 int cf_HashTable_strCmp(const void *k1, const void *k2, int n) {
   CF_UNUSED(n);
-  return strcmp(k1, k2);
+  return strcmp((const char *)k1, (const char *)k2);
 }
 
 size_t cf_HashTable_strHash(const void *s, int len) {

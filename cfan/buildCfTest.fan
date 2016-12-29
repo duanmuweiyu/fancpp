@@ -20,7 +20,9 @@ class Build : BuildCpp
     version = Version("1.0.0")
     depends = ["cfan 1.0.0", "tinyCThread 1.0.0"]
     srcDirs = [`cfTest/`]
-    libs    = ["rt"]
-    //define = ["_DEBUG"]
+
+    if (Env.cur.os == "linux") {
+      extLibs = ["rt"]
+    }
   }
 }
